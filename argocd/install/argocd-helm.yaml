@@ -15,7 +15,8 @@ spec:
   targetNamespace: argocd
   valuesContent: |-
     global:
-      logging: text
+      logging:
+        format: text
       networkPolicy:
         create: true
     redis:
