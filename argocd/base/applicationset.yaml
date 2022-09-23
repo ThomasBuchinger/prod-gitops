@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+spec:
+  generators:
+  - list:
+      elements:
+      - name: external-secrets
+        path: external-secrets/base
+  template:
+    metadata:
+      name: '{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/thomasbuchinger/prod-gitops
+        targetRevision: argo
+        path: '{{path}}'
+      destination:
+        namespace: '{{name}}'
