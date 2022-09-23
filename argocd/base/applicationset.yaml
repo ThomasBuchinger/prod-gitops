@@ -18,4 +18,5 @@ spec:
         targetRevision: argo
         path: '{{path}}'
       destination:
+        server: https://kubernetes.default.svc
         namespace: '{{name}}'
