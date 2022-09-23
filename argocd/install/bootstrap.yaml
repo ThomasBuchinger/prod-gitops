@@ -19,7 +19,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/thomasbuchinger/prod-gitops
-    targetRevision: main
+    targetRevision: argo
     path: argocd/base/
   destination:
     server: https://kubernetes.default.svc
@@ -34,7 +34,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/thomasbuchinger/prod-gitops
-    targetRevision: main
+    targetRevision: argo
     path: sealedsecrets/base/
   destination:
     server: https://kubernetes.default.svc
