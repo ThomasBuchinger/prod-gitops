@@ -24,6 +24,9 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -39,4 +42,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
+  syncPolicy:
+    automated:
+      selfHeal: true
   
