@@ -8,4 +8,4 @@ manual-manifest-deploy: gen-secrets
 	cp -f secrets/secrets.yaml $(MANIFEST_DIR)
 
 gen-secrets:
-	kubectl kustomize secrets/ > $(MANIFEST_DIR)/secrets.yaml
+	kubectl kustomize secrets/ > secrets/secrets.yaml
