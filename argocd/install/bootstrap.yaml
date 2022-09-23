@@ -13,7 +13,7 @@ stringData:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-config
+  name: zzz-argo-config
   namespace: argocd
 spec:
   project: default
@@ -31,7 +31,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sealed-secrets
+  name: zzz-sealed-secrets
   namespace: argocd
 spec:
   project: default
