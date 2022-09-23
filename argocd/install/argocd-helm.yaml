@@ -7,7 +7,7 @@ metadata:
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
-  name: argocd-deploy
+  name: argocd
   namespace: kube-system
 spec:
   chart: argo-cd
@@ -109,7 +109,4 @@ spec:
     configs:
       secret:
         createSecret: true
-        # extra:
-        #   accounts.socradev.password: $2a$10$FGEET8BeGazPQvwADx4rZuIt2MKNrtLpomNHTtaFBp.EjdfDxuWGy
-
-
+        argocdServerAdminPassword: $2a$10$C8QN1YJaoW/.L6bBSV/k1ucgA5Wm68JkyHPyyT8/Lke.UjwAaf73y
