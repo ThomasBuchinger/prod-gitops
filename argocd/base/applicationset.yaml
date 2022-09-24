@@ -22,3 +22,5 @@ spec:
         namespace: '{{name}}'
       syncPolicy:
         automated: {}
+        syncOptions:
+        - CreateNamespace=true
