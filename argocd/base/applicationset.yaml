@@ -17,6 +17,8 @@ spec:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
         targetRevision: argo
         path: '{{path}}'
+        plugin:
+          name: kustomized-helm
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{name}}'
