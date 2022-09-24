@@ -7,3 +7,6 @@ manual-manifest-deploy:
 	@echo "Generating manual Manifests to be deployed via k3s"
 	cp -rf argocd/install/* $(MANIFEST_DIR)
 	cp -f secrets/secrets.yaml $(MANIFEST_DIR)
+
+kubeseal:
+	kubeseal --cert secrets/sealed.crt -o yaml -f secrets/secret-id.yaml > external-secrets/base/secret-id-sealed.yaml
