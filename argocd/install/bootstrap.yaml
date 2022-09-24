@@ -19,7 +19,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/thomasbuchinger/prod-gitops
-    targetRevision: argo
+    targetRevision: main
     path: argocd/base/
   destination:
     server: https://kubernetes.default.svc

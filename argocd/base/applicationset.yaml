@@ -15,7 +15,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: argo
+        targetRevision: main
         path: '{{path}}'
         plugin:
           name: kustomized-helm
