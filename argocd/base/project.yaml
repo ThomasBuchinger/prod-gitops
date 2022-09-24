@@ -10,7 +10,8 @@ spec:
   description: Default project for all ArgoCD managed Applications
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - 'https://github.com/thomasbuchinger/prod-gitops'
+  - '*'
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
   - server: https://kubernetes.default.svc
+    namespace: '*'
