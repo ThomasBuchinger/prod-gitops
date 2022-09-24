@@ -8,10 +8,14 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   description: Default project for all ArgoCD managed Applications
-  # Allow manifests to deploy from any Git repos
   sourceRepos:
   - '*'
-  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
   destinations:
   - server: https://kubernetes.default.svc
     namespace: '*'
