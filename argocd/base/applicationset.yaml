@@ -12,7 +12,7 @@ spec:
     metadata:
       name: '{{name}}'
     spec:
-      project: default
+      project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
         targetRevision: argo

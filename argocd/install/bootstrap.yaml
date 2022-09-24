@@ -27,22 +27,3 @@ spec:
   syncPolicy:
     automated:
       selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: zzz-sealed-secrets
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/thomasbuchinger/prod-gitops
-    targetRevision: argo
-    path: sealedsecrets/base/
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: kube-system
-  syncPolicy:
-    automated:
-      selfHeal: true
-  
