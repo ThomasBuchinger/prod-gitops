@@ -1,0 +1,26 @@
+
+machine:
+  network:
+    hostname: prod.buc.sh
+    interfaces:
+    - interface: eth0
+      addresses:
+      - "10.0.0.0/24"
+      routes:
+      - network: "0.0.0.0/0"
+        gateway: "10.0.0.1"
+    nameservers:
+    - 10.0.0.16
+    - 10.0.0.1
+  install:
+    disk: /dev/vda
+
+cluster:
+  # extraManifests:
+  # - https://raw.githubusercontent.com/ThomasBuchinger/prod-gitops/talos/argocd-install/flux-system.yaml
+  # - https://raw.githubusercontent.com/ThomasBuchinger/prod-gitops/talos/argocd-install/voodoo-gitops.yaml
+  inlineManifests:
+  - name: sealed-secrets-private-key
+    contents:  ""
+  - name: argocd-install
+    contents: ""

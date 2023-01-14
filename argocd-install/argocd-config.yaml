@@ -1,0 +1,48 @@
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  # Enables anonymous user access. The anonymous users get default role permissions specified argocd-rbac-cm.yaml.
+  users.anonymous.enabled: "true"
+  admin.enabled: "true"
+  resource.compareoptions: |
+    ignoreAggregatedRoles: true
+  configManagementPlugins: |
+    - name: kustomized-helm
+      generate:
+        command: [sh, -c]
+        args: ["kustomize build --enable-helm"]
+  # # OIDC configuration as an alternative to dex (optional).
+  # oidc.config: |
+  #   name: Okta
+  #   issuer: https://dev-123456.oktapreview.com
+  #   clientID: aaaabbbbccccddddeee
+  #   clientSecret: $oidc.okta.clientSecret
+  #   # Optional set of OIDC scopes to request. If omitted, defaults to: ["openid", "profile", "email", "groups"]
+  #   requestedScopes: ["openid", "profile", "email"]
+  #   # Optional set of OIDC claims to request on the ID token.
+  #   requestedIDTokenClaims: {"groups": {"essential": true}}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+data:
+  # # Open-Telemetry collector address: (e.g. "otel-collector:4317")
+  # otlp.address:
+  
+  # Run server without TLS
+  server.insecure: "true"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-secret
+type: Opaque
+data:
+  admin.password: $2a$10$C8QN1YJaoW/.L6bBSV/k1ucgA5Wm68JkyHPyyT8/Lke.UjwAaf73y

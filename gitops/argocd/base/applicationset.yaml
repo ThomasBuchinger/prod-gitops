@@ -7,7 +7,8 @@ spec:
   - list:
       elements:
       - name: external-secrets
-        path: external-secrets/base
+        rev: talos
+        path: gitops/external-secrets/base
   template:
     metadata:
       name: '{{name}}'
@@ -15,7 +16,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: argo
+        targetRevision: '{{rev}}'
         path: '{{path}}'
         plugin:
           name: kustomized-helm

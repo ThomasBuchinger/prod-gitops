@@ -1,0 +1,7 @@
+resources:
+- https://raw.githubusercontent.com/argoproj/argo-cd/v2.5.6/manifests/install.yaml
+- ingress.yaml
+- bootstrap.yaml
+
+patchesStrategicMerge:
+- argocd-config.yaml
