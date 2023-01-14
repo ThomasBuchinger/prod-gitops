@@ -1,5 +1,5 @@
 NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.192
+DHCP_IP=10.0.0.167
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
@@ -46,7 +46,7 @@ untaint: kubeconfig
 
 talos-reset:
 	$(TALOSCTL) reset --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
-talos-apply:
+talos-apply: talos-config
 	$(TALOSCTL) apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF)
 
 kubeconfig:
