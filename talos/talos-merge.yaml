@@ -16,11 +16,17 @@ machine:
     disk: /dev/vda
 
 cluster:
+  apiServer:
+    extraArgs:
+      oidc-issuer-url: https://vault.buc.sh/v1/identity/oidc/provider/global
+      oidc-client-id: UnYkRDMRfKg5A6IZkicksKvS7H7CPIP3
+      # oidc-username-claim=:
+      # oidc-groups-claim:
   # extraManifests:
   # - https://raw.githubusercontent.com/ThomasBuchinger/prod-gitops/talos/argocd-install/flux-system.yaml
   # - https://raw.githubusercontent.com/ThomasBuchinger/prod-gitops/talos/argocd-install/voodoo-gitops.yaml
   inlineManifests:
-  - name: sealed-secrets-private-key
+  - name: eso-secret-id
     contents:  ""
   - name: infra-argocd
     contents: ""

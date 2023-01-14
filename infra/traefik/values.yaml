@@ -14,8 +14,8 @@ experimental:
       enabled: true
 # Configure Ports to be 80/443
 securityContext:
-  seccompProfile:
-    type: Localhost
+  allowPrivilegeEscalation: true
+  runAsNonRoot: false
 ports:
   web:
     hostPort: 80

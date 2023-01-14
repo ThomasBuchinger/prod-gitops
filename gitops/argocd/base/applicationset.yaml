@@ -9,17 +9,22 @@ spec:
       - name: external-secrets
         rev: talos
         path: gitops/external-secrets/base
+        wave: "1"
+      - name: argocd
+        rev: talos
+        path: gitops/argocd/oidc
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{wave}}'
     spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
         targetRevision: '{{rev}}'
         path: '{{path}}'
-        plugin:
-          name: kustomized-helm
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{name}}'
