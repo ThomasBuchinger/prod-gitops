@@ -22,5 +22,7 @@ cluster:
   inlineManifests:
   - name: sealed-secrets-private-key
     contents:  ""
-  - name: argocd-install
+  - name: infra-argocd
+    contents: ""
+  - name: infra-ingress
     contents: ""

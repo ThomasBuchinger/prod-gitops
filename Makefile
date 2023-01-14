@@ -1,5 +1,5 @@
 NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.199
+DHCP_IP=10.0.0.193
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
@@ -22,7 +22,8 @@ $(OUTPUT_DIR)/talos-secrets.yaml:
 kustomize:
 	mkdir -p out
 	kubectl kustomize ./secrets > $(OUTPUT_DIR)/sealed_secret.yaml
-	kubectl kustomize ./argocd-install > $(OUTPUT_DIR)/argocd-install.yaml
+	kubectl kustomize ./infra/argocd > $(OUTPUT_DIR)/infra-argocd.yaml
+	kubectl kustomize --enable-helm ./infra/traefik > $(OUTPUT_DIR)/infra-traefik.yaml
 
 talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	mkdir -p $(OUTPUT_DIR)/talos
@@ -32,8 +33,9 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 		--with-secrets "$(OUTPUT_DIR)/talos-secrets.yaml"
 	yq eval $(YQ_ARGS) '.machine.network.interfaces[0].addresses[0] = "$(NODE_IP)/24"'                       $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[0].contents = load_str("$(OUTPUT_DIR)/sealed_secret.yaml")' $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/argocd-install.yaml")' $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.contexts.prod.endpoints[0] = "$(NODE_IP)"'                                        $(TALOS_CONFIG)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/infra-argocd.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.contexts.prod.endpoints[0] = "$(NODE_IP)"'                                          $(TALOS_CONFIG)
 
 talos-init: talos-config
 	$(TALOSCTL) apply-config --insecure --nodes $(DHCP_IP) --file $(TALOS_NODECONF)

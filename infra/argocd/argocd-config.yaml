@@ -44,5 +44,5 @@ kind: Secret
 metadata:
   name: argocd-secret
 type: Opaque
-data:
+stringData:
   admin.password: $2a$10$C8QN1YJaoW/.L6bBSV/k1ucgA5Wm68JkyHPyyT8/Lke.UjwAaf73y

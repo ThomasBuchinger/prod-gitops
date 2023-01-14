@@ -1,3 +1,5 @@
 secrets
 out
 bin
+infra/traefik/charts
+kubeconfig
