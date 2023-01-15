@@ -14,6 +14,10 @@ machine:
     # - 10.0.0.1
   install:
     disk: /dev/vda
+  disks:
+  - device: /dev/sdb
+  partitions:
+    - mountpoint: /var/lib/local-path-provisioner
 
 cluster:
   apiServer:

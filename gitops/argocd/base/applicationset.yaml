@@ -14,6 +14,10 @@ spec:
         rev: talos
         path: gitops/argocd/oidc
         wave: "2"
+      - name: local-path-storage
+        rev: talos
+        path: gitops/local-path-storage/base
+        wave: "1"
   template:
     metadata:
       name: '{{name}}'
