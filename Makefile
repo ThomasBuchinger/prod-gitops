@@ -1,5 +1,5 @@
 NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.177
+DHCP_IP=10.0.0.184
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
@@ -40,6 +40,7 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 talos-init: talos-config
 	$(TALOSCTL) apply-config --insecure --nodes $(DHCP_IP) --file $(TALOS_NODECONF)
 talos-bootstrap:
+	echo Bootstrap etcd...
 	$(TALOSCTL) bootstrap --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 untaint: kubeconfig
 	KUBECONFIG=./kubeconfig kubectl taint nodes --all node-role.kubernetes.io/control-plane-

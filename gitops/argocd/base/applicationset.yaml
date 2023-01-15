@@ -7,7 +7,7 @@ spec:
   - list:
       elements:
       - name: external-secrets
-        rev: main
+        rev: monitoring
         path: gitops/external-secrets/base
         wave: "1"
       - name: argocd

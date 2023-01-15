@@ -1,0 +1,63 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: grafana-tls
+  namespace: monitoring
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-grafana-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      key: cert/cert-grafana-buc-sh
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: grafana-admin-cred
+  namespace: monitoring
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: grafana-admin-cred
+    creationPolicy: Owner
+  data:
+  - secretKey: username
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_user
+  - secretKey: password
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_password
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-tls
+  namespace: monitoring
+spec:
+  tls:
+  - hosts:
+      - grafana.buc.sh
+    secretName: cert-grafana-buc-sh
+  rules:
+  - host: "grafana.buc.sh"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 80
