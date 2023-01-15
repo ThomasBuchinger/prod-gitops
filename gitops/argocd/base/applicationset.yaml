@@ -7,18 +7,32 @@ spec:
   - list:
       elements:
       - name: external-secrets
-        path: external-secrets/base
+        rev: main
+        path: gitops/external-secrets/base
+        wave: "1"
+      - name: argocd
+        rev: main
+        path: gitops/argocd/additional_config
+        wave: "2"
+      - name: local-path-storage
+        rev: main
+        path: gitops/local-path-storage/base
+        wave: "1"
+      - name: monitoring
+        rev: monitoring
+        path: gitops/monitoring/all
+        wave: "1"
   template:
     metadata:
       name: '{{name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{wave}}'
     spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: argo
+        targetRevision: '{{rev}}'
         path: '{{path}}'
-        plugin:
-          name: kustomized-helm
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{name}}'

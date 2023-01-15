@@ -19,8 +19,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/thomasbuchinger/prod-gitops
-    targetRevision: argo
-    path: argocd/base/
+    targetRevision: talos
+    path: gitops/argocd/base/
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

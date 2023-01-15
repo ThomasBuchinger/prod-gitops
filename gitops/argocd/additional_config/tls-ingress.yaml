@@ -1,0 +1,39 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ingress-secret
+  namespace: argocd
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-argocd-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      key: cert/cert-argocd-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-tls
+  namespace: argocd
+spec:
+  tls:
+  - hosts:
+      - argocd.buc.sh
+    secretName: cert-argocd-buc-sh
+  rules:
+  - host: "argocd.buc.sh"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80

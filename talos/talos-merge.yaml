@@ -1,0 +1,42 @@
+
+machine:
+  network:
+    hostname: prod.buc.sh
+    interfaces:
+    - interface: eth0
+      addresses:
+      - "10.0.0.0/24"
+      routes:
+      - network: "0.0.0.0/0"
+        gateway: "10.0.0.1"
+    nameservers:
+    - 10.0.0.16
+  install:
+    disk: /dev/vda
+  disks:
+  - device: /dev/vdb
+    partitions:
+      - mountpoint: /var/lib/local-path-provisioner
+  kubelet:
+    extraArgs:
+      rotate-server-certificates: true
+cluster:
+  # apiServer:
+  #   extraArgs:
+  #     oidc-issuer-url:
+  #     oidc-client-id:
+  #     # oidc-username-claim=:
+  #     # oidc-groups-claim:
+  extraManifests:
+  # Talos usual certificate handling is incompatible with Metrics-Server.
+  # https://www.talos.dev/v1.3/kubernetes-guides/configuration/deploy-metrics-server/
+  - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+  inlineManifests:
+  - name: eso-secret-id
+    contents:  ""
+  - name: infra-argocd
+    contents: ""
+  - name: infra-ingress
+    contents: ""
+  - name: infra-auto-untaint
+    contents: ""

@@ -1,0 +1,28 @@
+
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+  kubernetesIngress:
+    allowExternalNameServices: true
+    ingressendpoint:
+      ip: 10.0.0.33
+experimental:
+  v3:
+    enabled: false
+  kubernetesGateway:
+    enabled: false
+    gateway:
+      enabled: true
+# Configure Ports to be 80/443
+securityContext:
+  allowPrivilegeEscalation: true
+  runAsNonRoot: false
+ports:
+  web:
+    hostPort: 80
+  websecure:
+    hostPort: 443
+service:
+  enabled: true
+  type: NodePort
