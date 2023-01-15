@@ -7,19 +7,19 @@ spec:
   - list:
       elements:
       - name: external-secrets
-        rev: talos
+        rev: main
         path: gitops/external-secrets/base
         wave: "1"
       - name: argocd
-        rev: talos
+        rev: main
         path: gitops/argocd/additional_config
         wave: "2"
       - name: local-path-storage
-        rev: talos
+        rev: main
         path: gitops/local-path-storage/base
         wave: "1"
       - name: monitoring
-        rev: talos
+        rev: monitoring
         path: gitops/monitoring/all
         wave: "1"
   template:

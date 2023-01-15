@@ -12,7 +12,8 @@ spec:
     name: cert-argocd-buc-sh
     creationPolicy: Owner
   dataFrom:
-  - key: cert/cert-argocd-buc-sh
+  - extract:
+      key: cert/cert-argocd-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1
