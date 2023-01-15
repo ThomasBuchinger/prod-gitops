@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: taint-cleaner
+  namespace: kube-system
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          containers:
+          - name: remove-cp-taint
+            image: bitnami/kubectl
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - "kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true"
+          restartPolicy: Never
+          serviceAccountName: taint-cleaner
+          tolerations:
+          - key: "node-role.kubernetes.io/control-plane"
+            operator: "Exists"
+            effect: "NoSchedule"
+
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: taint-cleaner
+  namespace: kube-system
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-updates
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: allow-taint-removal
+subjects:
+- kind: ServiceAccount
+  name: taint-cleaner
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: node-updates
+  apiGroup: rbac.authorization.k8s.io
