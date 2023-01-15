@@ -1,5 +1,5 @@
 NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.167
+DHCP_IP=10.0.0.188
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
@@ -34,6 +34,7 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[0].contents = load_str("secrets/vault-secretid.yaml")' $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/infra-argocd.yaml")'  $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[3].contents = load_str("infra/auto-untaint.yaml")'  $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.contexts.prod.endpoints[0] = "$(NODE_IP)"'                                          $(TALOS_CONFIG)
 
 talos-init: talos-config

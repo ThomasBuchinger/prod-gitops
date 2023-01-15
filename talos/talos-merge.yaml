@@ -11,7 +11,7 @@ machine:
         gateway: "10.0.0.1"
     nameservers:
     - 10.0.0.16
-    - 10.0.0.1
+    # - 10.0.0.1
   install:
     disk: /dev/vda
 
@@ -31,4 +31,6 @@ cluster:
   - name: infra-argocd
     contents: ""
   - name: infra-ingress
+    contents: ""
+  - name: infra-auto-untaint
     contents: ""
