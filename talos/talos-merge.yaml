@@ -11,24 +11,21 @@ machine:
         gateway: "10.0.0.1"
     nameservers:
     - 10.0.0.16
-    # - 10.0.0.1
   install:
     disk: /dev/vda
   disks:
-  - device: /dev/sdb
-  partitions:
-    - mountpoint: /var/lib/local-path-provisioner
+  - device: /dev/vdb
+    partitions:
+      - mountpoint: /var/lib/local-path-provisioner
 
 cluster:
-  apiServer:
-    extraArgs:
-      oidc-issuer-url: https://vault.buc.sh/v1/identity/oidc/provider/global
-      oidc-client-id: UnYkRDMRfKg5A6IZkicksKvS7H7CPIP3
-      # oidc-username-claim=:
-      # oidc-groups-claim:
-  # extraManifests:
-  # - https://raw.githubusercontent.com/ThomasBuchinger/prod-gitops/talos/argocd-install/flux-system.yaml
-  # - https://raw.githubusercontent.com/ThomasBuchinger/prod-gitops/talos/argocd-install/voodoo-gitops.yaml
+  # apiServer:
+  #   extraArgs:
+  #     oidc-issuer-url:
+  #     oidc-client-id:
+  #     # oidc-username-claim=:
+  #     # oidc-groups-claim:
+  # extraManifests: []
   inlineManifests:
   - name: eso-secret-id
     contents:  ""

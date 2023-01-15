@@ -1,5 +1,5 @@
 NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.188
+DHCP_IP=10.0.0.177
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
