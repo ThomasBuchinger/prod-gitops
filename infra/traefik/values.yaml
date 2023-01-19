@@ -5,8 +5,9 @@ providers:
     allowExternalNameServices: true
   kubernetesIngress:
     allowExternalNameServices: true
-    ingressendpoint:
-      ip: 10.0.0.33
+    ingressEndpoint:
+      # ip: 10.0.0.33
+      publishedService: traefik/traefik
 experimental:
   v3:
     enabled: false
