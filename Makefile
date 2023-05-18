@@ -1,5 +1,5 @@
-NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.184
+NODE_IP=10.0.0.21
+DHCP_IP=10.0.0.179
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
@@ -7,13 +7,13 @@ TALOSCTL="./bin/talosctl"
 TALOS_NODECONF=$(OUTPUT_DIR)/controlplane.yaml
 TALOS_CONFIG=$(OUTPUT_DIR)/talosconfig
 
-.PHONY: build kustomize talos-config
+.PHONY: build kustomize talos-config kubeconfig
 build: talos-config kubeseal
 
 bin/talosctl:
 	@echo "Installing talosctl to $(TALOSCTL)"
 	mkdir -p bin
-	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.3.0/talosctl-linux-amd64
+	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.4.0/talosctl-linux-amd64
 	chmod +x $(TALOSCTL)
 
 $(OUTPUT_DIR)/talos-secrets.yaml:
@@ -27,6 +27,7 @@ kustomize:
 talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	mkdir -p $(OUTPUT_DIR)/talos
 	$(TALOSCTL) gen config prod https://$(NODE_IP):6443 \
+		--force \
 		--config-patch=@talos/talos-merge.yaml \
 		--output-dir "$(OUTPUT_DIR)" \
 		--with-secrets "$(OUTPUT_DIR)/talos-secrets.yaml"

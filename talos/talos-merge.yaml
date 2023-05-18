@@ -13,6 +13,8 @@ machine:
     - 10.0.0.16
   install:
     disk: /dev/vda
+    extensions:
+    - image: ghcr.io/siderolabs/iscsi-tools:v0.1.1
   disks:
   - device: /dev/vdb
     partitions:
@@ -20,6 +22,7 @@ machine:
   kubelet:
     extraArgs:
       rotate-server-certificates: true
+
 cluster:
   # apiServer:
   #   extraArgs:
