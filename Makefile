@@ -7,7 +7,7 @@ TALOSCTL="./bin/talosctl"
 TALOS_NODECONF=$(OUTPUT_DIR)/controlplane.yaml
 TALOS_CONFIG=$(OUTPUT_DIR)/talosconfig
 
-.PHONY: build kustomize talos-config kubeconfig
+.PHONY: build kustomize talos-config
 build: talos-config kubeseal
 
 bin/talosctl:
@@ -45,6 +45,8 @@ talos-bootstrap:
 	$(TALOSCTL) bootstrap --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 untaint: kubeconfig
 	KUBECONFIG=./kubeconfig kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+setup-eso: kubeconfig
+	KUBECONFIG=./kubeconfig kubectl apply -f ./secrets/
 
 
 talos-reset:
@@ -54,7 +56,3 @@ talos-apply: talos-config
 
 kubeconfig:
 	$(TALOSCTL) kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
-
-
-kubeseal:
-	kubeseal --cert secrets/sealed.crt -o yaml -f secrets/secret-id.yaml > gitops/external-secrets/base/secret-id-sealed.yaml
