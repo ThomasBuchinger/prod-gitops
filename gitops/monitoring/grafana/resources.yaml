@@ -32,10 +32,14 @@ spec:
   data:
   - secretKey: username
     remoteRef:
+      conversionStrategy: Default
+      decodingStrategy: None
       key: access/static-cred
       property: cred_admin_user
   - secretKey: password
     remoteRef:
+      conversionStrategy: Default
+      decodingStrategy: None
       key: access/static-cred
       property: cred_admin_password
 

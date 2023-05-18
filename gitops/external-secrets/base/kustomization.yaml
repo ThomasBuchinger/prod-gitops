@@ -12,4 +12,3 @@ helmCharts:
 
 resources:
 - secret-stores.yaml
-- vault-secretid-sealed.yaml
