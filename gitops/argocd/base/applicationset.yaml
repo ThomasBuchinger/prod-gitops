@@ -18,6 +18,10 @@ spec:
         rev: main
         path: gitops/local-path-storage/base
         wave: "1"
+      - name: okd-console
+        rev: monitoring
+        path: gitops/okd-console
+        wave: "1"
       - name: monitoring
         rev: monitoring
         path: gitops/monitoring/all

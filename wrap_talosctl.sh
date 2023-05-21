@@ -1,1 +1,1 @@
-./bin/talosctl --talosconfig out/talosconfig -n 10.0.0.33 $@
+./bin/talosctl --talosconfig out/talosconfig -n 10.0.0.21 $@
