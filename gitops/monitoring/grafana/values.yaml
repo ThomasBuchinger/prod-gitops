@@ -46,7 +46,7 @@ datasources:
      isDefault: true
 dashboards:
   default:
-    custom-dashboard:
+    dashboard-landing.json:
       # This is a path to a file inside the dashboards directory inside the chart directory
       file: dashboard-landing.json
     cluster-dashboard:
