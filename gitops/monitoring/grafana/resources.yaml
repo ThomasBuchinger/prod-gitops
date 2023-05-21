@@ -13,6 +13,8 @@ spec:
     creationPolicy: Owner
   dataFrom:
   - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
       key: cert/cert-grafana-buc-sh
 
 ---
