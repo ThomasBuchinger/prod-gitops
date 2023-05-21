@@ -15,17 +15,20 @@ admin:
   userKey: username
   passwordKey: password
 
-datasources: {}
-dashboardProviders:
-  dashboardproviders.yaml:
-    apiVersion: 1
-    providers:
-    - name: 'default'
-      orgId: 1
-      folder: ''
-      type: file
-      disableDeletion: false
-      editable: true
-      options:
-        path: /var/lib/grafana/dashboards/default
-dashboards: {}
+datasources:
+ datasources.yaml:
+   apiVersion: 1
+   datasources:
+   - name: Prometheus
+     type: prometheus
+     url: http://prometheus:9090
+     access: proxy
+     isDefault: true
+dashboards:
+  default:
+    custom-dashboard:
+      # This is a path to a file inside the dashboards directory inside the chart directory
+      file: dashboard-landing.json
+    cluster-dashboard:
+      gnetId: 315
+      datasource: Prometheus

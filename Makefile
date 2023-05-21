@@ -43,16 +43,21 @@ talos-init: talos-config
 talos-bootstrap:
 	echo Bootstrap etcd...
 	$(TALOSCTL) bootstrap --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
-untaint: kubeconfig
-	KUBECONFIG=./kubeconfig kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-setup-eso: kubeconfig
-	KUBECONFIG=./kubeconfig kubectl apply -f ./secrets/
 
+kubeconfig:
+	$(TALOSCTL) kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 
+# === Debugging targets ===
 talos-reset:
 	$(TALOSCTL) reset --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 talos-apply: talos-config
 	$(TALOSCTL) apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF)
 
-kubeconfig:
-	$(TALOSCTL) kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
+# Temporary Workaround. Kubernetes 1.27 is not yet supported by the k8s operator controller-runtime
+# https://github.com/alex1989hu/kubelet-serving-cert-approver/issues/139
+approve-csr:
+	kubectl certificate approve $(kubectl get csr --sort-by=.metadata.creationTimestamp | grep Pending | awk '{print $1}')
+
+# There is a Job that automatically untaints the Nodes
+untaint: kubeconfig
+	KUBECONFIG=./kubeconfig kubectl taint nodes --all node-role.kubernetes.io/control-plane-

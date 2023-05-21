@@ -22,6 +22,12 @@ machine:
   kubelet:
     extraArgs:
       rotate-server-certificates: true
+  # files:
+  #   - content: |
+  #       [metrics]
+  #         address = "0.0.0.0:11234"
+  #     path: /var/cri/conf.d/metrics.toml
+  #     op: create
 
 cluster:
   # apiServer:
