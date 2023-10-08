@@ -7,7 +7,7 @@ spec:
   - list:
       elements:
       - name: external-secrets
-        rev: monitoring
+        rev: main
         path: gitops/external-secrets/base
         wave: "1"
       - name: argocd
@@ -19,11 +19,11 @@ spec:
         path: gitops/local-path-storage/base
         wave: "1"
       - name: okd-console
-        rev: monitoring
+        rev: main
         path: gitops/okd-console
         wave: "1"
       - name: monitoring
-        rev: monitoring
+        rev: main
         path: gitops/monitoring/all
         wave: "1"
   template:
