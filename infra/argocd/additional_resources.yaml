@@ -11,7 +11,7 @@ metadata:
   name: argocd
 spec:
   rules:
-  - host: "argocd.10.0.0.33.nip.io"
+  - host: "argocd.10.0.0.21.nip.io"
     http:
       paths:
       - pathType: Prefix
