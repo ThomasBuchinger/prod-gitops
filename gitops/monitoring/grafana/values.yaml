@@ -1,0 +1,54 @@
+
+serviceMonitor: {}
+networkPolicy:
+  enabled: true
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+persistence:
+  enabled: false
+
+admin:
+  existingSecret: grafana-admin-cred
+  userKey: username
+  passwordKey: password
+
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    folder: /tmp/dashboards
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: 'kube-prometheus-dashboards'
+        orgId: 1
+        folder: 'Kubernetes'
+        type: file
+        disableDeletion: false
+        editable: true
+        allowUiUpdates: true
+        options:
+          path: /tmp/dashboards/
+
+datasources:
+ datasources.yaml:
+   apiVersion: 1
+   datasources:
+   - name: Prometheus
+     type: prometheus
+     url: http://prometheus-kube-prometheus-prometheus:9090
+     access: proxy
+     isDefault: true
+dashboards:
+  default:
+    dashboard-landing.json:
+      # This is a path to a file inside the dashboards directory inside the chart directory
+      file: dashboard-landing.json
+    cluster-dashboard:
+      gnetId: 315
+      datasource: Prometheus

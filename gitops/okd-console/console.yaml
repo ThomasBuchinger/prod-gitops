@@ -1,0 +1,155 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: okd-console
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: okd-console-secret
+  annotations:
+    kubernetes.io/service-account.name: okd-console
+type: kubernetes.io/service-account-token
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: okd-console
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-viewer
+subjects:
+- kind: ServiceAccount
+  name: okd-console
+  namespace: okd-console
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-viewer
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - 'Pod'
+  verbs:
+  - get
+  - list
+  - watch
+  - delete
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: okd-console
+  labels:
+    app: console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: console
+  template:
+    metadata:
+      labels:
+        app: console
+    spec:
+      containers:
+        - name: console-app
+          image: "quay.io/openshift/origin-console:4.12"
+          env:
+            - name: BRIDGE_USER_AUTH
+              value: disabled # no authentication required
+            - name: BRIDGE_K8S_MODE
+              value: off-cluster
+            - name: BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT
+              value: https://kubernetes.default #master api
+            - name: BRIDGE_K8S_MODE_OFF_CLUSTER_SKIP_VERIFY_TLS
+              value: "true" # no tls enabled
+            - name: BRIDGE_K8S_AUTH
+              value: bearer-token
+            - name: BRIDGE_K8S_AUTH_BEARER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: okd-console-secret
+                  key: token
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: okd-console
+spec:
+  selector:
+    app: console
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9000
+      targetPort: 9000
+      protocol: TCP
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: okd-console
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-cloudflare-dns
+spec:
+  tls:
+  - hosts:
+    - prod-console.buc.sh
+    secretName: cert-evergreen-console-buc-sh
+  rules:
+  - host: prod-console.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: okd-console
+            port:
+              number: 9000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: okd-console-http
+spec:
+  rules:
+  - host: prod.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: okd-console
+            port:
+              number: 9000

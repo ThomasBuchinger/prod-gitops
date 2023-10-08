@@ -18,8 +18,12 @@ spec:
         rev: main
         path: gitops/local-path-storage/base
         wave: "1"
+      - name: okd-console
+        rev: main
+        path: gitops/okd-console
+        wave: "1"
       - name: monitoring
-        rev: monitoring
+        rev: main
         path: gitops/monitoring/all
         wave: "1"
   template:
@@ -39,4 +43,5 @@ spec:
       syncPolicy:
         automated: {}
         syncOptions:
+        - ServerSideApply=true
         - CreateNamespace=true

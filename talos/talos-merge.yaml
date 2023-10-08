@@ -13,6 +13,8 @@ machine:
     - 10.0.0.16
   install:
     disk: /dev/vda
+    extensions:
+    - image: ghcr.io/siderolabs/iscsi-tools:v0.1.1
   disks:
   - device: /dev/vdb
     partitions:
@@ -20,6 +22,13 @@ machine:
   kubelet:
     extraArgs:
       rotate-server-certificates: true
+  # files:
+  #   - content: |
+  #       [metrics]
+  #         address = "0.0.0.0:11234"
+  #     path: /var/cri/conf.d/metrics.toml
+  #     op: create
+
 cluster:
   # apiServer:
   #   extraArgs:
@@ -29,7 +38,7 @@ cluster:
   #     # oidc-groups-claim:
   extraManifests:
   # Talos usual certificate handling is incompatible with Metrics-Server.
-  # https://www.talos.dev/v1.3/kubernetes-guides/configuration/deploy-metrics-server/
+  #   https://www.talos.dev/v1.3/kubernetes-guides/configuration/deploy-metrics-server/
   - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
   inlineManifests:
   - name: eso-secret-id

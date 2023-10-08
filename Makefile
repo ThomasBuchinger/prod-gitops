@@ -1,5 +1,5 @@
-NODE_IP=10.0.0.33
-DHCP_IP=10.0.0.177
+NODE_IP=10.0.0.21
+DHCP_IP=10.0.0.179
 
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
@@ -13,7 +13,7 @@ build: talos-config kubeseal
 bin/talosctl:
 	@echo "Installing talosctl to $(TALOSCTL)"
 	mkdir -p bin
-	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.3.0/talosctl-linux-amd64
+	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.4.0/talosctl-linux-amd64
 	chmod +x $(TALOSCTL)
 
 $(OUTPUT_DIR)/talos-secrets.yaml:
@@ -27,6 +27,7 @@ kustomize:
 talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	mkdir -p $(OUTPUT_DIR)/talos
 	$(TALOSCTL) gen config prod https://$(NODE_IP):6443 \
+		--force \
 		--config-patch=@talos/talos-merge.yaml \
 		--output-dir "$(OUTPUT_DIR)" \
 		--with-secrets "$(OUTPUT_DIR)/talos-secrets.yaml"
@@ -40,19 +41,23 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 talos-init: talos-config
 	$(TALOSCTL) apply-config --insecure --nodes $(DHCP_IP) --file $(TALOS_NODECONF)
 talos-bootstrap:
+	echo Bootstrap etcd...
 	$(TALOSCTL) bootstrap --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
-untaint: kubeconfig
-	KUBECONFIG=./kubeconfig kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
+kubeconfig:
+	$(TALOSCTL) kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 
+# === Debugging targets ===
 talos-reset:
 	$(TALOSCTL) reset --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 talos-apply: talos-config
 	$(TALOSCTL) apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF)
 
-kubeconfig:
-	$(TALOSCTL) kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
+# Temporary Workaround. Kubernetes 1.27 is not yet supported by the k8s operator controller-runtime
+# https://github.com/alex1989hu/kubelet-serving-cert-approver/issues/139
+approve-csr: kubeconfig
+	kubectl --kubeconfig ./kubeconfig certificate approve $(kubectl get csr --kubeconfig ./kubeconfig --sort-by=.metadata.creationTimestamp | grep Pending | awk '{print $1}')
 
-
-kubeseal:
-	kubeseal --cert secrets/sealed.crt -o yaml -f secrets/secret-id.yaml > gitops/external-secrets/base/secret-id-sealed.yaml
+# There is a Job that automatically untaints the Nodes
+untaint: kubeconfig
+	kubectl --kubeconfig ./kubeconfig taint nodes --all node-role.kubernetes.io/control-plane-
