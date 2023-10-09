@@ -64,11 +64,11 @@ spec:
             memory: 400Mi
           limits: {}
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           capabilities:
             drop:
               - ALL
-          runAsGroup: 0
+          runAsGroup: 1001
           runAsNonRoot: true
           runAsUser: 1001
           seccompProfile:
