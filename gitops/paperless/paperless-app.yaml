@@ -29,8 +29,8 @@ data:
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: ingress-secret
-  namespace: argocd
+  name: paperless-credentials
+  namespace: paperless
 spec:
   refreshInterval: 1h
   secretStoreRef:
