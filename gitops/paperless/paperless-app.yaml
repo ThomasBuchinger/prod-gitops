@@ -44,7 +44,6 @@ spec:
         app.kubernetes.io/name: paperless
     spec:
       securityContext:
-        allowPrivilegeEscalation: false
         runAsGroup: 1001
         runAsNonRoot: true
         runAsUser: 1001
@@ -70,6 +69,7 @@ spec:
             memory: 400Mi
           limits: {}
         securityContext:
+          allowPrivilegeEscalation: false
           capabilities:
             add:
             - CHOWN
