@@ -26,6 +26,10 @@ spec:
         rev: main
         path: gitops/monitoring/all
         wave: "1"
+      - name: paperless
+        rev: paperless
+        path: gitops/paperless
+        wave: "1"
   template:
     metadata:
       name: '{{name}}'
