@@ -12,8 +12,8 @@ data:
   PAPERLESS_OCR_LANGUAGES: eng deu
   # Lanugaes to use
   PAPERLESS_OCR_LANGUAGE: deu
-  USERMAP_UID: 1001
-  USERMAP_GID: 1001
+  USERMAP_UID: "1001"
+  USERMAP_GID: "1001"
   PAPERLESS_TIME_ZONE: Europe/Vienna
   PAPERLESS_DBENGINE: sqlite
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{created}_{title}'
@@ -44,7 +44,6 @@ spec:
       app.kubernetes.io/component: master
       app.kubernetes.io/instance: redis-ephemeral
       app.kubernetes.io/name: redis
-  serviceName: paperless
   template:
     metadata:
       labels:
@@ -90,21 +89,35 @@ spec:
 
 # PVs: data
 # or SQlite: litestream+s3?
-# Service
 
-# Ingress: paperless.buc.sh
+# tls-Ingress: paperless.buc.sh
 # ESO Secret: Certificate, username/password
 
-# Ingress: http?
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+spec:
+  selector:
+    app.kubernetes.io/name: paperless
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8000
+    targetPort: http
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-  labels:
-    app.kubernetes.io/name: paperless
   name: paperless-http
   namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
 spec:
   rules:
   - host: paperless.prod.buc.sh
