@@ -69,15 +69,15 @@ spec:
             memory: 400Mi
           limits: {}
         securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            # add:
-            # - CHOWN
-            # # - SET_UID
-            # # - SET_GID
-            # - FOWNER
-            drop:
-            - ALL
+          # allowPrivilegeEscalation: false
+          # capabilities:
+          #   # add:
+          #   # - CHOWN
+          #   # # - SET_UID
+          #   # # - SET_GID
+          #   # - FOWNER
+          #   drop:
+          #   - ALL
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
