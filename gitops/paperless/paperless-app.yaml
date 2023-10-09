@@ -9,7 +9,7 @@ data:
   COMPOSE_PROJECT_NAME: paperless
   PAPERLESS_REDIS: redis://redis-ephemeral-headless
   # Languages to install
-  PAPERLESS_OCR_LANGUAGES: eng deu
+  # PAPERLESS_OCR_LANGUAGES: eng deu
   # Lanugaes to use
   PAPERLESS_OCR_LANGUAGE: deu
   USERMAP_UID: "1001"
@@ -21,7 +21,7 @@ data:
   PAPERLESS_DATA_DIR: /data/data
   # Storage for documents
   PAPERLESS_MEDIA_ROOT: /data/media
-  PAPERLESS_TRASH_DIR: /data/media/Trash
+  # PAPERLESS_TRASH_DIR: /data/media/Trash
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
 
@@ -63,16 +63,16 @@ spec:
             cpu: 50m
             memory: 400Mi
           limits: {}
-        # securityContext:
-        #   allowPrivilegeEscalation: false
-        #   capabilities:
-        #     drop:
-        #       - ALL
-        #   runAsGroup: 0
-        #   runAsNonRoot: true
-        #   runAsUser: 1001
-        #   seccompProfile:
-        #     type: RuntimeDefault
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsGroup: 0
+          runAsNonRoot: true
+          runAsUser: 1001
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /data
           name: paperless-data
