@@ -45,9 +45,9 @@ spec:
         app.kubernetes.io/name: paperless
     spec:
       securityContext:
-        # runAsGroup: 1001
+        runAsGroup: 1001
         runAsNonRoot: false
-        # runAsUser: 1001
+        runAsUser: 1001
         fsGroup: 1001
       automountServiceAccountToken: true
       containers:
@@ -84,9 +84,10 @@ spec:
           capabilities:
             add:
             - CHOWN
-            # - SET_UID
-            # - SET_GID
+            - SETUID
+            - SETGID
             - FOWNER
+            
             drop:
             - ALL
           seccompProfile:
