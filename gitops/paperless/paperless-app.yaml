@@ -12,8 +12,8 @@ data:
   # PAPERLESS_OCR_LANGUAGES: eng deu
   # Lanugaes to use
   PAPERLESS_OCR_LANGUAGE: deu
-  USERMAP_UID: "1001"
-  USERMAP_GID: "1001"
+  # USERMAP_UID: "1001"
+  # USERMAP_GID: "1001"
   PAPERLESS_TIME_ZONE: Europe/Vienna
   PAPERLESS_DBENGINE: sqlite
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{created}_{title}'
