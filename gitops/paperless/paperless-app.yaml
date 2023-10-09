@@ -12,8 +12,8 @@ data:
   # PAPERLESS_OCR_LANGUAGES: eng deu
   # Lanugaes to use
   PAPERLESS_OCR_LANGUAGE: deu
-  # USERMAP_UID: "1001"
-  # USERMAP_GID: "1001"
+  USERMAP_UID: "1001"
+  USERMAP_GID: "1001"
   PAPERLESS_TIME_ZONE: Europe/Vienna
   PAPERLESS_DBENGINE: sqlite
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{created}_{title}'
@@ -44,9 +44,9 @@ spec:
         app.kubernetes.io/name: paperless
     spec:
       securityContext:
-        runAsGroup: 1001
-        runAsNonRoot: true
-        runAsUser: 1001
+        # runAsGroup: 1001
+        runAsNonRoot: false
+        # runAsUser: 1001
         fsGroup: 1001
       automountServiceAccountToken: true
       containers:
@@ -71,11 +71,11 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
-            add:
-            - CHOWN
-            # - SET_UID
-            # - SET_GID
-            - FOWNER
+            # add:
+            # - CHOWN
+            # # - SET_UID
+            # # - SET_GID
+            # - FOWNER
             drop:
             - ALL
           seccompProfile:
