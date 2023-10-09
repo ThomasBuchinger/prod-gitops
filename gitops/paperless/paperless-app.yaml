@@ -73,6 +73,9 @@ spec:
           capabilities:
             add:
             - CHOWN
+            - SET_UID
+            - SET_UIF
+            - FOWNER
             drop:
             - ALL
           seccompProfile:
