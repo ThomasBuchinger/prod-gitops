@@ -63,16 +63,16 @@ spec:
             cpu: 50m
             memory: 400Mi
           limits: {}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          runAsGroup: 0
-          runAsNonRoot: true
-          runAsUser: 1001
-          seccompProfile:
-            type: RuntimeDefault
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop:
+        #       - ALL
+        #   runAsGroup: 0
+        #   runAsNonRoot: true
+        #   runAsUser: 1001
+        #   seccompProfile:
+        #     type: RuntimeDefault
         volumeMounts:
         - mountPath: /data
           name: paperless-data
