@@ -44,10 +44,14 @@ spec:
     remoteRef:
       key: access/static-cred
       property: cred_admin_user
+      conversionStrategy: Default
+      decodingStrategy: None
   - secretKey: PAPERLESS_ADMIN_PASSWORD
     remoteRef:
       key: access/static-cred
       property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
 
 ---
 apiVersion: apps/v1
