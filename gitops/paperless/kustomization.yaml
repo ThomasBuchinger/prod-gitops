@@ -15,4 +15,5 @@ helmCharts:
       persistence:
         enabled: false
 
-
+resources:
+- paperless-app.yaml
