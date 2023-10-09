@@ -128,7 +128,7 @@ metadata:
   name: paperless-data
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadOnlyMany
   resources:
     requests:
       storage: 50Gi
