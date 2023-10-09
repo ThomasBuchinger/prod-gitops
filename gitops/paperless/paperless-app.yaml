@@ -73,8 +73,8 @@ spec:
           capabilities:
             add:
             - CHOWN
-            - SET_UID
-            - SET_UIF
+            # - SET_UID
+            # - SET_GID
             - FOWNER
             drop:
             - ALL
