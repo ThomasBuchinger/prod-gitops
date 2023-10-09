@@ -25,9 +25,7 @@ data:
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
 
-
 ---
-# Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,8 +35,6 @@ metadata:
     app.kubernetes.io/name: paperless
 spec:
   replicas: 1
-  updateStrategy:
-    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/component: master
@@ -57,7 +53,7 @@ spec:
         envFrom:
         - configMapRef:
             name: paperless-env
-        containerPort:
+        ports:
         - name: http
           containerPort: 8000
         livenessProbe:
