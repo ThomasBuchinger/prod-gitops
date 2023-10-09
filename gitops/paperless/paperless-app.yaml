@@ -24,6 +24,7 @@ data:
   # PAPERLESS_TRASH_DIR: /data/media/Trash
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
+  PAPERLESS_PORT: "8000"
 
 ---
 apiVersion: apps/v1
@@ -60,8 +61,18 @@ spec:
         - name: http
           containerPort: 8000
         livenessProbe:
-          httpGet:
-            path: /
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          tcpSocket:
+            port: 8000
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          tcpSocket:
             port: 8000
         resources:
           requests:
