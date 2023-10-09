@@ -81,14 +81,14 @@ spec:
           limits: {}
         securityContext:
           # allowPrivilegeEscalation: false
-          # capabilities:
+          capabilities:
           #   # add:
           #   # - CHOWN
           #   # # - SET_UID
           #   # # - SET_GID
           #   # - FOWNER
-          #   drop:
-          #   - ALL
+            drop:
+            - ALL
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
