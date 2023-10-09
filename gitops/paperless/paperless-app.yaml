@@ -75,12 +75,12 @@ spec:
           runAsUser: 1001
           seccompProfile:
             type: RuntimeDefault
-          volumeMounts:
-          - mountPath: /data
-            name: paperless-data
-        volumes:
-        - name: paperless-data
-          emptyDir: {}
+        volumeMounts:
+        - mountPath: /data
+          name: paperless-data
+      volumes:
+      - name: paperless-data
+        emptyDir: {}
 
 
 # PVs: data
