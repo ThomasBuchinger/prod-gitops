@@ -43,6 +43,12 @@ spec:
       labels:
         app.kubernetes.io/name: paperless
     spec:
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
       automountServiceAccountToken: true
       containers:
       - name: paperless
@@ -64,16 +70,11 @@ spec:
             memory: 400Mi
           limits: {}
         securityContext:
-          allowPrivilegeEscalation: false
           capabilities:
             add:
             - CHOWN
             drop:
             - ALL
-          runAsGroup: 1001
-          runAsNonRoot: true
-          runAsUser: 1001
-          fsGroup: 1001
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
