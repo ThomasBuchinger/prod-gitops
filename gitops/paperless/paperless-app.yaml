@@ -124,3 +124,13 @@ spec:
               number: 8000
         path: /
         pathType: Prefix
+  - host: paperless.10.0.0.21.nip.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: paperless
+            port:
+              number: 8000
+        path: /
+        pathType: Prefix
