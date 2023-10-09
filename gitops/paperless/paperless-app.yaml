@@ -119,7 +119,21 @@ spec:
           name: paperless-data
       volumes:
       - name: paperless-data
-        emptyDir: {}
+        PersistentVolumeClaim:
+          claimName: paperless-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: ""
+  volumeName: k8s-apps
 
 
 # PVs: data
