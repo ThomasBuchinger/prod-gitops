@@ -64,13 +64,16 @@ spec:
             memory: 400Mi
           limits: {}
         securityContext:
-          allowPrivilegeEscalation: true
+          allowPrivilegeEscalation: false
           capabilities:
+            add:
+            - CHOWN
             drop:
-              - ALL
+            - ALL
           runAsGroup: 1001
           runAsNonRoot: true
           runAsUser: 1001
+          fsGroup: 1001
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
