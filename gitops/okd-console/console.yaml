@@ -27,6 +27,7 @@ subjects:
   name: okd-console
   namespace: okd-console
 
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -44,20 +45,30 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - 'Pod'
+  - 'pods'
   verbs:
   - get
   - list
   - watch
+  - update
   - delete
+- apiGroups:
+  - ''
+  resources:
+  - 'deployments'
+  - 'statefulsets'
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - scale
 - nonResourceURLs:
   - '*'
   verbs:
   - get
   - list
   - watch
-
-
 
 ---
 apiVersion: apps/v1
