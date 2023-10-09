@@ -25,6 +25,29 @@ data:
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
   PAPERLESS_PORT: "8000"
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ingress-secret
+  namespace: argocd
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: eso-paperless-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: PAPERLESS_ADMIN_USER
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_user
+  - secretKey: PAPERLESS_ADMIN_PASSWORD
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_password
 
 ---
 apiVersion: apps/v1
@@ -55,6 +78,8 @@ spec:
         envFrom:
         - configMapRef:
             name: paperless-env
+        - secretRef:
+            name: eso-paperless-credentials
         ports:
         - name: http
           containerPort: 8000
