@@ -123,7 +123,7 @@ spec:
           name: paperless-data
       volumes:
       - name: paperless-data
-        PersistentVolumeClaim:
+        persistentVolumeClaim:
           claimName: paperless-data
 ---
 apiVersion: v1
