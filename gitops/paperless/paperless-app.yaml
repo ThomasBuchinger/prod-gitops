@@ -82,11 +82,11 @@ spec:
         securityContext:
           # allowPrivilegeEscalation: false
           capabilities:
-          #   # add:
-          #   # - CHOWN
-          #   # # - SET_UID
-          #   # # - SET_GID
-          #   # - FOWNER
+            add:
+            - CHOWN
+            # - SET_UID
+            # - SET_GID
+            - FOWNER
             drop:
             - ALL
           seccompProfile:
