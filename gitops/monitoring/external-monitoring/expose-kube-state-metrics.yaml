@@ -1,0 +1,19 @@
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: expose-kube-state-metrics
+  namespace: monitoring
+spec:
+  rules:
+  - host: "kube-state-metrics.10.0.0.21.nip.io"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: prometheus-kube-state-metrics
+            port:
+              number: 8080

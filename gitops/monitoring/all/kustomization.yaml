@@ -6,3 +6,4 @@ resources:
 - ../grafana
 - ../prometheus
 - ../metrics-server
+- ../external-monitoring
