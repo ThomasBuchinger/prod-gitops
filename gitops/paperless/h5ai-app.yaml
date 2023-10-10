@@ -78,7 +78,7 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    port: 8000
+    port: 80
     targetPort: http
 
 ---
@@ -98,9 +98,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: paperless
+            name: h5ai-paperless
             port:
-              number: 8000
+              number: 80
   - host: files.10.0.0.21.nip.io
     http:
       paths:
@@ -108,7 +108,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: paperless
+            name: h5ai-paperless
             port:
-              number: 8000
+              number: 80
 
