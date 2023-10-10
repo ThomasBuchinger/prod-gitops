@@ -16,11 +16,11 @@ spec:
       labels:
         app.kubernetes.io/name: h5ai
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1001
-        runAsGroup: 1001
-        fsGroup: 1001
+      # securityContext:
+      #   runAsNonRoot: true
+      #   runAsUser: 1001
+      #   runAsGroup: 1001
+      #   fsGroup: 1001
       automountServiceAccountToken: true
       containers:
       - name: h5ai
@@ -48,13 +48,13 @@ spec:
             cpu: 5m
             memory: 20Mi
           limits: {}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop:
+        #     - ALL
+        #   seccompProfile:
+        #     type: RuntimeDefault
         volumeMounts:
         - mountPath: /data
           name: paperless-data
