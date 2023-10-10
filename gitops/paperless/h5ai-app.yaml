@@ -56,7 +56,7 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - mountPath: /h5ai/paperless
+        - mountPath: /h5ai
           name: paperless-data
           readOnly: true
       volumes:
@@ -94,7 +94,7 @@ spec:
   - host: files.prod.buc.sh
     http:
       paths:
-      - path: /paperless
+      - path: /
         pathType: Prefix
         backend:
           service:
@@ -104,7 +104,7 @@ spec:
   - host: files.10.0.0.21.nip.io
     http:
       paths:
-      - path: /paperless
+      - path: /
         pathType: Prefix
         backend:
           service:
