@@ -18,4 +18,3 @@ helmCharts:
 resources:
 - paperless-app.yaml
 - k8s-apps-pv.yaml
-- h5ai-app.yaml
