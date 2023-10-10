@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+spec:
+  generators:
+  - list:
+      elements:
+      - name: h5ai
+        rev: paperless
+        path: gitops/h5ai
+        wave: "1"
+  template:
+    metadata:
+      name: '{{name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{wave}}'
+    spec:
+      project: apps
+      source:
+        repoURL: https://github.com/thomasbuchinger/prod-gitops
+        targetRevision: '{{rev}}'
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated: {}
+        syncOptions:
+        - ServerSideApply=true
