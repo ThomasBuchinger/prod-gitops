@@ -56,7 +56,7 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - mountPath: /h5ai/
+        - mountPath: /h5ai/paperless
           name: paperless-data
           readOnly: true
       volumes:
