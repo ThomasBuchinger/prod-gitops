@@ -30,6 +30,10 @@ spec:
         rev: paperless
         path: gitops/paperless
         wave: "1"
+      - name: shared
+        rev: paperless
+        path: gitops/shared
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
