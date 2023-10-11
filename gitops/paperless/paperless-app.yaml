@@ -137,14 +137,7 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: ""
-  volumeName: k8s-apps
-
-
-# PVs: data
-# or SQlite: litestream+s3?
-
-# tls-Ingress: paperless.buc.sh
-# ESO Secret: Certificate, username/password
+  volumeName: paperless
 
 ---
 apiVersion: v1
@@ -173,23 +166,56 @@ metadata:
     app.kubernetes.io/name: paperless
 spec:
   rules:
-  - host: paperless.prod.buc.sh
-    http:
-      paths:
-      - backend:
-          service:
-            name: paperless
-            port:
-              number: 8000
-        path: /
-        pathType: Prefix
   - host: paperless.10.0.0.21.nip.io
     http:
       paths:
-      - backend:
+      - path: /
+        pathType: Prefix
+        backend:
           service:
             name: paperless
             port:
               number: 8000
-        path: /
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: paperless-cert
+  namespace: paperless
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-paperless-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-paperless-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paperless-tls
+  namespace: argocd
+spec:
+  tls:
+  - hosts:
+      - paperless.buc.sh
+    secretName: cert-paperless-buc-sh
+  rules:
+  - host: "paperless.buc.sh"
+    http:
+      paths:
+      - path: "/"
         pathType: Prefix
+        backend:
+          service:
+            name: paperless
+            port:
+              number: 8000
