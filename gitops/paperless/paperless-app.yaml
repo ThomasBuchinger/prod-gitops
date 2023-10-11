@@ -12,10 +12,9 @@ data:
   # PAPERLESS_OCR_LANGUAGES: eng deu
   # Lanugaes to use
   PAPERLESS_OCR_LANGUAGE: deu
-  # USERMAP_UID: "1001"
-  # USERMAP_GID: "1001"
   PAPERLESS_TIME_ZONE: Europe/Vienna
   PAPERLESS_DBENGINE: sqlite
+  PAPERLESS_PORT: "8000"
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{created}_{title}'
   # Database and other internals
   PAPERLESS_DATA_DIR: /data/data
@@ -24,7 +23,7 @@ data:
   # PAPERLESS_TRASH_DIR: /data/media/Trash
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
-  PAPERLESS_PORT: "8000"
+
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -125,20 +124,6 @@ spec:
       - name: paperless-data
         persistentVolumeClaim:
           claimName: paperless-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: paperless-data
-spec:
-  accessModes:
-    - ReadOnlyMany
-  resources:
-    requests:
-      storage: 50Gi
-  storageClassName: ""
-  volumeName: paperless
-
 ---
 apiVersion: v1
 kind: Service
