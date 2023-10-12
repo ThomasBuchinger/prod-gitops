@@ -22,8 +22,9 @@ data:
   # PAPERLESS_TRASH_DIR: /data/media/Trash
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
-  PAPERLESS_PORT: "8000"             # Overwrite K8s variable, used by gunicorn
-  PAPERLESS_URL: paperless.buc.sh    # Fix CSRF issue, when using https (http works) 
+  PAPERLESS_PORT: "8000"                     # Overwrite K8s variable, used by gunicorn
+  PAPERLESS_URL: https://paperless.buc.sh    # Fix CSRF issue, when using https (http works) 
+  
 
 ---
 apiVersion: external-secrets.io/v1beta1
