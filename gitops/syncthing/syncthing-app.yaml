@@ -1,6 +1,49 @@
-
-
-
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: syncthing-credentials
+  namespace: syncthing
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: eso-syncthing-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: ADMIN_USER
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_user
+      conversionStrategy: Default
+      decodingStrategy: None
+  - secretKey: ADMIN_PASSWORD
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: syncthing-application
+  namespace: syncthing
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: eso-syncthing-application
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: access/syncthing
 
 ---
 apiVersion: apps/v1
@@ -28,18 +71,14 @@ spec:
         # - --gui-apikey=ZAUBqGHpatCwpKzFaKH5
         image: docker.io/syncthing/syncthing:1.25
         imagePullPolicy: IfNotPresent
-        # livenessProbe:
-        #   failureThreshold: 3
-        #   httpGet:
-        #     httpHeaders:
-        #     - name: X-API-Key
-        #       value: ZAUBqGHpatCwpKzFaKH5
-        #     path: /rest/system/ping
-        #     port: http
-        #     scheme: HTTP
-        #   periodSeconds: 10
-        #   successThreshold: 1
-        #   timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /rest/noauth/health
+            port: http
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
         ports:
         - containerPort: 8384
           name: http
@@ -61,12 +100,12 @@ spec:
             cpu: 10m
             memory: 60M
         volumeMounts:
-        # - mountPath: /etc/syncthing/key.pem
-        #   name: tls-config
-        #   subPath: tls.key
-        # - mountPath: /etc/syncthing/cert.pem
-        #   name: tls-config
-        #   subPath: tls.crt
+        - mountPath: /etc/syncthing/key.pem
+          name: tls-config
+          subPath: tls.key
+        - mountPath: /etc/syncthing/cert.pem
+          name: tls-config
+          subPath: tls.crt
         - mountPath: /etc/syncthing/
           name: config-root
         - mountPath: /var/syncthing/
@@ -77,6 +116,9 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
+      - name: tls-config
+        secret:
+          secretName: eso-syncthing-application
       - name: config-root
         emptyDir: {}
       - name: data-root
@@ -89,10 +131,53 @@ metadata:
   name: syncthing
   namespace: syncthing
 spec:
+  selector:
+    app.kubernetes.io/app: syncthing
+  type: ClusterIP
   ports:
   - name: http
     port: 8384
     targetPort: http
-  selector:
-    app.kubernetes.io/app: syncthing
-  type: ClusterIP
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: syncthing-cert
+  namespace: syncthing
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-syncthing-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-syncthing-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: syncthing-tls
+  namespace: syncthing
+spec:
+  tls:
+  - hosts:
+      - syncthing.buc.sh
+    secretName: cert-syncthing-buc-sh
+  rules:
+  - host: "syncthing.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: syncthing
+            port:
+              number: 8000
