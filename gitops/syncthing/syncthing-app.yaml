@@ -6,11 +6,11 @@ metadata:
 data:
   init.sh: |-
     #!/bin/sh
-
     DIR=/var/syncthing
+    set -eu
+
     mkdir -p $DIR/config
     syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
-    syncthing
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
 
