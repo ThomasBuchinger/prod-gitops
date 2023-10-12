@@ -187,7 +187,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: paperless-tls
-  namespace: argocd
+  namespace: paperless
 spec:
   tls:
   - hosts:
