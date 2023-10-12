@@ -9,7 +9,8 @@ data:
 
     DIR=/var/syncthing
     mkdir -p $DIR/config
-    syncthing generate --home $DIR/config --gui-user=admin --gui-password=adminadmin --no-default-folder
+    syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
+    syncthing
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
 
@@ -88,11 +89,16 @@ spec:
         - /scripts/init.sh
         image: docker.io/syncthing/syncthing:1.25
         env:
-        # - name: TLS_CRT
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: eso-syncthing-application
-        #       key: tls.crt
+        - name: ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-credentials
+              key: ADMIN_USER
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-credentials
+              key: ADMIN_PASSWORD
         volumeMounts:
         - name: scripts
           mountPath: /scripts
@@ -110,14 +116,12 @@ spec:
         # - --gui-apikey=ZAUBqGHpatCwpKzFaKH5
         image: docker.io/syncthing/syncthing:1.25
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /rest/noauth/health
-            port: http
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
+        env:
+        - name: STGUIAPIKEY
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-application
+              key: apikey
         ports:
         - containerPort: 8384
           name: http
@@ -141,6 +145,14 @@ spec:
         volumeMounts:
         - mountPath: /var/syncthing/
           name: data-root
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /rest/noauth/health
+            port: http
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
