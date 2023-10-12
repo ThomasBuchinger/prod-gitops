@@ -31,6 +31,22 @@ spec:
       decodingStrategy: None
       key: access/nas
 
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-data
+  namespace: syncthing
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ""
+  volumeName: syncthing
+
 ---
 apiVersion: v1
 kind: PersistentVolume

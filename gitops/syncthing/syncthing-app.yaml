@@ -176,24 +176,9 @@ spec:
           name: syncthing-init
       - name: config-root
         emptyDir: {}
-        # persistentVolumeClaim:
-        #   claimName: syncthing-config
       - name: data-root
-        emptyDir: {}
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: syncthing-config
-  namespace: syncthing
-spec:
-  storageClassName: "local-path"
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+        persistentVolumeClaim:
+          claimName: syncthing-data
 
 ---
 apiVersion: v1
