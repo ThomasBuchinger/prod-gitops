@@ -9,13 +9,12 @@ data:
 
     DIR=/var/syncthing
     mkdir -p $DIR/config
-    echo -n $TLS_CRT > $DIR/config/cert.pem
-    echo -n $TLS_key > $DIR/config/key.pem
+    syncthing generate --home $DIR --gui-user=admin --gui-password=adminadmin --no-default-folder
+    cp -f /tls-config/tls.crt $DIR/config/cert.pem
+    cp -f /tls-config/tls.key $DIR/config/key.pem
 
     cat $DIR/config/cert.pem
     ls -lR $DIR
-
-    syncthing generate --home $DIR --gui-user=admin --gui-password=adminadmin --no-default-folder
 
 ---
 apiVersion: external-secrets.io/v1beta1
@@ -89,21 +88,18 @@ spec:
         - /scripts/init.sh
         image: docker.io/syncthing/syncthing:1.25
         env:
-        - name: TLS_CRT
-          valueFrom:
-            secretKeyRef:
-              name: eso-syncthing-application
-              key: tls.crt
-        - name: TLS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: eso-syncthing-application
-              key: tls.key
+        # - name: TLS_CRT
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: eso-syncthing-application
+        #       key: tls.crt
         volumeMounts:
-        - mountPath: /var/syncthing/
-          name: data-root
-        - mountPath: /scripts
-          name: scripts
+        - name: scripts
+          mountPath: /scripts
+        - name: tls-config
+          mountPath: /tls-config
+        - name: data-root
+          mountPath: /var/syncthing/
       containers:
       - name: syncthing
         # command:
