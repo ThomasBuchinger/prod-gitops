@@ -9,10 +9,11 @@ data:
 
     DIR=/var/syncthing
     mkdir -p $DIR/config
-    echo $TLS_CRT > $DIR/config/cert.pem
-    echo $TLS_key > $DIR/config/key.pem
+    echo -n $TLS_CRT > $DIR/config/cert.pem
+    echo -n $TLS_key > $DIR/config/key.pem
 
-    echo $TLS_CRT
+    cat $DIR/config/cert.pem
+    ls -lR
 
     syncthing generate --gui-user=admin --gui-password=adminadmin --no-default-folder
 
