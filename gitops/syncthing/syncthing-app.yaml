@@ -153,7 +153,7 @@ spec:
           secretName: eso-syncthing-application
       - name: scripts
         configMap:
-          configMapName: syncthing-init
+          name: syncthing-init
       - name: config-root
         emptyDir: {}
       - name: data-root
