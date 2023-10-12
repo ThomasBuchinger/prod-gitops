@@ -3,6 +3,5 @@ kind: Kustomization
 
 resources:
 # - operator.yaml
-- additional-resources.yaml
 - syncthing-app.yaml
 - syncthing-pv.yaml
