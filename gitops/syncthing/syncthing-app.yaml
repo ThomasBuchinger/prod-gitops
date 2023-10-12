@@ -10,12 +10,11 @@ data:
     set -eu
 
     mkdir -p $DIR/config
-    syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
+    test -f $DIR/config/config.xml && syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
 
-    cat $DIR/config/cert.pem
-    ls -laR $DIR
+    find $DIR
 
 ---
 apiVersion: external-secrets.io/v1beta1
@@ -108,12 +107,6 @@ spec:
           mountPath: /var/syncthing/
       containers:
       - name: syncthing
-        # command:
-        # - syncthing
-        # - serve
-        # - --config=/etc/syncthing/
-        # - --data=/var/syncthing/
-        # - --gui-apikey=ZAUBqGHpatCwpKzFaKH5
         image: docker.io/syncthing/syncthing:1.25
         imagePullPolicy: IfNotPresent
         env:
@@ -166,9 +159,24 @@ spec:
         configMap:
           name: syncthing-init
       - name: config-root
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: syncthing-config
       - name: data-root
         emptyDir: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-config
+  namespace: syncthing
+spec:
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 
 ---
 apiVersion: v1
