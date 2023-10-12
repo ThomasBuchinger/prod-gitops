@@ -102,10 +102,10 @@ spec:
             cpu: 10m
             memory: 60M
         volumeMounts:
-        - mountPath: /etc/syncthing/key.pem
+        - mountPath: /var/syncthing/config/key.pem
           name: tls-config
           subPath: tls.key
-        - mountPath: /etc/syncthing/cert.pem
+        - mountPath: /var/syncthing/config/cert.pem
           name: tls-config
           subPath: tls.crt
         - mountPath: /etc/syncthing/
