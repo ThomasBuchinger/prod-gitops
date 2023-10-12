@@ -1,0 +1,98 @@
+
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+  namespace: syncthing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: syncthing
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: syncthing
+    spec:
+      containers:
+      - name: syncthing
+        # command:
+        # - syncthing
+        # - serve
+        # - --config=/etc/syncthing/
+        # - --data=/var/syncthing/
+        # - --gui-apikey=ZAUBqGHpatCwpKzFaKH5
+        image: docker.io/syncthing/syncthing:1.25
+        imagePullPolicy: IfNotPresent
+        # livenessProbe:
+        #   failureThreshold: 3
+        #   httpGet:
+        #     httpHeaders:
+        #     - name: X-API-Key
+        #       value: ZAUBqGHpatCwpKzFaKH5
+        #     path: /rest/system/ping
+        #     port: http
+        #     scheme: HTTP
+        #   periodSeconds: 10
+        #   successThreshold: 1
+        #   timeoutSeconds: 1
+        ports:
+        - containerPort: 8384
+          name: http
+          protocol: TCP
+        - containerPort: 22000
+          name: sync
+          protocol: UDP
+          hostPort: 22000
+        - containerPort: 22000
+          name: sync-tcp
+          protocol: TCP
+          hostPort: 22000
+        - containerPort: 21027
+          name: discovery
+          protocol: TCP
+          hostPort: 21027
+        resources:
+          requests:
+            cpu: 10m
+            memory: 60M
+        volumeMounts:
+        # - mountPath: /etc/syncthing/key.pem
+        #   name: tls-config
+        #   subPath: tls.key
+        # - mountPath: /etc/syncthing/cert.pem
+        #   name: tls-config
+        #   subPath: tls.crt
+        - mountPath: /etc/syncthing/
+          name: config-root
+        - mountPath: /var/syncthing/
+          name: data-root
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: config-root
+        emptyDir: {}
+      - name: data-root
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing
+  namespace: syncthing
+spec:
+  ports:
+  - name: http
+    port: 8384
+    targetPort: http
+  selector:
+    app.kubernetes.io/app: syncthing
+  type: ClusterIP
