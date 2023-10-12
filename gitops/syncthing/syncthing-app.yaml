@@ -12,7 +12,9 @@ data:
     echo $TLS_CRT > $DIR/config/cert.pem
     echo $TLS_key > $DIR/config/key.pem
 
-    syncthing generate --home $DIR --gui-user=admin --gui-password=adminadmin --no-default-folder
+    echo $TLS_CRT
+
+    syncthing generate --gui-user=admin --gui-password=adminadmin --no-default-folder
 
 ---
 apiVersion: external-secrets.io/v1beta1
