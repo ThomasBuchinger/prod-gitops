@@ -138,15 +138,12 @@ spec:
         - containerPort: 22000
           name: sync
           protocol: UDP
-          hostPort: 22000
         - containerPort: 22000
           name: sync-tcp
           protocol: TCP
-          hostPort: 22000
         - containerPort: 21027
           name: discovery
           protocol: TCP
-          hostPort: 21027
         resources:
           requests:
             cpu: 10m
@@ -162,6 +159,7 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
+      hostnetwork: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
