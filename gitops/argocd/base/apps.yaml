@@ -15,7 +15,7 @@ spec:
         path: gitops/argocd/additional_config
         wave: "2"
       - name: local-path-storage
-        rev: main
+        rev: syncthing
         path: gitops/local-path-storage/base
         wave: "1"
       - name: okd-console
