@@ -167,7 +167,7 @@ spec:
         fsGroup: 1000
         sysctls:
         - name: fs.inotify.max_user_watches
-          value: 204800
+          value: "204800"
       volumes:
       - name: tls-config
         secret:
