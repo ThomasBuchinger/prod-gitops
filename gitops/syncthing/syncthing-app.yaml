@@ -21,7 +21,7 @@ data:
     mkdir -p $DIR/config
     if [ ! -f $DIR/config/config.xml ]; then
         syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
-        sed -i -e 's|<urAccepted>3</urAccepted>|<urAccepted>0</urAccepted>' -e 's|<urSeen>3</urSeen>|<urSeen>0</urSeen>' $DIR/config/config.xml
+        sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>' $DIR/config/config.xml
     fi
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
