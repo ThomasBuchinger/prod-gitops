@@ -159,7 +159,7 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-      hostnetwork: true
+      hostNetwork: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
