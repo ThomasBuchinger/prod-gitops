@@ -13,7 +13,7 @@ build: talos-config kubeseal
 bin/talosctl:
 	@echo "Installing talosctl to $(TALOSCTL)"
 	mkdir -p bin
-	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.4.0/talosctl-linux-amd64
+	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.5.0/talosctl-linux-amd64
 	chmod +x $(TALOSCTL)
 
 $(OUTPUT_DIR)/talos-secrets.yaml:

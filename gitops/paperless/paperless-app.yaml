@@ -1,0 +1,206 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: paperless-env
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+data:
+  COMPOSE_PROJECT_NAME: paperless
+  PAPERLESS_REDIS: redis://redis-ephemeral-headless
+  # Languages to install
+  # PAPERLESS_OCR_LANGUAGES: eng deu
+  # Lanugaes to use
+  PAPERLESS_OCR_LANGUAGE: deu
+  PAPERLESS_TIME_ZONE: Europe/Vienna
+  PAPERLESS_DBENGINE: sqlite
+  PAPERLESS_PORT: "8000"
+  PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{created}_{title}'
+  # Database and other internals
+  PAPERLESS_DATA_DIR: /data/data
+  # Storage for documents
+  PAPERLESS_MEDIA_ROOT: /data/media
+  # PAPERLESS_TRASH_DIR: /data/media/Trash
+  # Not really used, but we put it on the PV anyway
+  PAPERLESS_CONSUMPTION_DIR: /data/in
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: paperless-credentials
+  namespace: paperless
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: eso-paperless-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: PAPERLESS_ADMIN_USER
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_user
+      conversionStrategy: Default
+      decodingStrategy: None
+  - secretKey: PAPERLESS_ADMIN_PASSWORD
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: paperless
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: paperless
+    spec:
+      securityContext:
+        runAsNonRoot: false
+        fsGroup: 1001
+      automountServiceAccountToken: true
+      containers:
+      - name: paperless
+        image:  ghcr.io/paperless-ngx/paperless-ngx:latest
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: paperless-env
+        - secretRef:
+            name: eso-paperless-credentials
+        ports:
+        - name: http
+          containerPort: 8000
+        livenessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          tcpSocket:
+            port: 8000
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          tcpSocket:
+            port: 8000
+        resources:
+          requests:
+            cpu: 50m
+            memory: 400Mi
+          limits: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - CHOWN
+            - SETUID
+            - SETGID
+            - FOWNER
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /data
+          name: paperless-data
+      volumes:
+      - name: paperless-data
+        persistentVolumeClaim:
+          claimName: paperless-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+spec:
+  selector:
+    app.kubernetes.io/name: paperless
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8000
+    targetPort: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paperless-http
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+spec:
+  rules:
+  - host: paperless.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: paperless
+            port:
+              number: 8000
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: paperless-cert
+  namespace: paperless
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-paperless-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-paperless-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paperless-tls
+  namespace: paperless
+spec:
+  tls:
+  - hosts:
+      - paperless.buc.sh
+    secretName: cert-paperless-buc-sh
+  rules:
+  - host: "paperless.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: paperless
+            port:
+              number: 8000

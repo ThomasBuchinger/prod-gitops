@@ -27,12 +27,8 @@ spec:
         path: gitops/monitoring/all
         wave: "1"
       - name: paperless
-        rev: paperless
+        rev: main
         path: gitops/paperless
-        wave: "1"
-      - name: shared
-        rev: paperless
-        path: gitops/shared
         wave: "2"
   template:
     metadata:
