@@ -87,13 +87,15 @@ spec:
         image: docker.io/syncthing/syncthing:1.25
         env:
         - name: TLS_CRT
-          secretKeyRef:
-            name: tls-config
-            key: tls.crt
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-application
+              key: tls.crt
         - name: TLS_KEY
-          secretKeyRef:
-            name: tls-config
-            key: tls.key
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-application
+              key: tls.key
         volumeMounts:
         - mountPath: /var/syncthing/
           name: data-root
