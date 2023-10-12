@@ -9,12 +9,12 @@ data:
 
     DIR=/var/syncthing
     mkdir -p $DIR/config
-    syncthing generate --data $DIR/Sync --config $DIR/config --gui-user=admin --gui-password=adminadmin --no-default-folder
+    syncthing generate --config $DIR/config --gui-user=admin --gui-password=adminadmin --no-default-folder
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
 
     cat $DIR/config/cert.pem
-    ls -lR $DIR
+    ls -laR $DIR
 
 ---
 apiVersion: external-secrets.io/v1beta1
