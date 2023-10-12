@@ -19,7 +19,10 @@ data:
     set -eu
 
     mkdir -p $DIR/config
-    test -f $DIR/config/config.xml && syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
+    if [ -f $DIR/config/config.xml ]; then
+        syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
+        sed -i -e 's|<urAccepted>3</urAccepted>|<urAccepted>0</urAccepted>' -e 's|<urSeen>3</urSeen>|<urSeen>0</urSeen>' $DIR/config/config.xml
+    fi
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
 
@@ -172,8 +175,9 @@ spec:
         configMap:
           name: syncthing-init
       - name: config-root
-        persistentVolumeClaim:
-          claimName: syncthing-config
+        emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: syncthing-config
       - name: data-root
         emptyDir: {}
 
