@@ -13,9 +13,9 @@ data:
     echo -n $TLS_key > $DIR/config/key.pem
 
     cat $DIR/config/cert.pem
-    ls -lR
+    ls -lR $DIR
 
-    syncthing generate --gui-user=admin --gui-password=adminadmin --no-default-folder
+    syncthing generate --home $DIR --gui-user=admin --gui-password=adminadmin --no-default-folder
 
 ---
 apiVersion: external-secrets.io/v1beta1
@@ -82,6 +82,11 @@ spec:
       labels:
         app.kubernetes.io/app: syncthing
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       initContainers:
       - name: gen-config
         command:
