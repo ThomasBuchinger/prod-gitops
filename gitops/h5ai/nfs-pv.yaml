@@ -39,14 +39,12 @@ metadata:
   namespace: h5ai
 spec:
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteMany
   resources:
     requests:
       storage: 4Ti
   storageClassName: ""
   volumeName: nfs-files
-
-
 
 ---
 apiVersion: v1
