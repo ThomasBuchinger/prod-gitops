@@ -76,8 +76,6 @@ spec:
         volumeMounts:
         - name: h5ai-config
           mountPath: /myconfig
-          # mountPath: /usr/share/h5ai/my_h5ai/private/conf/options.json
-          # subPath: options.json
         - mountPath: /h5ai/syncthing
           name: syncthing-data
           readOnly: true
