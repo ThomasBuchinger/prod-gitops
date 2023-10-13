@@ -1,37 +1,4 @@
 ---
-# apiVersion: external-secrets.io/v1beta1
-# kind: ExternalSecret
-# metadata:
-#   name: nas-credentials
-#   namespace: paperless
-# spec:
-#   refreshInterval: 1h
-#   secretStoreRef:
-#     name: vault-approle-secret
-#     kind: ClusterSecretStore
-#   target:
-#     name: eso-nas-credentials
-#     creationPolicy: Owner
-#     template:
-#       type: "kubernetes.io/iscsi-chap"
-#       data:
-#         # Authenticate Kubernetes to NAS
-#         discovery.sendtargets.auth.username: "{{ .iscsi_user }}"
-#         discovery.sendtargets.auth.password: "{{ .iscsi_password }}"
-#         node.session.auth.username: "{{ .iscsi_user }}"
-#         node.session.auth.password: "{{ .iscsi_password }}"
-#         # Not Needed: mutual CHAP-authentication
-#         discovery.sendtargets.auth.username_in: ""
-#         discovery.sendtargets.auth.password_in: ""
-#         node.session.auth.username_in: ""
-#         node.session.auth.password_in: ""
-#   dataFrom:
-#   - extract:
-#       conversionStrategy: Default
-#       decodingStrategy: None
-#       key: access/nas
-
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
