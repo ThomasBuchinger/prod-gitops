@@ -70,7 +70,7 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - mountPath: /h5ai/syncthing
+        - mountPath: /h5ai
           name: syncthing-data
           readOnly: true
       volumes:
@@ -122,6 +122,16 @@ spec:
     http:
       paths:
       - path: /syncthing
+        pathType: Prefix
+        backend:
+          service:
+            name: h5ai-syncthing
+            port:
+              number: 80
+  - host: sync-files.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
