@@ -58,8 +58,8 @@ spec:
             - CHOWN
             - DAC_OVERRIDE
             - FOWNER
-            drop:
-            - ALL
+            # drop:
+            # - ALL
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
