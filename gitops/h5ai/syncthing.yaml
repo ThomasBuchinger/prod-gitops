@@ -70,10 +70,16 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - mountPath: /h5ai
+        - name: h5ai-config
+          mountPath: /usr/share/nginx/html/_h5ai/private/conf/options.json
+          subPath: options.json
+        - mountPath: /h5ai/syncthing
           name: syncthing-data
           readOnly: true
       volumes:
+      - name: h5ai-config
+        configMap:
+          name: h5ai-syncthing-config
       - name: syncthing-data
         persistentVolumeClaim:
           claimName: syncthing-data
@@ -128,14 +134,3 @@ spec:
             name: h5ai-syncthing
             port:
               number: 80
-  - host: sync-files.10.0.0.21.nip.io
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: h5ai-syncthing
-            port:
-              number: 80
-
