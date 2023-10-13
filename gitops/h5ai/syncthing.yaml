@@ -29,6 +29,11 @@ spec:
       - name: h5ai
         image:  awesometic/h5ai
         imagePullPolicy: IfNotPresent
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
         ports:
         - name: http
           containerPort: 80
