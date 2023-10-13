@@ -23,7 +23,7 @@ spec:
       #   runAsNonRoot: true
       #   runAsUser: 1001
       #   runAsGroup: 1001
-      #   fsGroup: 1001
+        # fsGroup: 0
       automountServiceAccountToken: true
       containers:
       - name: h5ai
@@ -51,11 +51,15 @@ spec:
             cpu: 5m
             memory: 20Mi
           limits: {}
-        # securityContext:
+        securityContext:
         #   allowPrivilegeEscalation: false
-        #   capabilities:
-        #     drop:
-        #     - ALL
+          capabilities:
+            add:
+            - CHOWN
+            - DAC_OVERRIDE
+            - FOWNER
+            drop:
+            - ALL
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
