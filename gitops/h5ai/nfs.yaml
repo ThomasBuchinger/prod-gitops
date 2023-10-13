@@ -60,11 +60,12 @@ spec:
         #     type: RuntimeDefault
         volumeMounts:
         - mountPath: /h5ai/nfs
-          name: dummy
+          name: nfs-data
           readOnly: true
       volumes:
-      - name: dummy
-        emptyDir: {}
+      - name: nfs-data
+        persistentVolumeClaim:
+          claimName: nfs-data
 ---
 apiVersion: v1
 kind: Service
