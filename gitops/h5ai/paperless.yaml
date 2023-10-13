@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: h5ai
+  name: h5ai-paperless
   namespace: paperless
   labels:
     app.kubernetes.io/instance: paperless
@@ -90,7 +90,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: h5ai-aperless
+  name: h5ai-paperless
   namespace: paperless
   labels:
     app.kubernetes.io/instance: paperless
