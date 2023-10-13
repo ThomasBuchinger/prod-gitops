@@ -27,7 +27,7 @@ spec:
       automountServiceAccountToken: true
       containers:
       - name: h5ai
-        image:  awesometic/h5ai
+        image:  nginx
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -59,7 +59,7 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - mountPath: /h5ai/paperless
+        - mountPath: /usr/share/nginx/html/paperless
           name: paperless-data
           readOnly: true
       volumes:
