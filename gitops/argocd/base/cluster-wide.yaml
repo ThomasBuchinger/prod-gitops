@@ -7,7 +7,7 @@ spec:
   - list:
       elements:
       - name: h5ai
-        rev: main
+        rev: h5ai
         path: gitops/h5ai
         wave: "1"
   template:
