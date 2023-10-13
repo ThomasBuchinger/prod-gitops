@@ -2,6 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-# - operator.yaml
+# - https://github.com/thomasbuchinger/syncthing-operator/config/default?timeout=120&ref=main
 - syncthing-app.yaml
 - syncthing-pv.yaml
