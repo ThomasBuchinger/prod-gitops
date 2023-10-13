@@ -71,6 +71,9 @@ spec:
         - mountPath: /h5ai/syncthing
           name: dummy
           readOnly: true
+        - mountPath: /h5ai/nfs
+          name: dummy
+          readOnly: true
       volumes:
       - name: dummy
         emptyDir: {}
@@ -105,16 +108,6 @@ metadata:
 spec:
   rules:
   - host: files.prod.buc.sh
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: h5ai-root
-            port:
-              number: 80
-  - host: files.10.0.0.21.nip.io
     http:
       paths:
       - path: /

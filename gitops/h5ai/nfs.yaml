@@ -2,42 +2,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: h5ai-syncthing
-  namespace: syncthing
+  name: h5ai-nfs
+  namespace: h5ai
   labels:
-    app.kubernetes.io/instance: syncthing
+    app.kubernetes.io/instance: nfs
     app.kubernetes.io/name: h5ai
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: syncthing
+      app.kubernetes.io/instance: nfs
       app.kubernetes.io/name: h5ai
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: syncthing
+        app.kubernetes.io/instance: nfs
         app.kubernetes.io/name: h5ai
     spec:
       # securityContext:
       #   runAsNonRoot: true
       #   runAsUser: 1001
       #   runAsGroup: 1001
-        # fsGroup: 0
+      #   fsGroup: 1001
       automountServiceAccountToken: true
       containers:
       - name: h5ai
         image:  awesometic/h5ai
         imagePullPolicy: IfNotPresent
-        command:
-        - bash
-        - -c
-        - 'cp -f /myconfig/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
         ports:
         - name: http
           containerPort: 80
@@ -60,47 +51,32 @@ spec:
             cpu: 5m
             memory: 20Mi
           limits: {}
-        securityContext:
+        # securityContext:
         #   allowPrivilegeEscalation: false
-          capabilities:
-            add:
-            - CHOWN
-            - DAC_OVERRIDE
-            - SETUID
-            - SETGID
-            - FOWNER
-            # drop:
-            # - ALL
+        #   capabilities:
+        #     drop:
+        #     - ALL
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - name: h5ai-config
-          mountPath: /myconfig
-          # mountPath: /usr/share/h5ai/my_h5ai/private/conf/options.json
-          # subPath: options.json
-        - mountPath: /h5ai/syncthing
-          name: syncthing-data
+        - mountPath: /h5ai/nfs
+          name: dummy
           readOnly: true
       volumes:
-      - name: h5ai-config
-        configMap:
-          name: h5ai-syncthing-config
-      - name: syncthing-data
-        persistentVolumeClaim:
-          claimName: syncthing-data
-
+      - name: dummy
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: h5ai-syncthing
-  namespace: syncthing
+  name: h5ai-nfs
+  namespace: h5ai
   labels:
-    app.kubernetes.io/instance: syncthing
+    app.kubernetes.io/instance: nfs
     app.kubernetes.io/name: h5ai
 spec:
   selector:
-    app.kubernetes.io/instance: syncthing
+    app.kubernetes.io/instance: nfs
     app.kubernetes.io/name: h5ai
   ports:
   - name: http
@@ -112,20 +88,21 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: h5ai-syncthing
-  namespace: syncthing
+  name: h5ai-nfs
+  namespace: h5ai
   labels:
-    app.kubernetes.io/instance: syncthing
+    app.kubernetes.io/instance: nfs
     app.kubernetes.io/name: h5ai
 spec:
   rules:
   - host: files.prod.buc.sh
     http:
       paths:
-      - path: /syncthing
+      - path: /nfs
         pathType: Prefix
         backend:
           service:
-            name: h5ai-syncthing
+            name: h5ai-nfs
             port:
               number: 80
+

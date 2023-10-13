@@ -107,14 +107,3 @@ spec:
             name: h5ai-paperless
             port:
               number: 80
-  - host: files.10.0.0.21.nip.io
-    http:
-      paths:
-      - path: /paperless
-        pathType: Prefix
-        backend:
-          service:
-            name: h5ai-paperless
-            port:
-              number: 80
-
