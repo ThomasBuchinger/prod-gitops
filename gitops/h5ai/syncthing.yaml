@@ -119,7 +119,7 @@ metadata:
     app.kubernetes.io/name: h5ai
 spec:
   rules:
-  - host: files.prod.buc.sh
+  - host: files.buc.sh
     http:
       paths:
       - path: /syncthing
