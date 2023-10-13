@@ -29,6 +29,10 @@ spec:
       - name: h5ai
         image:  awesometic/h5ai
         imagePullPolicy: IfNotPresent
+        command:
+        - bash
+        - -c
+        - 'cp -f /myconfig/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
         env:
         - name: PUID
           value: "3000"
@@ -70,10 +74,15 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
+        - name: h5ai-config
+          mountPath: /myconfig
         - mountPath: /h5ai/nfs
           name: nfs-data
           readOnly: true
       volumes:
+      - name: h5ai-config
+        configMap:
+          name: h5ai-nfs-config
       - name: nfs-data
         persistentVolumeClaim:
           claimName: nfs-data
