@@ -5,7 +5,7 @@ metadata:
   name: h5ai-syncthing-config
   namespace: syncthing
 data:
-  options.json: |-
+  options.json: |
     /* h5ai v0.30.0 - https://larsjung.de/h5ai/ */
     {
         /*
