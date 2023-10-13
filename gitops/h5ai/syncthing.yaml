@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: h5ai-paperless
-  namespace: paperless
+  name: h5ai-syncthing
+  namespace: syncthing
   labels:
-    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: h5ai
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: paperless
+      app.kubernetes.io/instance: syncthing
       app.kubernetes.io/name: h5ai
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: paperless
+        app.kubernetes.io/instance: syncthing
         app.kubernetes.io/name: h5ai
     spec:
       # securityContext:
@@ -59,26 +59,26 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - mountPath: /h5ai/paperless
-          name: paperless-data
+        - mountPath: /h5ai/syncthing
+          name: syncthing-data
           readOnly: true
       volumes:
-      - name: paperless-data
+      - name: syncthing-data
         persistentVolumeClaim:
-          claimName: paperless-data
+          claimName: syncthing-data
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: h5ai-paperless
-  namespace: paperless
+  name: h5ai-syncthing
+  namespace: syncthing
   labels:
-    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: h5ai
 spec:
   selector:
-    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: h5ai
   ports:
   - name: http
@@ -90,31 +90,31 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: h5ai-paperless
-  namespace: paperless
+  name: h5ai-syncthing
+  namespace: syncthing
   labels:
-    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/instance: syncthing
     app.kubernetes.io/name: h5ai
 spec:
   rules:
   - host: files.prod.buc.sh
     http:
       paths:
-      - path: /paperless
+      - path: /syncthing
         pathType: Prefix
         backend:
           service:
-            name: h5ai-paperless
+            name: h5ai-syncthing
             port:
               number: 80
   - host: files.10.0.0.21.nip.io
     http:
       paths:
-      - path: /paperless
+      - path: /syncthing
         pathType: Prefix
         backend:
           service:
-            name: h5ai-paperless
+            name: h5ai-syncthing
             port:
               number: 80
 
