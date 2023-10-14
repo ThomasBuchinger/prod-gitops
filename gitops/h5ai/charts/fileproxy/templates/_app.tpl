@@ -87,10 +87,6 @@ spec:
           name: {{ include "fileproxy.fullname" . }}-{{ .proxy.id }}-config
       {{- end }}
 
-
-
-
-
 ---
 apiVersion: v1
 kind: Service

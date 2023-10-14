@@ -18,8 +18,9 @@ helmCharts:
       namespace: paperless
       mounts:
       - path: /paperless
-        persistentVolumeClaim:
-          claimName: paperless-data
+        volume:
+          persistentVolumeClaim:
+            claimName: paperless-data
     - id: syncthing
       namespace: syncthing
       is_big: true
@@ -27,8 +28,9 @@ helmCharts:
         uid: 1000
       mounts:
       - path: /syncthing
-        persistentVolumeClaim:
-          claimName: syncthing-data
+        volume:
+          persistentVolumeClaim:
+            claimName: syncthing-data
     - id: nfs
       namespace: h5ai
       is_big: true
@@ -36,5 +38,6 @@ helmCharts:
         uid: 3000
       mounts:
       - path: /nfs
-        persistentVolumeClaim:
-          claimName: syncthing-data
+        volume:
+          persistentVolumeClaim:
+            claimName: syncthing-data

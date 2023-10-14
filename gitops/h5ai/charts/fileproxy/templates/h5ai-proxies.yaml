@@ -5,7 +5,7 @@
 
 {{- $globalContext := . -}}
 {{- range .Values.proxies }}
-
-  {{- include "fileproxy.h5ai" (merge (dict "proxy" .) $globalContext) }}
+---
+{{- include "fileproxy.h5ai" (merge (dict "proxy" .) $globalContext) }}
 
 {{- end }}

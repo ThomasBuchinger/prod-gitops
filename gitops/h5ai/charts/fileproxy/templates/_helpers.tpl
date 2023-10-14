@@ -101,7 +101,7 @@ VOLUMES: Configure Volumes for Proxies and/or main app
   {{ else }}
     {{- range .proxy.mounts }}
 - name: {{ .path | trimPrefix "/" | default "root" | quote }}
-  {{- .volume | toYaml | nindent 8}}
+  {{- .volume | toYaml | nindent 2}}
     {{- end }}
   {{- end }}
 {{- end }}
