@@ -40,4 +40,4 @@ helmCharts:
       - path: /nfs
         volume:
           persistentVolumeClaim:
-            claimName: syncthing-data
+            claimName: nfs-data
