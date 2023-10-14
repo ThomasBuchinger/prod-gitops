@@ -61,6 +61,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             add:
+            - CHOWN
             - DAC_OVERRIDE
             - SETUID
             - SETGID
