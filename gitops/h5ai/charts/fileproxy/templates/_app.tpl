@@ -16,15 +16,15 @@ metadata:
   labels:
     {{- include "fileproxy.labels" .  | nindent 4 }}
 spec:
+  replicas: 1
   selector:
     matchLabels:
       {{- include "fileproxy.selectorLabels" .  | nindent 6 }}
   template:
     metadata:
       labels:
-      {{- include "fileproxy.selectorLabels" .  | nindent 6 }}
+        {{- include "fileproxy.selectorLabels" .  | nindent 8 }}
     spec:
-      replicas: 1
       containers:
       - name: h5ai
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
@@ -124,23 +124,21 @@ spec:
       - path: /
         pathType: Prefix
         backend:
-        service:
-          name: {{ $svc_name }}-{{ $id }}
-          port:
-            name: http
+          service:
+            name: {{ $svc_name }}-{{ $id }}
+            port:
+              name: http
       {{ else }}
       {{- range .proxy.mounts }}
       - path: {{ .path }}
         pathType: Prefix
         backend:
-        service:
-          name: {{ $svc_name }}-{{ $id }}
-          port:
-            name: http
+          service:
+            name: {{ $svc_name }}-{{ $id }}
+            port:
+              name: http
       {{- end }}
       {{- end }}
-
-
 
 
 
