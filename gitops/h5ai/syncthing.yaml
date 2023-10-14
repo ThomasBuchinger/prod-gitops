@@ -29,10 +29,10 @@ spec:
       - name: h5ai
         image:  awesometic/h5ai
         imagePullPolicy: IfNotPresent
-        command:
-        - bash
-        - -c
-        - 'cp -f /myconfig/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
+        # command:
+        # - bash
+        # - -c
+        # - 'cp -f /myconfig/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
         # TODO
         # env:
         # - name: PUID
