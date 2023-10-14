@@ -1,9 +1,19 @@
+
+{{/*
+H5ai Configuration file for Big Shares
+
+Mostly disables calculating the folder size
+*/}}
+
+{{- define "fileproxy.bigShareConfig" -}}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: h5ai-syncthing-config
-  namespace: syncthing
+  name: {{ include "fileproxy.fullname" . }}-{{ .proxy.id }}-config
+  namespace: {{ .proxy.namespace }}
+  labels:
+    {{- include "fileproxy.labels" .  | nindent 4 }}
 data:
   options.json: |
     /* h5ai v0.30.0 - https://larsjung.de/h5ai/ */
@@ -407,3 +417,4 @@ data:
             "ignorecase": true
         }
     }
+{{- end }}

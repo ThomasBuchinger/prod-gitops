@@ -1,0 +1,23 @@
+image:
+  repository: awesometic/h5ai
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+ingress:
+  host: files.buc.sh
+  tls: []
+
+root_proxy:
+  id: main
+  namespace: h5ai
+  is_root: true
+  mounts: []
+
+
+proxies: []
