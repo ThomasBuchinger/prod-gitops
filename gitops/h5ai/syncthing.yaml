@@ -33,7 +33,7 @@ spec:
         - bash
         - -c
         - 'cp -f /myconfig/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
-        TODO
+        # TODO
         env:
         - name: PUID
           value: "1000"
