@@ -33,11 +33,12 @@ spec:
         - bash
         - -c
         - 'cp -f /myconfig/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
+        # TODO
+        # env:
+        # - name: PUID
+        #   value: "1000"
+        # - name: PGID
+        #   value: "1000"
         ports:
         - name: http
           containerPort: 80
@@ -60,8 +61,12 @@ spec:
             cpu: 5m
             memory: 20Mi
           limits: {}
+        # TODO
         securityContext:
         #   allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
           capabilities:
             add:
             - CHOWN
@@ -69,6 +74,7 @@ spec:
             - SETUID
             - SETGID
             - FOWNER
+            - NET_BIND_SERVICE
             # drop:
             # - ALL
         #   seccompProfile:
