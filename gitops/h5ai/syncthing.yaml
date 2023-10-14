@@ -67,7 +67,7 @@ spec:
           capabilities:
             add:
             - CHOWN
-            - DAC_OVERRIDE
+            # - DAC_OVERRIDE
             - SETUID
             - SETGID
             # - FOWNER
