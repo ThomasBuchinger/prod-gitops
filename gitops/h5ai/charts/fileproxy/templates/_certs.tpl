@@ -18,7 +18,7 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: fileproxy-cert-ns-{{ . }}
-  namespace: {{ .proxy.namespace }}
+  namespace: {{ . }}
 spec:
   refreshInterval: 1h
   secretStoreRef:
