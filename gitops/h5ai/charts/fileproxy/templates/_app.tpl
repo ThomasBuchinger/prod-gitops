@@ -35,6 +35,9 @@ spec:
         - -c
         - 'cp -f /custom-config/options.json /usr/share/h5ai/_h5ai/private/conf && exec /init.sh'
         {{- end }}
+        env:
+        - name: TZ
+          value: Europe/Berlin
         {{- include "fileproxy.uid_change" . | nindent 8 }}
         ports:
         - name: http
@@ -106,6 +109,39 @@ spec:
 
 
 ---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: fileproxy-cert
+  namespace: {{ .proxy.namespace }}
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-files-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-files-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paperless-tls
+  namespace: paperless
+spec:
+  tls:
+  - hosts:
+      - paperless.buc.sh
+    secretName: cert-paperless-buc-sh
+
+
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -114,6 +150,10 @@ metadata:
   labels:
     {{- include "fileproxy.labels" .  | nindent 4 }}
 spec:
+  tls:
+  - hosts:
+      - files.buc.sh
+    secretName: cert-files-buc-sh
   rules:
   - host: {{ .Values.ingress.host }}
     http:

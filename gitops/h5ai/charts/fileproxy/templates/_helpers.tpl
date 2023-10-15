@@ -112,12 +112,10 @@ PV ACCESS: Configure ENV variable the init-script should change to
 */}}
 {{- define "fileproxy.uid_change" -}}
   {{ if (dig "fs" "uid" false .proxy) }}
-env:
 - name: PUID
   value: {{ .proxy.fs.uid | quote }}
 - name: PGID
   value: {{ .proxy.fs.uid | quote }}
-
   {{- end }}
 {{- end }}
 
