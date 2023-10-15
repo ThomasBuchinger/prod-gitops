@@ -1,0 +1,2 @@
+Done! Visit the Application at: {{ .Values.ingress.hosts }}
+
