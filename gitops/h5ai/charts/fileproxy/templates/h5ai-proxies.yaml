@@ -3,6 +3,8 @@
 {{- include "fileproxy.h5ai" (merge (dict "proxy" .Values.root_proxy) .) }}
 
 
+{{- include "fileproxy.ns_resources" (append .Values.proxies .Values.root_proxy) }}
+
 {{- $globalContext := . -}}
 {{- range .Values.proxies }}
 ---
