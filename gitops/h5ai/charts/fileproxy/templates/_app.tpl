@@ -132,19 +132,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: paperless-tls
-  namespace: paperless
-spec:
-  tls:
-  - hosts:
-      - paperless.buc.sh
-    secretName: cert-paperless-buc-sh
-
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: {{ include "fileproxy.fullname" . }}-{{ .proxy.id }}
   namespace: {{ .proxy.namespace }}
   labels:
