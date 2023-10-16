@@ -60,7 +60,7 @@ spec:
     - ReadOnlyMany
   iscsi:
      targetPortal: 10.0.0.20:3260
-     iqn: iqn.2005-10.org.freenas.ctl:syncthing
+     iqn: iqn.2005-10.org.freenas.ctl:syncthing-file
      lun: 0
      fsType: 'xfs'
      readOnly: false
