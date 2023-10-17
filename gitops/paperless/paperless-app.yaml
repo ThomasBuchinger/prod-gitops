@@ -120,14 +120,14 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: paperless-data
-          mountPath: /data
+        # - name: paperless-data
+        #   mountPath: /data
         - name: paperless-data-files
-          mountPath: /migration-data
+          mountPath: /data
       volumes:
-      - name: paperless-data
-        persistentVolumeClaim:
-          claimName: paperless-data
+      # - name: paperless-data
+      #   persistentVolumeClaim:
+      #     claimName: paperless-data
       - name: paperless-data-files
         persistentVolumeClaim:
           claimName: paperless-data-files
