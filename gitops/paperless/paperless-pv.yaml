@@ -82,13 +82,13 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: ""
-  volumeName: paperless-files
+  volumeName: paperless-file
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: paperless-files
+  name: paperless-file
 spec:
   capacity:
     storage: 4Ti
@@ -97,7 +97,7 @@ spec:
     - ReadOnlyMany
   iscsi:
     targetPortal: 10.0.0.20:3260
-    iqn: iqn.2005-10.org.freenas.ctl:paperless-files
+    iqn: iqn.2005-10.org.freenas.ctl:paperless-file
     lun: 0
     fsType: 'xfs'
     readOnly: false
