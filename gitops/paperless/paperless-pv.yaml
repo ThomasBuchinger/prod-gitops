@@ -82,7 +82,7 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: ""
-  volumeName: paperless
+  volumeName: paperless-files
 
 ---
 apiVersion: v1
