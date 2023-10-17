@@ -67,3 +67,41 @@ spec:
     chapAuthSession: true
     secretRef:
       name: eso-nas-credentials
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-data-files
+  namespace: paperless
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: ""
+  volumeName: paperless
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-files
+spec:
+  capacity:
+    storage: 4Ti
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+  iscsi:
+    targetPortal: 10.0.0.20:3260
+    iqn: iqn.2005-10.org.freenas.ctl:paperless-files
+    lun: 0
+    fsType: 'xfs'
+    readOnly: false
+    chapAuthDiscovery: true
+    chapAuthSession: true
+    secretRef:
+      name: eso-nas-credentials

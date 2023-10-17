@@ -122,10 +122,15 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: paperless-data
+        - mountPath: /migration-data
+          name: paperless-data
       volumes:
       - name: paperless-data
         persistentVolumeClaim:
           claimName: paperless-data
+      - name: paperless-data-files
+        persistentVolumeClaim:
+          claimName: paperless-data-files
 ---
 apiVersion: v1
 kind: Service
