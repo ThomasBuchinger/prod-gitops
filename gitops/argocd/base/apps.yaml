@@ -27,7 +27,7 @@ spec:
         path: gitops/monitoring/all
         wave: "1"
       - name: paperless
-        rev: main
+        rev: pvmigration
         path: gitops/paperless
         wave: "2"
       - name: syncthing
