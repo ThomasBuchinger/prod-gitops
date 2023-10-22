@@ -15,7 +15,7 @@ data:
     #  customStaticFilePath: '/customFiles/static/' # Directory path for custom static files
     ui:
       appName: PDF Tools
-      homeDescription: ""
+      homeDescription: "Hosted on Kubernetes"
       appNameNavbar: PDF
 
     #endpoints:
