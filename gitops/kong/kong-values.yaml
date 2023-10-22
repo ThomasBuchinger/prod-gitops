@@ -3,19 +3,19 @@ admin:
     konghq.com/protocol: https
   enabled: true
   http:
-    enabled: false
-  ingress:
-    annotations:
-      konghq.com/https-redirect-status-code: "301"
-      konghq.com/protocols: https
-      konghq.com/strip-path: "true"
-      nginx.ingress.kubernetes.io/app-root: /
-      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-      nginx.ingress.kubernetes.io/permanent-redirect-code: "301"
     enabled: true
-    hostname: kong.127-0-0-1.nip.io
-    path: /api
-    tls: quickstart-kong-admin-cert
+  ingress:
+    # annotations:
+    #   konghq.com/https-redirect-status-code: "301"
+    #   konghq.com/protocols: https
+    #   konghq.com/strip-path: "true"
+    #   nginx.ingress.kubernetes.io/app-root: /
+    #   nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    #   nginx.ingress.kubernetes.io/permanent-redirect-code: "301"
+    enabled: false
+    # hostname: kong.127-0-0-1.nip.io
+    # path: /api
+    # tls: quickstart-kong-admin-cert
   tls:
     containerPort: 8444
     enabled: true
@@ -44,8 +44,8 @@ certificates:
     enabled: true
     commonName: kong.127-0-0-1.nip.io
   portal:
-    enabled: true
-    commonName: developer.127-0-0-1.nip.io
+    enabled: false
+    # commonName: developer.127-0-0-1.nip.io
   proxy:
     enabled: true
     commonName: 127-0-0-1.nip.io
@@ -75,7 +75,7 @@ enterprise:
   enabled: true
   license_secret: kong-enterprise-license
   portal:
-    enabled: true
+    enabled: false
   rbac:
     admin_api_auth: basic-auth
     admin_gui_auth_conf_secret: kong-config-secret
@@ -97,7 +97,8 @@ env:
   cluster_data_plane_purge_delay: 60
   cluster_listen: 0.0.0.0:8005
   cluster_telemetry_listen: 0.0.0.0:8006
-  database: postgres
+  KONG_DATABASE: off
+  # database: postgres
   log_level: debug
   lua_package_path: /opt/?.lua;;
   nginx_worker_processes: "2"
@@ -106,32 +107,32 @@ env:
       secretKeyRef:
         key: kong_admin_password
         name: kong-config-secret
-  pg_database: kong
-  pg_host:
-    valueFrom:
-      secretKeyRef:
-        key: pg_host
-        name: kong-config-secret
-  pg_ssl: "off"
-  pg_ssl_verify: "off"
-  pg_user: kong
+  # pg_database: kong
+  # pg_host:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       key: pg_host
+  #       name: kong-config-secret
+  # pg_ssl: "off"
+  # pg_ssl_verify: "off"
+  # pg_user: kong
   plugins: bundled,openid-connect
-  portal: true
-  portal_api_access_log: /dev/stdout
-  portal_api_error_log: /dev/stdout
-  portal_api_url: https://developer.127-0-0-1.nip.io/api
-  portal_auth: basic-auth
-  portal_cors_origins: '*'
-  portal_gui_access_log: /dev/stdout
-  portal_gui_error_log: /dev/stdout
-  portal_gui_host: developer.127-0-0-1.nip.io
-  portal_gui_protocol: https
-  portal_gui_url: https://developer.127-0-0-1.nip.io/
-  portal_session_conf:
-    valueFrom:
-      secretKeyRef:
-        key: portal_session_conf
-        name: kong-config-secret
+  portal: false
+  # portal_api_access_log: /dev/stdout
+  # portal_api_error_log: /dev/stdout
+  # portal_api_url: https://developer.127-0-0-1.nip.io/api
+  # portal_auth: basic-auth
+  # portal_cors_origins: '*'
+  # portal_gui_access_log: /dev/stdout
+  # portal_gui_error_log: /dev/stdout
+  # portal_gui_host: developer.127-0-0-1.nip.io
+  # portal_gui_protocol: https
+  # portal_gui_url: https://developer.127-0-0-1.nip.io/
+  # portal_session_conf:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       key: portal_session_conf
+  #       name: kong-config-secret
   prefix: /kong_prefix/
   proxy_access_log: /dev/stdout
   proxy_error_log: /dev/stdout
@@ -162,8 +163,8 @@ ingressController:
   image:
     repository: docker.io/kong/kubernetes-ingress-controller
     tag: "2.10"
-  ingressClass: default
-  installCRDs: false
+  ingressClass: kong
+  installCRDs: true
 manager:
   annotations:
     konghq.com/protocol: https
@@ -173,14 +174,14 @@ manager:
     enabled: false
     servicePort: 8002
   ingress:
-    annotations:
-      konghq.com/https-redirect-status-code: "301"
-      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    ingressClassName: kong
-    enabled: true
-    hostname: kong.127-0-0-1.nip.io
-    path: /
-    tls: quickstart-kong-admin-cert
+    # annotations:
+    #   konghq.com/https-redirect-status-code: "301"
+    #   nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    # ingressClassName: kong
+    enabled: false
+    # hostname: kong.127-0-0-1.nip.io
+    # path: /
+    # tls: quickstart-kong-admin-cert
   tls:
     containerPort: 8445
     enabled: true
@@ -196,59 +197,59 @@ namespace: kong
 podAnnotations:
   kuma.io/gateway: enabled
 portal:
-  annotations:
-    konghq.com/protocol: https
-  enabled: true
-  http:
-    containerPort: 8003
-    enabled: false
-    servicePort: 8003
-  ingress:
-    annotations:
-      konghq.com/https-redirect-status-code: "301"
-      konghq.com/protocols: https
-      konghq.com/strip-path: "false"
-    ingressClassName: kong
-    enabled: true
-    hostname: developer.127-0-0-1.nip.io
-    path: /
-    tls: quickstart-kong-portal-cert
-  tls:
-    containerPort: 8446
-    enabled: true
-    parameters:
-    - http2
-    servicePort: 8446
-  type: ClusterIP
+  # annotations:
+  #   konghq.com/protocol: https
+  enabled: false
+  # http:
+  #   containerPort: 8003
+  #   enabled: false
+  #   servicePort: 8003
+  # ingress:
+  #   annotations:
+  #     konghq.com/https-redirect-status-code: "301"
+  #     konghq.com/protocols: https
+  #     konghq.com/strip-path: "false"
+  #   ingressClassName: kong
+  #   enabled: true
+  #   hostname: developer.127-0-0-1.nip.io
+  #   path: /
+  #   tls: quickstart-kong-portal-cert
+  # tls:
+  #   containerPort: 8446
+  #   enabled: true
+  #   parameters:
+  #   - http2
+  #   servicePort: 8446
+  # type: ClusterIP
 portalapi:
-  annotations:
-    konghq.com/protocol: https
-  enabled: true
-  http:
+  # annotations:
+  #   konghq.com/protocol: https
+  # enabled: true
+  # http:
+  #   enabled: false
+  # ingress:
+  #   annotations:
+  #     konghq.com/https-redirect-status-code: "301"
+  #     konghq.com/protocols: https
+  #     konghq.com/strip-path: "true"
+  #     nginx.ingress.kubernetes.io/app-root: /
+  #   ingressClassName: kong
     enabled: false
-  ingress:
-    annotations:
-      konghq.com/https-redirect-status-code: "301"
-      konghq.com/protocols: https
-      konghq.com/strip-path: "true"
-      nginx.ingress.kubernetes.io/app-root: /
-    ingressClassName: kong
-    enabled: true
-    hostname: developer.127-0-0-1.nip.io
-    path: /api
-    tls: quickstart-kong-portal-cert
-  tls:
-    containerPort: 8447
-    enabled: true
-    parameters:
-    - http2
-    servicePort: 8447
-  type: ClusterIP
+    # hostname: developer.127-0-0-1.nip.io
+    # path: /api
+    # tls: quickstart-kong-portal-cert
+  # tls:
+  #   containerPort: 8447
+  #   enabled: true
+  #   parameters:
+  #   - http2
+  #   servicePort: 8447
+  # type: ClusterIP
 postgresql:
-  enabled: true
-  auth:
-    database: kong
-    username: kong
+  enabled: false
+  # auth:
+  #   database: kong
+  #   username: kong
 proxy:
   annotations:
     prometheus.io/port: "9542"
@@ -257,7 +258,7 @@ proxy:
   http:
     containerPort: 8080
     enabled: true
-    hostPort: 80
+    hostPort: 8080
   ingress:
     enabled: false
   labels:
@@ -265,7 +266,7 @@ proxy:
   tls:
     containerPort: 8443
     enabled: true
-    hostPort: 443
+    hostPort: 8443
   type: LoadBalancer
 replicaCount: 1
 secretVolumes: []
