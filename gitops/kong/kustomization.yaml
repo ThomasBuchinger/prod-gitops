@@ -1,0 +1,52 @@
+
+resources:
+- config.yaml
+
+
+helmCharts:
+- releaseName: cert-manager
+  name: cert-manager
+  repo: https://charts.jetstack.io
+  includeCRDs: true
+  valuesInline:
+    installCRDS: true
+- releaseName: kong
+  name: kong
+  repo:  https://charts.konghq.com
+  includeCRDs: true
+  valuesFile: kong-values.yaml
+
+
+
+
+#     ingress:
+#       host: files.buc.sh
+#       tls: []
+#     proxies:
+#     - id: paperless
+#       namespace: paperless
+#       mounts:
+#       - path: /paperless
+#         volume:
+#           persistentVolumeClaim:
+#             claimName: paperless-data
+#     - id: syncthing
+#       namespace: syncthing
+#       is_big: true
+#       fs:
+#         uid: 1000
+#       mounts:
+#       - path: /syncthing
+#         volume:
+#           persistentVolumeClaim:
+#             claimName: syncthing-data
+#     - id: nfs
+#       namespace: h5ai
+#       is_big: true
+#       fs:
+#         uid: 3000
+#       mounts:
+#       - path: /nfs
+#         volume:
+#           persistentVolumeClaim:
+#             claimName: nfs-data

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-enterprise-license
+stringData:
+  license: {}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-config-secret
+stringData:
+  portal_session_conf:
+    storage: "kong"
+    secret: "super_secret_salt_string"
+    cookie_name: "portal_session"
+    cookie_same_site: "Lax"
+    cookie_secure: false
+
+  admin_gui_session_conf: 
+    storage: "kong"
+    secret: "super_secret_salt_string"
+    cookie_name: "admin_session"
+    cookie_same_site: "Lax"
+    cookie_secure: false
+  kong_admin_password: kong
+  password: kong
+
+  pg_host: "enterprise-postgresql.kong.svc.cluster.local"
