@@ -55,7 +55,7 @@ spec:
         - name: ocr
           mountPath: /usr/share/tesseract-ocr/4.00/tessdata
         - name: configs
-          mountPath: /config
+          mountPath: /configs
         livenessProbe:
           tcpSocket:
             port: 8080
