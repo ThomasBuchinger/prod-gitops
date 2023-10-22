@@ -164,7 +164,7 @@ ingressController:
     repository: docker.io/kong/kubernetes-ingress-controller
     tag: "2.10"
   ingressClass: kong
-  installCRDs: true
+  installCRDs: false
 manager:
   annotations:
     konghq.com/protocol: https
