@@ -34,6 +34,10 @@ spec:
         rev: main
         path: gitops/syncthing
         wave: "2"
+      - name: spdf
+        rev: spdf
+        path: gitops/stirling-pdf
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
