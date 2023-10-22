@@ -38,6 +38,10 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "2"
+      - name: kong
+        rev: kong
+        path: gitops/kong
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
