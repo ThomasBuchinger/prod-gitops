@@ -1,6 +1,5 @@
 admin:
   annotations:
-    konghq.com/protocol: https
     traefik.ingress.kubernetes.io/service.serversscheme: https
   enabled: true
   http:
@@ -167,13 +166,13 @@ image:
 #   ingressClass: kong
 #   installCRDs: false
 manager:
-  # annotations:
-  #   konghq.com/protocol: https
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
   enabled: true
-  http:
-    containerPort: 8002
-    enabled: true
-    servicePort: 8002
+  # http:
+  #   containerPort: 8002
+  #   enabled: true
+  #   servicePort: 8002
   ingress:
 #     # annotations:
 #     #   konghq.com/https-redirect-status-code: "301"
