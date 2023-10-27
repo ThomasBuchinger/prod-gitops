@@ -16,12 +16,12 @@ admin:
     hostname: kong.buc.sh
     path: /api
     # tls: quickstart-kong-admin-cert
-  tls:
-    containerPort: 8444
-    enabled: true
-    parameters:
-    - http2
-    servicePort: 8444
+  # tls:
+  #   containerPort: 8444
+  #   enabled: true
+  #   parameters:
+  #   - http2
+  #   servicePort: 8444
   type: ClusterIP
 affinity:
   podAntiAffinity:
