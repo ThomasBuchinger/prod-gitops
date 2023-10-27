@@ -142,8 +142,7 @@ env:
 #   smtp_mock: "on"
 #   status_listen: 0.0.0.0:8100
 #   trusted_ips: 0.0.0.0/0,::/0
-  vitals: true
-  KONG_VITALS: "on"
+  vitals: "on"
 # extraLabels:
 #   konghq.com/component: quickstart
 image:
