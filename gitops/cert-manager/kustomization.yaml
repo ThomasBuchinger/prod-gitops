@@ -3,9 +3,9 @@ helmCharts:
 - releaseName: cert-manager
   name: cert-manager
   repo: https://charts.jetstack.io
-  includeCRDs: true
+  # includeCRDs: true
   valuesInline:
-    installCRDS: true
+    installCRDs: true
 
 #     ingress:
 #       host: files.buc.sh
