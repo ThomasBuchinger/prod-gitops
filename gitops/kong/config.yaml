@@ -18,12 +18,7 @@ stringData:
     cookie_same_site: "Lax"
     cookie_secure: false
 
-  admin_gui_session_conf: |
-    storage: "kong"
-    secret: "super_secret_salt_string"
-    cookie_name: "admin_session"
-    cookie_same_site: "Lax"
-    cookie_secure: false
+  admin_gui_session_conf: '{"storage": "kong", "secret": "super_secret_salt_string", "cookie_name": "admin_session", "cookie_same_site": "Lax", "cookie_secure": false }'
   kong_admin_password: kong
   password: kong
 
