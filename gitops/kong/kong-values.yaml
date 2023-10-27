@@ -98,7 +98,7 @@ env:
 #   cluster_data_plane_purge_delay: 60
 #   cluster_listen: 0.0.0.0:8005
 #   cluster_telemetry_listen: 0.0.0.0:8006
-KONG_DATABASE: off
+  KONG_DATABASE: off
 #   # database: postgres
 #   log_level: debug
 #   lua_package_path: /opt/?.lua;;
