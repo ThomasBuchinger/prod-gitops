@@ -36,22 +36,22 @@ affinity:
             - dataplane
         topologyKey: kubernetes.io/hostname
       weight: 100
-# certificates:
-#   enabled: true
-#   issuer: quickstart-kong-selfsigned-issuer
-#   cluster:
-#     enabled: true
-#   admin:
-#     enabled: true
-#     commonName: kong.buc.sh
-#   portal:
-#     enabled: false
-#     # commonName: developer.127-0-0-1.nip.io
-#   proxy:
-#     enabled: true
-#     commonName: ingress.cloud.buc.sh
-#     dnsNames:
-#     - '*.cloud.buc.sh'
+certificates:
+  enabled: true
+  issuer: kong-ca
+  cluster:
+    enabled: true
+  admin:
+    enabled: false
+    commonName: kong.buc.sh
+  portal:
+    enabled: false
+    # commonName: developer.127-0-0-1.nip.io
+  proxy:
+    enabled: false
+    # commonName: ingress.cloud.buc.sh
+    # dnsNames:
+    # - '*.cloud.buc.sh'
 # cluster:
 #   enabled: true
 #   labels:
@@ -72,11 +72,11 @@ affinity:
 #   kong:
 #     daemonset: false
 #     enabled: true
-# enterprise:
-#   enabled: true
-#   license_secret: kong-enterprise-license
-#   portal:
-#     enabled: false
+enterprise:
+  enabled: true
+  license_secret: kong-enterprise-license
+  portal:
+    enabled: false
 #   rbac:
 #     admin_api_auth: basic-auth
 #     admin_gui_auth_conf_secret: kong-config-secret
@@ -145,9 +145,9 @@ affinity:
 #   vitals: true
 # # extraLabels:
 # #   konghq.com/component: quickstart
-# image:
-#   repository: kong/kong-gateway
-#   tag: "3.4"
+image:
+  repository: kong/kong-gateway
+  tag: "3.4"
 # ingressController:
 #   enabled: true
 #   env:
@@ -166,22 +166,22 @@ affinity:
 #     tag: "2.10"
 #   ingressClass: kong
 #   installCRDs: false
-# manager:
-#   annotations:
-#     konghq.com/protocol: https
-#   enabled: true
-#   http:
-#     containerPort: 8002
-#     enabled: false
-#     servicePort: 8002
-#   ingress:
+manager:
+  # annotations:
+  #   konghq.com/protocol: https
+  enabled: true
+  http:
+    containerPort: 8002
+    enabled: true
+    servicePort: 8002
+  ingress:
 #     # annotations:
 #     #   konghq.com/https-redirect-status-code: "301"
 #     #   nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-#     # ingressClassName: kong
-#     enabled: false
-#     # hostname: kong.127-0-0-1.nip.io
-#     # path: /
+#     ingressClassName: kong
+    enabled: true
+    hostname: kong.buc.sh
+    path: /
 #     # tls: quickstart-kong-admin-cert
 #   tls:
 #     containerPort: 8445
@@ -189,7 +189,7 @@ affinity:
 #     parameters:
 #     - http2
 #     servicePort: 8445
-#   type: ClusterIP
+  type: ClusterIP
 # migrations:
 #   enabled: true
 #   postUpgrade: true
