@@ -22,7 +22,7 @@ admin:
     parameters:
     - http2
     servicePort: 8444
-  type: ClusterIP
+  type: NodePort
 affinity:
   podAntiAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
@@ -42,15 +42,15 @@ certificates:
     enabled: true
   admin:
     enabled: true
-    commonName: kong.127-0-0-1.nip.io
+    commonName: kong.buc.sh
   portal:
     enabled: false
     # commonName: developer.127-0-0-1.nip.io
   proxy:
     enabled: true
-    commonName: 127-0-0-1.nip.io
+    commonName: ingress.cloud.buc.sh
     dnsNames:
-    - '*.127-0-0-1.nip.io'
+    - '*.cloud.buc.sh'
 cluster:
   enabled: true
   labels:
@@ -87,13 +87,13 @@ enterprise:
     enabled: true
 env:
   admin_access_log: /dev/stdout
-  admin_gui_api_url: https://kong.127-0-0-1.nip.io/api
+  admin_gui_api_url: https://kong.buc.sh/api
   admin_error_log: /dev/stdout
   admin_gui_access_log: /dev/stdout
   admin_gui_error_log: /dev/stdout
-  admin_gui_host: kong.127-0-0-1.nip.io
+  admin_gui_host: kong.buc.sh
   admin_gui_protocol: https
-  admin_gui_url: https://kong.127-0-0-1.nip.io/
+  admin_gui_url: https://kong.buc.sh/
   cluster_data_plane_purge_delay: 60
   cluster_listen: 0.0.0.0:8005
   cluster_telemetry_listen: 0.0.0.0:8006
@@ -142,8 +142,8 @@ env:
   status_listen: 0.0.0.0:8100
   trusted_ips: 0.0.0.0/0,::/0
   vitals: true
-extraLabels:
-  konghq.com/component: quickstart
+# extraLabels:
+#   konghq.com/component: quickstart
 image:
   repository: kong/kong-gateway
   tag: "3.4"
