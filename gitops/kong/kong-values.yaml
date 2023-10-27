@@ -12,9 +12,9 @@ admin:
     #   nginx.ingress.kubernetes.io/app-root: /
     #   nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     #   nginx.ingress.kubernetes.io/permanent-redirect-code: "301"
-    enabled: false
-    # hostname: kong.127-0-0-1.nip.io
-    # path: /api
+    enabled: true
+    hostname: kong.buc.sh
+    path: /api
     # tls: quickstart-kong-admin-cert
   tls:
     containerPort: 8444
@@ -22,7 +22,7 @@ admin:
     parameters:
     - http2
     servicePort: 8444
-  type: NodePort
+  type: ClusterIP
 affinity:
   podAntiAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
@@ -258,7 +258,7 @@ proxy:
   http:
     containerPort: 8080
     enabled: true
-    hostPort: 8080
+    # hostPort: 8080
   ingress:
     enabled: false
   labels:
@@ -266,8 +266,8 @@ proxy:
   tls:
     containerPort: 8443
     enabled: true
-    hostPort: 8443
-  type: LoadBalancer
+    # hostPort: 8443
+  type: NodePort
 replicaCount: 1
 secretVolumes: []
 status:
