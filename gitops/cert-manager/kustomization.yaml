@@ -1,17 +1,11 @@
 
-resources:
-- config.yaml
-
-
 helmCharts:
-- releaseName: kong
-  name: kong
-  repo:  https://charts.konghq.com
+- releaseName: cert-manager
+  name: cert-manager
+  repo: https://charts.jetstack.io
   includeCRDs: true
-  valuesFile: kong-values.yaml
-
-
-
+  valuesInline:
+    installCRDS: true
 
 #     ingress:
 #       host: files.buc.sh
