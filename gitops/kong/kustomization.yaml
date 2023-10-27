@@ -1,7 +1,7 @@
 
 resources:
 - config.yaml
-- kong-certs.yalm
+- kong-certs.yaml
 
 
 helmCharts:
