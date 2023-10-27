@@ -4,6 +4,7 @@ admin:
   enabled: true
   http:
     enabled: true
+    servicePort: 8001
   ingress:
     annotations:
     #   konghq.com/https-redirect-status-code: "301"
@@ -21,7 +22,7 @@ admin:
   #   enabled: true
   #   parameters:
   #   - http2
-    servicePort: 8001
+  #   servicePort: 8001
   type: ClusterIP
 affinity:
   podAntiAffinity:
@@ -169,10 +170,10 @@ manager:
   # annotations:
   #   traefik.ingress.kubernetes.io/service.serversscheme: https
   enabled: true
-  # http:
-  #   containerPort: 8002
-  #   enabled: true
-  #   servicePort: 8002
+  http:
+    containerPort: 8002
+    enabled: true
+    servicePort: 8002
   ingress:
 #     # annotations:
 #     #   konghq.com/https-redirect-status-code: "301"
@@ -186,8 +187,8 @@ manager:
 #     containerPort: 8445
 #     enabled: true
 #     parameters:
+#     servicePort: 8002
 #     - http2
-    servicePort: 8002
   type: ClusterIP
 # migrations:
 #   enabled: true
