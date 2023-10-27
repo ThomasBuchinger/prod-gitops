@@ -73,15 +73,15 @@ certificates:
 #     daemonset: false
 #     enabled: true
 enterprise:
-  enabled: true
+  enabled: false
   license_secret: kong-enterprise-license
   portal:
     enabled: false
-  rbac:
-    admin_api_auth: basic-auth
-    admin_gui_auth_conf_secret: kong-config-secret
-    enabled: true
-    session_conf_secret: kong-config-secret
+  # rbac:
+  #   admin_api_auth: basic-auth
+  #   admin_gui_auth_conf_secret: kong-config-secret
+  #   enabled: true
+  #   session_conf_secret: kong-config-secret
 #   smtp:
 #     enabled: false
   vitals:
