@@ -6,7 +6,7 @@ admin:
     enabled: true
   ingress:
     annotations:
-      traefik.ingress.kubernetes.io/service.serversscheme: https.
+      traefik.ingress.kubernetes.io/service.serversscheme: https
     #   konghq.com/https-redirect-status-code: "301"
     #   konghq.com/protocols: https
     #   konghq.com/strip-path: "true"
