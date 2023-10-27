@@ -250,24 +250,24 @@ namespace: kong
 #   # auth:
 #   #   database: kong
 #   #   username: kong
-# proxy:
-#   annotations:
-#     prometheus.io/port: "9542"
-#     prometheus.io/scrape: "true"
-#   enabled: true
-#   http:
-#     containerPort: 8080
-#     enabled: true
-#     # hostPort: 8080
-#   ingress:
-#     enabled: false
-#   labels:
-#     enable-metrics: true
-#   tls:
-#     containerPort: 8443
-#     enabled: true
-#     # hostPort: 8443
-#   type: NodePort
+proxy:
+  annotations:
+    prometheus.io/port: "9542"
+    prometheus.io/scrape: "true"
+  enabled: true
+  http:
+    containerPort: 8080
+    enabled: true
+    # hostPort: 8080
+  ingress:
+    enabled: false
+  labels:
+    enable-metrics: true
+  tls:
+    containerPort: 8443
+    enabled: true
+    # hostPort: 8443
+  type: NodePort
 # replicaCount: 1
 # secretVolumes: []
 # status:
