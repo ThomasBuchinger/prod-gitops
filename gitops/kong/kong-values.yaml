@@ -259,6 +259,7 @@ proxy:
   http:
     containerPort: 8080
     enabled: true
+    nodePort: 30080
     # hostPort: 8080
   ingress:
     enabled: false
@@ -267,6 +268,7 @@ proxy:
   tls:
     containerPort: 8443
     enabled: true
+    nodePort: 30443
     # hostPort: 8443
   type: NodePort
 # replicaCount: 1
