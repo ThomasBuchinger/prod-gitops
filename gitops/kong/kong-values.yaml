@@ -84,8 +84,8 @@ enterprise:
 #     session_conf_secret: kong-config-secret
 #   smtp:
 #     enabled: false
-#   vitals:
-#     enabled: true
+  vitals:
+    enabled: true
 # env:
 #   admin_access_log: /dev/stdout
 #   admin_gui_api_url: https://kong.buc.sh/api
@@ -273,12 +273,12 @@ proxy:
   type: NodePort
 # replicaCount: 1
 # secretVolumes: []
-# status:
-#   enabled: true
-#   http:
-#     containerPort: 8100
-#     enabled: true
-#   tls:
-#     containerPort: 8543
-#     enabled: false
+status:
+  enabled: true
+  http:
+    containerPort: 8100
+    enabled: true
+  tls:
+    containerPort: 8543
+    enabled: false
 
