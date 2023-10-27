@@ -73,7 +73,7 @@ certificates:
 #     daemonset: false
 #     enabled: true
 enterprise:
-  enabled: false
+  enabled: true
   license_secret: kong-enterprise-license
   portal:
     enabled: false
@@ -99,7 +99,7 @@ env:
 #   cluster_listen: 0.0.0.0:8005
 #   cluster_telemetry_listen: 0.0.0.0:8006
 #   KONG_DATABASE: off
-#   # database: postgres
+  database: postgres
 #   log_level: debug
 #   lua_package_path: /opt/?.lua;;
 #   nginx_worker_processes: "2"
@@ -246,11 +246,13 @@ namespace: kong
 #   #   - http2
 #   #   servicePort: 8447
 #   # type: ClusterIP
-# postgresql:
-#   enabled: false
-#   # auth:
-#   #   database: kong
-#   #   username: kong
+postgresql:
+  enabled: true
+  global:
+    storageClass: local-path
+  auth:
+    database: kong
+    username: kong
 proxy:
   annotations:
     prometheus.io/port: "9542"
