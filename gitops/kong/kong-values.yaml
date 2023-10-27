@@ -98,7 +98,7 @@ env:
 #   cluster_data_plane_purge_delay: 60
 #   cluster_listen: 0.0.0.0:8005
 #   cluster_telemetry_listen: 0.0.0.0:8006
-  KONG_DATABASE: off
+#   KONG_DATABASE: off
 #   # database: postgres
 #   log_level: debug
 #   lua_package_path: /opt/?.lua;;
@@ -142,7 +142,8 @@ env:
 #   smtp_mock: "on"
 #   status_listen: 0.0.0.0:8100
 #   trusted_ips: 0.0.0.0/0,::/0
-vitals: true
+  vitals: true
+  KONG_VITALS: "on"
 # extraLabels:
 #   konghq.com/component: quickstart
 image:
