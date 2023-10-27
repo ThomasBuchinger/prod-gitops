@@ -17,9 +17,9 @@ admin:
     hostname: kong.buc.sh
     path: /api
     # tls: quickstart-kong-admin-cert
-  # tls:
+  tls:
   #   containerPort: 8444
-  #   enabled: true
+    enabled: false
   #   parameters:
   #   - http2
   #   servicePort: 8001
@@ -183,9 +183,9 @@ manager:
     hostname: kong.buc.sh
     path: /
 #     # tls: quickstart-kong-admin-cert
-#   tls:
+  tls:
 #     containerPort: 8445
-#     enabled: true
+    enabled: false
 #     parameters:
 #     servicePort: 8002
 #     - http2
