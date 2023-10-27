@@ -77,16 +77,16 @@ enterprise:
   license_secret: kong-enterprise-license
   portal:
     enabled: false
-#   rbac:
-#     admin_api_auth: basic-auth
-#     admin_gui_auth_conf_secret: kong-config-secret
-#     enabled: true
-#     session_conf_secret: kong-config-secret
+  rbac:
+    admin_api_auth: basic-auth
+    admin_gui_auth_conf_secret: kong-config-secret
+    enabled: true
+    session_conf_secret: kong-config-secret
 #   smtp:
 #     enabled: false
   vitals:
     enabled: true
-# env:
+env:
 #   admin_access_log: /dev/stdout
 #   admin_gui_api_url: https://kong.buc.sh/api
 #   admin_error_log: /dev/stdout
@@ -98,7 +98,7 @@ enterprise:
 #   cluster_data_plane_purge_delay: 60
 #   cluster_listen: 0.0.0.0:8005
 #   cluster_telemetry_listen: 0.0.0.0:8006
-#   KONG_DATABASE: off
+KONG_DATABASE: off
 #   # database: postgres
 #   log_level: debug
 #   lua_package_path: /opt/?.lua;;
@@ -142,9 +142,9 @@ enterprise:
 #   smtp_mock: "on"
 #   status_listen: 0.0.0.0:8100
 #   trusted_ips: 0.0.0.0/0,::/0
-#   vitals: true
-# # extraLabels:
-# #   konghq.com/component: quickstart
+vitals: true
+# extraLabels:
+#   konghq.com/component: quickstart
 image:
   repository: kong/kong-gateway
   tag: "3.4"
