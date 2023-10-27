@@ -38,6 +38,10 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "2"
+      - name: cert-manager
+        rev: kong
+        path: gitops/cert-manager
+        wave: "2"
       - name: kong
         rev: kong
         path: gitops/kong
