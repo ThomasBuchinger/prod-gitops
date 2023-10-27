@@ -146,7 +146,7 @@ env:
 # extraLabels:
 #   konghq.com/component: quickstart
 image:
-  repository: kong/kong-gateway
+  repository: kong
   tag: "3.4"
 # ingressController:
 #   enabled: true
