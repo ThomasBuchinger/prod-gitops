@@ -1,6 +1,6 @@
 admin:
-  annotations:
-    traefik.ingress.kubernetes.io/service.serversscheme: https
+  # annotations:
+  #   traefik.ingress.kubernetes.io/service.serversscheme: https
   enabled: true
   http:
     enabled: true
@@ -21,7 +21,7 @@ admin:
   #   enabled: true
   #   parameters:
   #   - http2
-  #   servicePort: 8444
+    servicePort: 8001
   type: ClusterIP
 affinity:
   podAntiAffinity:
@@ -42,7 +42,7 @@ certificates:
     enabled: true
   admin:
     enabled: false
-    commonName: kong.buc.sh
+    # commonName: kong.buc.sh
   portal:
     enabled: false
     # commonName: developer.127-0-0-1.nip.io
@@ -166,8 +166,8 @@ image:
 #   ingressClass: kong
 #   installCRDs: false
 manager:
-  annotations:
-    traefik.ingress.kubernetes.io/service.serversscheme: https
+  # annotations:
+  #   traefik.ingress.kubernetes.io/service.serversscheme: https
   enabled: true
   # http:
   #   containerPort: 8002
@@ -187,7 +187,7 @@ manager:
 #     enabled: true
 #     parameters:
 #     - http2
-#     servicePort: 8445
+    servicePort: 8002
   type: ClusterIP
 # migrations:
 #   enabled: true
