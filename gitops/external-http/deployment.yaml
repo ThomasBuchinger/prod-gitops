@@ -40,6 +40,7 @@ spec:
           capabilities:
             add:
             - CHOWN
+            - FOWNER
             - SETUID
             - SETGID
 
