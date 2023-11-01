@@ -18,36 +18,44 @@ spec:
         app.kubernetes.io/name: nginx
         app.kubernetes.io/instance: external-http
     spec:
-      # initContainers:
-      # - name: nginx-ui-dbprepare
-      #   image: keinos/sqlite3:latest
-      #   command:
-      #   - /bin/sh
-      #   - -c
-      #   - "sqlite3 /etc/nginx-ui/database.db < /conf/dump.sql"
-      #   volumeMounts:
-      #   - name: nginx-ui-cm
-      #     mountPath: /conf
-      #   - name: etc-nginxui
-      #     mountPath: /etc/nginx-ui
-      # - name: nginx-ui-copy-config
-      #   image: keinos/sqlite3:latest
-      #   command:
-      #   - /bin/sh
-      #   - -c
-      #   - "cp /conf/appdata.ini /etc/nginx-ui/ && chmod +rw -R /etc/nginx-ui/"
-      #   securityContext:
-      #     capabilities:
-      #       add:
-      #       - CHOWN
-      #       - FOWNER
-      #       - SETUID
-      #       - SETGID
-      #   volumeMounts:
-      #   - name: nginx-ui-cm
-      #     mountPath: /conf
-      #   - name: etc-nginxui
-      #     mountPath: /etc/nginx-ui
+      initContainers:
+      - name: nginx-ui-dbprepare
+        image: keinos/sqlite3:latest
+        command:
+        - /bin/sh
+        - -c
+        - "sqlite3 /etc/nginx-ui/database.db < /conf/dump.sql"
+        volumeMounts:
+        - name: nginx-ui-cm
+          mountPath: /conf
+        - name: etc-nginxui
+          mountPath: /etc/nginx-ui
+      - name: nginx-ui-copy-config
+        image: keinos/sqlite3:latest
+        command:
+        - /bin/sh
+        - -c
+        - "cp /conf/appdata.ini /etc/nginx-ui/ && chmod +rw -R /etc/nginx-ui/"
+        securityContext:
+          capabilities:
+            add:
+            - CHOWN
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - MKNOD
+            - NET_BIND_SERVICE
+            - SETFCAP
+            - SETGID
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
+        volumeMounts:
+        - name: nginx-ui-cm
+          mountPath: /conf
+        - name: etc-nginxui
+          mountPath: /etc/nginx-ui
       containers:
       - name: nginx
         image: nginx:latest
@@ -120,6 +128,17 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             add:
+            - CHOWN
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - MKNOD
+            - SETFCAP
+            - SETGID
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
             - NET_BIND_SERVICE
             drop:
             - ALL
