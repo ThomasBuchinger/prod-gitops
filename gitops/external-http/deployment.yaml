@@ -18,6 +18,18 @@ spec:
         app.kubernetes.io/name: nginx
         app.kubernetes.io/instance: external-http
     spec:
+      initContainers:
+      - name: nginx-ui-dbprepare
+        image: keinos/sqlite3:latest
+        command:
+        - /bin/bash
+        - -c
+        - "sqlite3 /etc/nginx-ui/data/database.db < /etc/nginx-ui/dump.sql"
+        volumeMounts:
+        - name: nginx-ui-conf
+          mountPath: /etc/nginx-ui
+        - name: nginx-ui-data
+          mountPath: /etc/nginx-ui/data
       containers:
       - name: nginx
         image: nginx:latest
@@ -100,10 +112,10 @@ spec:
           mountPath: /var/log/nginx
         - name: conf
           mountPath: /etc/nginx/
-        # - name: nginx-ui-conf
-        #   mountPath: /etc/nginx-ui
-        - name: tmpdir2
-          mountPath: /etc/nginx-ui/
+        - name: nginx-ui-conf
+          mountPath: /etc/nginx-ui
+        - name: nginx-ui-data
+          mountPath: /etc/nginx-ui/data
         - name: tmpdir
           mountPath: /var/cache/nginx
       securityContext: {}
@@ -117,7 +129,7 @@ spec:
           name: nginx-ui
       - name: logs
         emptyDir: {}
-      - name: tmpdir2
+      - name: nginx-ui-data
         emptyDir: {}
 
 ---

@@ -15,7 +15,7 @@ data:
     NodeSecret        = 384c2355-aae3-4954-a345-cca013a0eaff
     HTTPChallengePort = 9180
     Email             = admin@example.com
-    Database          = data/database
+    Database          = /etc/nginx-ui/data/database
     StartCmd          = login
     CADir             = 
     Demo              = false
@@ -43,3 +43,24 @@ data:
     Username           = 
     Password           = 
     PrivateKeyFilePath = 
+
+  dump.sql: |
+    PRAGMA foreign_keys=OFF;
+    BEGIN TRANSACTION;
+    CREATE TABLE `auth_tokens` (`token` text);
+    CREATE TABLE IF NOT EXISTS "chat_gpt_logs" (`name` text,`content` text);
+    CREATE TABLE IF NOT EXISTS "config_backups" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`file_path` text,`content` text,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "auths" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`password` text,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "dns_credentials" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`config` text,`provider` text,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "certs" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`domain` text, `domains` text[], `filename` text, `ssl_certificate_path` text, `ssl_certificate_key_path` text, `auto_cert` integer, `name` text, `log` text, `challenge_method` text, `dns_credential_id` integer,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "sites" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`path` text,`advanced` numeric,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "environments" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`url` text,`token` text,PRIMARY KEY (`id`));
+    CREATE INDEX `idx_config_backups_deleted_at` ON `config_backups`(`deleted_at`);
+    CREATE INDEX `idx_auths_deleted_at` ON `auths`(`deleted_at`);
+    CREATE INDEX `idx_dns_credentials_deleted_at` ON `dns_credentials`(`deleted_at`);
+    CREATE INDEX `idx_certs_deleted_at` ON `certs`(`deleted_at`);
+    CREATE INDEX `idx_sites_deleted_at` ON `sites`(`deleted_at`);
+    CREATE INDEX `idx_environments_deleted_at` ON `environments`(`deleted_at`);
+
+    INSERT INTO auths VALUES(1,'2021-10-13 11:08:51.586009312+08:00','2021-10-13 11:08:51.586009312+08:00',NULL,'admin','$2y$05$e4JFFJrC64IuViEn0K2KIuveGG.rfjNVtrebWJ3D5skfhE8NRUGG6');
+    COMMIT;
