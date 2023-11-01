@@ -7,7 +7,7 @@ kind: ConfigMap
 metadata:
   name: nginx-ui
 data:
-  appdata.ini: |
+  app.ini: |
     [server]
     HttpPort          = 9000
     RunMode           = debug
