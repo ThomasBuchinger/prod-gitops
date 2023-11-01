@@ -27,14 +27,16 @@ spec:
         ports:
         - name: http
           containerPort: 80
-        # livenessProbe:
+        - name: https
+          containerPort: 443
+        livenessProbe:
         #   # failureThreshold: 3
         #   # periodSeconds: 10
         #   # successThreshold: 1
         #   # timeoutSeconds: 1
-        #   httpGet:
-        #     path: /
-        #     port: http
+          httpGet:
+            path: /
+            port: http
         # readinessProbe:
         #   httpGet:
         #     path: /
@@ -55,21 +57,24 @@ spec:
         #     type: RuntimeDefault
         volumeMounts:
         - name: conf
-          mountPath: /etc/nginx/conf.d
+          mountPath: /etc/nginx
         - name: tmpdir
           mountPath: /var/cache/nginx
       - name: nginx-ui
         image: uozi/nginx-ui
         imagePullPolicy: IfNotPresent
         env: []
-        # livenessProbe:
+        ports:
+        - name: ui
+          containerPort: 9000
+        livenessProbe:
         #   # failureThreshold: 3
         #   # periodSeconds: 10
         #   # successThreshold: 1
         #   # timeoutSeconds: 1
-        #   httpGet:
-        #     path: /
-        #     port: http
+          httpGet:
+            path: /
+            port: ui
         # readinessProbe:
         #   httpGet:
         #     path: /
@@ -90,7 +95,7 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - name: conf
-          mountPath: /etc/nginx/cof.g
+          mountPath: /etc/nginx/
       securityContext: {}
       volumes:
       - name: conf
@@ -118,9 +123,8 @@ spec:
     nodePort: 32443
     targetPort: 443
   - name: ui
-    port: 8080
-    nodePort: 32081
-    targetPort: 8080
+    port: 9000
+    targetPort: 9000
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -144,16 +148,16 @@ spec:
           service:
             name: external-http
             port:
-              number: 8080
+              name: ui
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: okd-console-http
+  name: external-http-http
 spec:
   rules:
-  - host: prod.10.0.0.21.nip.io
+  - host: external-http.10.0.0.21.nip.io
     http:
       paths:
       - path: /
@@ -162,4 +166,4 @@ spec:
           service:
             name: okd-console
             port:
-              number: 9000
+              name: ui
