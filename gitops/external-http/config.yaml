@@ -62,4 +62,5 @@ data:
     CREATE INDEX `idx_sites_deleted_at` ON `sites`(`deleted_at`);
     CREATE INDEX `idx_environments_deleted_at` ON `environments`(`deleted_at`);
 
+    INSERT INTO auths VALUES(2,'2023-11-01 17:38:30.037216134+00:00','2023-11-01 17:38:30.037216134+00:00','2023-11-01 17:41:11','admin','$2a$10$Tz9WdkTrLPPSilvh2FsGLeqzLHjRIwV4BSGFa1mwneveSvGlw41l6');
     COMMIT;
