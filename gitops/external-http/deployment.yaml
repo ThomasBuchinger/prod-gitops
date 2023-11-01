@@ -35,7 +35,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "cp /conf/app.ini /etc/nginx-ui/"
+        - "cp /conf/appdata.ini /etc/nginx-ui/"
         volumeMounts:
         - name: nginx-ui-cm
           mountPath: /conf
