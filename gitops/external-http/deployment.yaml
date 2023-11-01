@@ -105,6 +105,8 @@ spec:
           mountPath: /run
         - name: tmpdir
           mountPath: /var/cache/nginx
+        - name: etc-nginx-sitesavailable
+          mountPath: /etc/nginx/site-available
       - name: nginx-ui
         image: uozi/nginx-ui
         imagePullPolicy: IfNotPresent
@@ -169,6 +171,9 @@ spec:
       volumes:
       - name: etc-nginx
         emptyDir: {}
+      - name: etc-nginx-sitesavailable
+        configMap:
+          name: nginx-config
       - name: run
         emptyDir: {}
       - name: logs
