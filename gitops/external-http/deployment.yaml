@@ -44,15 +44,15 @@ spec:
             cpu: 5m
             memory: 64Mi
           limits: {}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            add:
-            - NET_BIND_SERVICE
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     add:
+        #     - NET_BIND_SERVICE
+        #     drop:
+        #     - ALL
+        #   seccompProfile:
+        #     type: RuntimeDefault
         volumeMounts:
         - name: conf
           mountPath: /etc/nginx/conf.d
