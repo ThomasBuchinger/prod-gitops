@@ -96,11 +96,15 @@ spec:
         volumeMounts:
         - name: conf
           mountPath: /etc/nginx/
+        - name: tmpdir2
+          mountPath: /etc/nginx-ui/
       securityContext: {}
       volumes:
       - name: conf
         emptyDir: {}
       - name: tmpdir
+        emptyDir: {}
+      - name: tmpdir2
         emptyDir: {}
 
 ---
