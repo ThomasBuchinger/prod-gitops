@@ -24,10 +24,10 @@ data:
     
     
     [nginx]
-    AccessLogPath = 
-    ErrorLogPath  = 
+    AccessLogPath = /var/log/nginx
+    ErrorLogPath  = /var/log/nginx
     ConfigDir     = 
-    PIDPath       = 
+    PIDPath       = /run/nginx.pid
     ReloadCmd     = 
     RestartCmd    = 
 
