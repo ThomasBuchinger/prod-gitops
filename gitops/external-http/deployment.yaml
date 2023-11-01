@@ -1,4 +1,23 @@
 ---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: external-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-cloud-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-secure-http-buc-sh
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -59,8 +78,6 @@ spec:
           mountPath: /etc/nginx-ui
         - name: etc-nginx
           mountPath: /etc/nginx
-
-
       containers:
       - name: nginx
         image: nginx:latest
@@ -105,6 +122,8 @@ spec:
           mountPath: /var/log/nginx
         - name: run
           mountPath: /run
+        - name: nginx-cert
+          mountPath: /etc/nginx/certs
         - name: tmpdir
           mountPath: /var/cache/nginx
         - name: nginx-sites
@@ -178,6 +197,9 @@ spec:
       - name: nginx-sites
         configMap:
           name: nginx-config
+      - name: nginx-cert
+        secret:
+          secretName: cert-cloud-buc-sh
       - name: run
         emptyDir: {}
       - name: logs
