@@ -106,7 +106,7 @@ spec:
         - name: tmpdir
           mountPath: /var/cache/nginx
         - name: etc-nginx-sitesavailable
-          mountPath: /etc/nginx/site-available
+          mountPath: /etc/nginx/sites-available
       - name: nginx-ui
         image: uozi/nginx-ui
         imagePullPolicy: IfNotPresent
@@ -162,6 +162,8 @@ spec:
           mountPath: /var/log/nginx
         - name: run
           mountPath: /run
+        - name: etc-nginx-sitesavailable
+          mountPath: /etc/nginx/sites-available
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
         - name: tmpdir
