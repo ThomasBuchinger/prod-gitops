@@ -24,12 +24,23 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "sqlite3 /etc/nginx-ui/data/database.db < /etc/nginx-ui/dump.sql"
+        - "sqlite3 /etc/nginx-ui/data/database.db < /conf/dump.sql"
         volumeMounts:
-        - name: nginx-ui-conf
+        - name: nginx-ui-cm
+          mountPath: /conf
+        - name: etc-nginxui
           mountPath: /etc/nginx-ui
-        - name: nginx-ui-data
-          mountPath: /etc/nginx-ui/data
+      - name: nginx-ui-copy-config
+        image: keinos/sqlite3:latest
+        command:
+        - /bin/sh
+        - -c
+        - "cp /conf/app.ini /etc/nginx-ui/"
+        volumeMounts:
+        - name: nginx-ui-cm
+          mountPath: /conf
+        - name: etc-nginxui
+          mountPath: /etc/nginx-ui
       containers:
       - name: nginx
         image: nginx:latest
@@ -69,7 +80,7 @@ spec:
         #     type: RuntimeDefault
         volumeMounts:
         - name: conf
-          mountPath: /etc/nginx
+          mountPath: /etc/nginx/
         - name: logs
           mountPath: /var/log/nginx
         - name: tmpdir
@@ -108,28 +119,28 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: logs
-          mountPath: /var/log/nginx
         - name: conf
           mountPath: /etc/nginx/
-        - name: nginx-ui-conf
+        - name: logs
+          mountPath: /var/log/nginx
+        # - name: nginx-ui-cm
+        #   mountPath: /etc/nginx-ui
+        - name: etc-nginxui
           mountPath: /etc/nginx-ui
-        - name: nginx-ui-data
-          mountPath: /etc/nginx-ui/data
         - name: tmpdir
           mountPath: /var/cache/nginx
       securityContext: {}
       volumes:
       - name: conf
         emptyDir: {}
-      - name: tmpdir
-        emptyDir: {}
-      - name: nginx-ui-conf
-        configMap:
-          name: nginx-ui
       - name: logs
         emptyDir: {}
-      - name: nginx-ui-data
+      - name: tmpdir
+        emptyDir: {}
+      - name: nginx-ui-cm
+        configMap:
+          name: nginx-ui
+      - name: etc-nginxui
         emptyDir: {}
 
 ---
