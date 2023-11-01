@@ -39,7 +39,10 @@ spec:
         securityContext:
           capabilities:
             add:
-            - ALL
+            - CHOWN
+            - SETUID
+            - SETGID
+
         volumeMounts:
         - name: nginx-ui-cm
           mountPath: /conf
