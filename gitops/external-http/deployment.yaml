@@ -34,8 +34,7 @@ spec:
         image: uozi/nginx-ui
         command:
         - /bin/sh
-        - -c
-        - "cp /conf/app.ini /etc/nginx-ui/ && cp -rf /usr/etc/nginx/* /etc/nginx"
+        - /conf/prep_nginx_confih.sh
         securityContext:
           capabilities:
             add:
@@ -54,10 +53,13 @@ spec:
         volumeMounts:
         - name: nginx-ui-cm
           mountPath: /conf
+        - name: nginx-sites
+          mountPath: /sites
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
         - name: etc-nginx
           mountPath: /etc/nginx
+
 
       containers:
       - name: nginx
@@ -105,7 +107,7 @@ spec:
           mountPath: /run
         - name: tmpdir
           mountPath: /var/cache/nginx
-        - name: etc-nginx-sitesavailable
+        - name: nginx-sites
           mountPath: /etc/nginx/sites-available
       - name: nginx-ui
         image: uozi/nginx-ui
@@ -162,7 +164,7 @@ spec:
           mountPath: /var/log/nginx
         - name: run
           mountPath: /run
-        - name: etc-nginx-sitesavailable
+        - name: nginx-sites
           mountPath: /etc/nginx/sites-available
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
@@ -173,7 +175,7 @@ spec:
       volumes:
       - name: etc-nginx
         emptyDir: {}
-      - name: etc-nginx-sitesavailable
+      - name: nginx-sites
         configMap:
           name: nginx-config
       - name: run

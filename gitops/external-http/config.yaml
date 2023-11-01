@@ -21,6 +21,17 @@ kind: ConfigMap
 metadata:
   name: nginx-ui
 data:
+  prep_nginx_confih.sh: |
+    # Copy nginx-ui config
+    cp /conf/app.ini /etc/nginx-ui/
+    
+    # Build NGINX configuration directory
+    cp -rf /usr/etc/nginx/* /etc/nginx
+    for site in $(ls /sites); do
+      cp /sites/$site /etc/nginx/sites-available
+      ln -s /etc/nginx/sites-available/$site /etc/nginx/sites-enabled/$site
+    done
+
   app.ini: |
     [server]
     HttpPort          = 9000
