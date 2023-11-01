@@ -1,4 +1,4 @@
 resources:
-# - deployment.yaml
-# - config.yaml
-- npm-deploy.yaml
+- deployment.yaml
+- config.yaml
+- homepage-deploy.yaml
