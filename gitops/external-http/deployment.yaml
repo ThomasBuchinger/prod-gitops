@@ -21,6 +21,7 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
+        # image: cgr.dev/chainguard/nginx:latest
         imagePullPolicy: IfNotPresent
         env: []
         livenessProbe:
@@ -51,7 +52,9 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - name: conf
-          mountPath: /etc/nginx/cof.g
+          mountPath: /etc/nginx/conf.d
+        - name: tmpdir
+          mountPath: /var/cache/nginx
       - name: nginx-ui
         image: busybox
         imagePullPolicy: IfNotPresent
@@ -88,6 +91,8 @@ spec:
       securityContext: {}
       volumes:
       - name: conf
+        emptyDir: {}
+      - name: tmpdir
         emptyDir: {}
 
 ---
