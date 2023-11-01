@@ -11,10 +11,10 @@ data:
     [server]
     HttpPort          = 9000
     RunMode           = debug
-    JwtSecret         = 
-    NodeSecret        = 384c2355-aae3-4954-a345-cca013a0eaff
+    JwtSecret         = 76187bdd-9e40-4b06-b59f-f1689433251f
+    NodeSecret        = 37295599-404e-41bd-b82f-1684432fcdea
     HTTPChallengePort = 9180
-    Email             = admin@example.com
+    Email             = admin@buc.sh
     Database          = database
     StartCmd          = login
     CADir             = 
@@ -62,6 +62,7 @@ data:
     CREATE INDEX `idx_sites_deleted_at` ON `sites`(`deleted_at`);
     CREATE INDEX `idx_environments_deleted_at` ON `environments`(`deleted_at`);
 
-    INSERT INTO auths VALUES(1,'2021-10-13 11:08:51.586009312+08:00','2023-11-01 17:50:15.232273307+00:00',NULL,'admin','$2a$10$tGVXZYokfAyf0Qf0/5kkMex8MnF5AH9cd7kd1vr/t9CK.UV.FwZia');
-    
+    INSERT INTO auth_tokens VALUES('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJleHAiOjE2OTg5NDkwOTd9.0CScgDY9hq9E0Rl8CWL7Kl8ULiQTSmtGJOlqDcYZb7U');
+    INSERT INTO auths VALUES(2,'2023-11-01 18:18:09.759995967+00:00','2023-11-01 18:18:09.759995967+00:00',NULL,'admin','$2a$10$vcgq7YtzUZeIvItLFDTeu.t5IxhE0xI16rDdEwZj6xAWgUT3.iaZO');
     COMMIT;
+
