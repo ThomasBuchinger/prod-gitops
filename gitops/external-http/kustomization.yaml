@@ -1,3 +1,4 @@
 resources:
-- deployment.yaml
-- config.yaml
+# - deployment.yaml
+# - config.yaml
+- npm-deploy.yaml
