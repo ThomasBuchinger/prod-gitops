@@ -6,7 +6,7 @@ metadata:
 data:
   homepage-external.conf: |
     server {
-      listen :8080;
+      listen 8080;
       servername: apps.cloud.buc.sh;
 
       location / {
