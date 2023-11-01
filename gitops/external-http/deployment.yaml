@@ -34,7 +34,7 @@ spec:
         image: uozi/nginx-ui
         command:
         - /bin/sh
-        - /conf/prep_nginx_confih.sh
+        - /conf/prep_nginx_config.sh
         securityContext:
           capabilities:
             add:
