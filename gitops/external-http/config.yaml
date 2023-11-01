@@ -15,7 +15,7 @@ data:
     NodeSecret        = 384c2355-aae3-4954-a345-cca013a0eaff
     HTTPChallengePort = 9180
     Email             = admin@example.com
-    Database          = /etc/nginx-ui/database
+    Database          = database
     StartCmd          = login
     CADir             = 
     Demo              = false
