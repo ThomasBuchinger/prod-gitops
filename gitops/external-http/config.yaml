@@ -37,7 +37,7 @@ data:
     
     # Build NGINX configuration directory
     cp -rf /usr/etc/nginx/* /etc/nginx
-    for site in $(ls /sites/*.conf); do
+    for site in $(ls /sites); do
       cp /sites/$site /etc/nginx/sites-available
       ln -s /etc/nginx/sites-available/$site /etc/nginx/sites-enabled/$site
     done
