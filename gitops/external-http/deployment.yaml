@@ -22,7 +22,7 @@ spec:
       - name: nginx-ui-dbprepare
         image: keinos/sqlite3:latest
         command:
-        - /bin/bash
+        - /bin/sh
         - -c
         - "sqlite3 /etc/nginx-ui/data/database.db < /etc/nginx-ui/dump.sql"
         volumeMounts:
