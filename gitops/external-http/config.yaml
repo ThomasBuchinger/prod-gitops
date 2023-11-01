@@ -1,0 +1,45 @@
+
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-ui
+data:
+  appdata.ini: |
+    [server]
+    HttpPort          = 9000
+    RunMode           = debug
+    JwtSecret         = 
+    NodeSecret        = 384c2355-aae3-4954-a345-cca013a0eaff
+    HTTPChallengePort = 9180
+    Email             = admin@example.com
+    Database          = data/database
+    StartCmd          = login
+    CADir             = 
+    Demo              = false
+    PageSize          = 10
+    GithubProxy       = 
+    
+    
+    [nginx]
+    AccessLogPath = 
+    ErrorLogPath  = 
+    ConfigDir     = 
+    PIDPath       = 
+    ReloadCmd     = 
+    RestartCmd    = 
+
+    [openai]
+    BaseUrl = 
+    Token   = 
+    Proxy   = 
+    Model   = 
+
+    [git]
+    Url                = 
+    AuthMethod         = 
+    Username           = 
+    Password           = 
+    PrivateKeyFilePath = 

@@ -58,6 +58,8 @@ spec:
         volumeMounts:
         - name: conf
           mountPath: /etc/nginx
+        - name: logs
+          mountPath: /var/log/nginx
         - name: tmpdir
           mountPath: /var/cache/nginx
       - name: nginx-ui
@@ -94,15 +96,26 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
+        - name: logs
+          mountPath: /var/log/nginx
         - name: conf
           mountPath: /etc/nginx/
+        - name: nginx-ui-conf
+          mountPath: /etc/nginx-ui
         - name: tmpdir2
-          mountPath: /etc/nginx-ui/
+          mountPath: /etc/nginx-ui/data
+        - name: tmpdir
+          mountPath: /var/cache/nginx
       securityContext: {}
       volumes:
       - name: conf
         emptyDir: {}
       - name: tmpdir
+        emptyDir: {}
+      - name: nginx-ui
+        configMap:
+          name: nginx-ui
+      - name: logs
         emptyDir: {}
       - name: tmpdir2
         emptyDir: {}
