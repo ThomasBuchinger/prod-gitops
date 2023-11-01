@@ -100,10 +100,10 @@ spec:
           mountPath: /var/log/nginx
         - name: conf
           mountPath: /etc/nginx/
-        - name: nginx-ui-conf
-          mountPath: /etc/nginx-ui
+        # - name: nginx-ui-conf
+        #   mountPath: /etc/nginx-ui
         - name: tmpdir2
-          mountPath: /etc/nginx-ui/data
+          mountPath: /etc/nginx-ui/
         - name: tmpdir
           mountPath: /var/cache/nginx
       securityContext: {}
