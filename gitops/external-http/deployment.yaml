@@ -35,7 +35,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "cp /conf/appdata.ini /etc/nginx-ui/ && chmod +rw -R /etc/nginx-ui/"
+        - "cp /conf/appdata.ini /etc/nginx-ui/"
         securityContext:
           capabilities:
             add:
