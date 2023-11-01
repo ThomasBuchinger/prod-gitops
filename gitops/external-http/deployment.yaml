@@ -31,7 +31,7 @@ spec:
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
       - name: nginx-ui-copy-config
-        image: keinos/sqlite3:latest
+        image: uozi/nginx-ui
         command:
         - /bin/sh
         - -c
@@ -56,6 +56,8 @@ spec:
           mountPath: /conf
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
+        - name: etc-nginx
+          mountPath: /etc/nginx
 
       containers:
       - name: nginx
@@ -95,7 +97,7 @@ spec:
         #   seccompProfile:
         #     type: RuntimeDefault
         volumeMounts:
-        - name: conf
+        - name: etc-nginx
           mountPath: /etc/nginx/
         - name: logs
           mountPath: /var/log/nginx
@@ -150,12 +152,10 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: conf
+        - name: etc-nginx
           mountPath: /etc/nginx/
         - name: logs
           mountPath: /var/log/nginx
-        - name: nginx-ui-cm
-          mountPath: /etc/nginx-ui
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
         - name: tmpdir
@@ -163,7 +163,7 @@ spec:
       shareProcessNamespace: true
       securityContext: {}
       volumes:
-      - name: conf
+      - name: etc-nginx
         emptyDir: {}
       - name: logs
         emptyDir: {}
