@@ -112,7 +112,7 @@ spec:
         emptyDir: {}
       - name: tmpdir
         emptyDir: {}
-      - name: nginx-ui
+      - name: nginx-ui-conf
         configMap:
           name: nginx-ui
       - name: logs
