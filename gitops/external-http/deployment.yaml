@@ -36,6 +36,10 @@ spec:
         - /bin/sh
         - -c
         - "cp /conf/appdata.ini /etc/nginx-ui/ && chmod +rw -R /etc/nginx-ui/"
+        securityContext:
+          capabilities:
+            add:
+            - ALL
         volumeMounts:
         - name: nginx-ui-cm
           mountPath: /conf
