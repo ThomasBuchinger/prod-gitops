@@ -59,7 +59,7 @@ spec:
         - name: tmpdir
           mountPath: /var/cache/nginx
       - name: nginx-ui
-        image: busybox
+        image: uozi/nginx-ui
         imagePullPolicy: IfNotPresent
         env: []
         # livenessProbe:
