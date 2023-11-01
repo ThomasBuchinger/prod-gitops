@@ -18,37 +18,36 @@ spec:
         app.kubernetes.io/name: nginx
         app.kubernetes.io/instance: external-http
     spec:
-      initContainers:
-      - name: nginx-ui-dbprepare
-        image: keinos/sqlite3:latest
-        command:
-        - /bin/sh
-        - -c
-        - "sqlite3 /etc/nginx-ui/database.db < /conf/dump.sql"
-        volumeMounts:
-        - name: nginx-ui-cm
-          mountPath: /conf
-        - name: etc-nginxui
-          mountPath: /etc/nginx-ui
-      - name: nginx-ui-copy-config
-        image: keinos/sqlite3:latest
-        command:
-        - /bin/sh
-        - -c
-        - "cp /conf/appdata.ini /etc/nginx-ui/ && chmod +rw -R /etc/nginx-ui/"
-        securityContext:
-          capabilities:
-            add:
-            - CHOWN
-            - FOWNER
-            - SETUID
-            - SETGID
-
-        volumeMounts:
-        - name: nginx-ui-cm
-          mountPath: /conf
-        - name: etc-nginxui
-          mountPath: /etc/nginx-ui
+      # initContainers:
+      # - name: nginx-ui-dbprepare
+      #   image: keinos/sqlite3:latest
+      #   command:
+      #   - /bin/sh
+      #   - -c
+      #   - "sqlite3 /etc/nginx-ui/database.db < /conf/dump.sql"
+      #   volumeMounts:
+      #   - name: nginx-ui-cm
+      #     mountPath: /conf
+      #   - name: etc-nginxui
+      #     mountPath: /etc/nginx-ui
+      # - name: nginx-ui-copy-config
+      #   image: keinos/sqlite3:latest
+      #   command:
+      #   - /bin/sh
+      #   - -c
+      #   - "cp /conf/appdata.ini /etc/nginx-ui/ && chmod +rw -R /etc/nginx-ui/"
+      #   securityContext:
+      #     capabilities:
+      #       add:
+      #       - CHOWN
+      #       - FOWNER
+      #       - SETUID
+      #       - SETGID
+      #   volumeMounts:
+      #   - name: nginx-ui-cm
+      #     mountPath: /conf
+      #   - name: etc-nginxui
+      #     mountPath: /etc/nginx-ui
       containers:
       - name: nginx
         image: nginx:latest
