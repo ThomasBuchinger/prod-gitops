@@ -102,18 +102,18 @@ spec:
       app.kubernetes.io/name: external-http
   policyTypes:
     - Egress
-    - Ingress
+    # - Ingress
   egress:
   - to:
     - ipBlock:
         cidr: "0.0.0.0/0"
-  ingress:
-  # Allow Ingress
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: traefik
-    ports:
-    - protocol: TCP
-      port: 8080
+  # ingress:
+  # # Allow Ingress
+  # - from:
+  #   - namespaceSelector:
+  #       matchLabels:
+  #         kubernetes.io/metadata.name: traefik
+  #   ports:
+  #   - protocol: TCP
+  #     port: 8080
 

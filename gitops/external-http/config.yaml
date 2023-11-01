@@ -7,7 +7,7 @@ data:
   homepage-external.conf: |
     server {
       listen 8080;
-      servername: apps.cloud.buc.sh;
+      server_name: apps.cloud.buc.sh;
 
       location / {
         proxy_pass http://homepage-external:8080;
