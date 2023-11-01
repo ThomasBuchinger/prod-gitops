@@ -101,6 +101,8 @@ spec:
           mountPath: /etc/nginx/
         - name: logs
           mountPath: /var/log/nginx
+        - name: run
+          mountPath: /run
         - name: tmpdir
           mountPath: /var/cache/nginx
       - name: nginx-ui
@@ -156,6 +158,8 @@ spec:
           mountPath: /etc/nginx/
         - name: logs
           mountPath: /var/log/nginx
+        - name: run
+          mountPath: /run
         - name: etc-nginxui
           mountPath: /etc/nginx-ui
         - name: tmpdir
@@ -164,6 +168,8 @@ spec:
       securityContext: {}
       volumes:
       - name: etc-nginx
+        emptyDir: {}
+      - name: run
         emptyDir: {}
       - name: logs
         emptyDir: {}
