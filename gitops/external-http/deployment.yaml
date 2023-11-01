@@ -24,6 +24,9 @@ spec:
         # image: cgr.dev/chainguard/nginx:latest
         imagePullPolicy: IfNotPresent
         env: []
+        ports:
+        - name: http
+          containerPort: 80
         livenessProbe:
           # failureThreshold: 3
           # periodSeconds: 10
