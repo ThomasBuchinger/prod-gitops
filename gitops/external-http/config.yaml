@@ -48,14 +48,9 @@ data:
     PRAGMA foreign_keys=OFF;
     BEGIN TRANSACTION;
     CREATE TABLE `auth_tokens` (`token` text);
-    INSERT INTO auth_tokens VALUES('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJleHAiOjE2OTg5NDY3MjR9.w122oUFxiIznsW9llyFeHsrSTQCLvEmxCi9lTkHh5nw');
     CREATE TABLE IF NOT EXISTS "chat_gpt_logs" (`name` text,`content` text);
-    INSERT INTO chat_gpt_logs VALUES('/etc/nginx/sites-available/test',NULL);
     CREATE TABLE IF NOT EXISTS "config_backups" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`file_path` text,`content` text,PRIMARY KEY (`id`));
     CREATE TABLE IF NOT EXISTS "auths" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`password` text,PRIMARY KEY (`id`));
-    INSERT INTO auths VALUES(1,'2021-10-13 11:08:51.586009312+08:00','2023-11-01 17:50:15.232273307+00:00',NULL,'admin','$2a$10$tGVXZYokfAyf0Qf0/5kkMex8MnF5AH9cd7kd1vr/t9CK.UV.FwZia');
-    INSERT INTO auths VALUES(2,'2023-11-01 17:38:30.037216134+00:00','2023-11-01 17:38:30.037216134+00:00','2023-11-01 17:41:11','admin','$2a$10$Tz9WdkTrLPPSilvh2FsGLeqzLHjRIwV4BSGFa1mwneveSvGlw41l6');
-    INSERT INTO auths VALUES(3,'2023-11-01 17:50:43.969476629+00:00','2023-11-01 17:50:43.969476629+00:00',NULL,'buc','$2a$10$5m1TXlL2MEpcIqDi.tf/yOSz569s2ASME0zlfYipd7wDwFpjGeIZm');
     CREATE TABLE IF NOT EXISTS "dns_credentials" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`config` text,`provider` text,PRIMARY KEY (`id`));
     CREATE TABLE IF NOT EXISTS "certs" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`domain` text, `domains` text[], `filename` text, `ssl_certificate_path` text, `ssl_certificate_key_path` text, `auto_cert` integer, `name` text, `log` text, `challenge_method` text, `dns_credential_id` integer,PRIMARY KEY (`id`));
     CREATE TABLE IF NOT EXISTS "sites" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`path` text,`advanced` numeric,PRIMARY KEY (`id`));
@@ -66,4 +61,7 @@ data:
     CREATE INDEX `idx_certs_deleted_at` ON `certs`(`deleted_at`);
     CREATE INDEX `idx_sites_deleted_at` ON `sites`(`deleted_at`);
     CREATE INDEX `idx_environments_deleted_at` ON `environments`(`deleted_at`);
+
+    INSERT INTO auths VALUES(1,'2021-10-13 11:08:51.586009312+08:00','2023-11-01 17:50:15.232273307+00:00',NULL,'admin','$2a$10$tGVXZYokfAyf0Qf0/5kkMex8MnF5AH9cd7kd1vr/t9CK.UV.FwZia');
+    
     COMMIT;
