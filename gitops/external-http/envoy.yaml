@@ -43,8 +43,8 @@ spec:
         imagePullPolicy: IfNotPresent
         command:
         - envoy
-        - --config
-        - /config/envoy-config.yaml
+        - -c
+        - /config
         env: []
         ports:
         - name: http
