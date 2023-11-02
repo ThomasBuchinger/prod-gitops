@@ -1,0 +1,151 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: external-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-cloud-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-secure-http-buc-sh
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-http
+  labels:
+    app.kubernetes.io/name: envoy
+    app.kubernetes.io/instance: external-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/instance: external-http
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: envoy
+        app.kubernetes.io/instance: external-http
+    spec:
+      containers:
+      - name: envoy
+        image: envoyproxy/envoy:dev
+        imagePullPolicy: IfNotPresent
+        command:
+        - envoy
+        - --config
+        - /config/envoy-config.yaml
+        env: []
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: https
+          containerPort: 8443
+        - name: ui
+          containerPort: 9000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits: {}
+        volumeMounts:
+        - name: envoy-cm
+          mountPath: /config
+
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     add:
+        #     - NET_BIND_SERVICE
+        #     drop:
+        #     - ALL
+        #   seccompProfile:
+        #     type: RuntimeDefault
+      securityContext: {}
+      volumes:
+      - name: envoy-cm
+        configMap:
+          name: envoy-cm
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: external-http
+spec:
+  selector:
+    app.kubernetes.io/name: envoy
+    app.kubernetes.io/instance: external-http
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    nodePort: 32080
+    targetPort: 8080
+  - name: https
+    port: 443
+    nodePort: 32443
+    targetPort: 8443
+  - name: ui
+    port: 9000
+    targetPort: 9000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: external-http
+  # annotations:
+  #   cert-manager.io/cluster-issuer: letsencrypt-prod-cloudflare-dns
+spec:
+  # tls:
+  # - hosts:
+  #   - prod-console.buc.sh
+  #   secretName: cert-evergreen-console-buc-sh
+  rules:
+  - host: external-http.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: external-http
+            port:
+              name: ui
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: external-http-http
+spec:
+  rules:
+  - host: external-http.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: external-http
+            port:
+              name: ui

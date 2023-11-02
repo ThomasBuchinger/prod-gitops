@@ -1,4 +1,6 @@
 resources:
-- deployment.yaml
-- config.yaml
+# - deployment.yaml
+# - config.yaml
 - homepage-deploy.yaml
+- envoy.yaml
+- envoy-config.yaml
