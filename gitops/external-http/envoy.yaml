@@ -44,7 +44,7 @@ spec:
         command:
         - envoy
         - -c
-        - /config
+        - /config/envoy-config.yaml
         env: []
         ports:
         - name: http
