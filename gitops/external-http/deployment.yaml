@@ -80,27 +80,22 @@ spec:
           mountPath: /etc/nginx
       containers:
       - name: nginx
-        image: nginx:latest
-        # image: cgr.dev/chainguard/nginx:latest
+        image: cgr.dev/chainguard/nginx:latest
         imagePullPolicy: IfNotPresent
         env: []
         ports:
         - name: http
-          containerPort: 80
+          containerPort: 8080
         - name: https
           containerPort: 443
         livenessProbe:
-        #   # failureThreshold: 3
-        #   # periodSeconds: 10
-        #   # successThreshold: 1
-        #   # timeoutSeconds: 1
           httpGet:
             path: /
             port: http
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
         resources:
           requests:
             cpu: 5m
@@ -226,7 +221,7 @@ spec:
   - name: http
     port: 80
     nodePort: 32080
-    targetPort: 80
+    targetPort: 8080
   - name: https
     port: 443
     nodePort: 32443
