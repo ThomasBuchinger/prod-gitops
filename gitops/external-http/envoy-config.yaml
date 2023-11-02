@@ -4,6 +4,12 @@ metadata:
   name: envoy-cm
 data:
   envoy-config.yaml: |
+    admin:
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 9000
+
     static_resources:
       listeners:
       - name: listener_0
@@ -36,14 +42,6 @@ data:
                     route:
                       host_rewrite_literal: www.envoyproxy.io
                       cluster: service_envoyproxy_io
-
-      admin:
-        address:
-          socket_address:
-            protocol: TCP
-            address: 0.0.0.0
-            port_value: 9000
-
       clusters:
       - name: service_envoyproxy_io
         type: LOGICAL_DNS
