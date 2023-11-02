@@ -45,14 +45,13 @@ data:
     
     # Build NGINX configuration directory
     cp /conf/nginx.conf /usr/etc/nginx/mime.types /etc/nginx
-    mkdir -p /etc/nginx/conf.d
-    cp /sites/* /etc/nginx/conf.d/
 
-    # cp -rf /usr/etc/nginx/* /etc/nginx
-    # for site in $(ls /sites); do
-    #   cp /sites/$site /etc/nginx/sites-available
-    #   ln -s /etc/nginx/sites-available/$site /etc/nginx/sites-enabled/$site
-    # done
+    mkdir -p /etc/nginx/sites-available
+    mkdir -p /etc/nginx/sites-enabled
+    for site in $(ls /sites); do
+      cp /sites/$site /etc/nginx/sites-available
+      ln -s /etc/nginx/sites-available/$site /etc/nginx/sites-enabled/$site
+    done
   nginx.conf: |
     worker_processes  auto;
     error_log  /var/log/nginx/error.log notice;
@@ -73,6 +72,7 @@ data:
         keepalive_timeout  65;
         gzip  on;
         include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*.conf
     }
   
   app.ini: |
