@@ -3,4 +3,8 @@ resources:
 # - config.yaml
 - homepage-deploy.yaml
 - envoy.yaml
-- envoy-config.yaml
+
+configMapGenerator:
+- name: envoy-cm
+  files:
+  - envoy-config.yaml
