@@ -103,8 +103,8 @@ static_resources:
               - match:
                   prefix: "/"
                 route:
-                  cluster: external-homepage
-                  prefix_rewrite: /external
+                  cluster: homepage
+                  prefix_rewrite: /external/
           http_filters:
           # Blocking any Request ype that is not GET.
           # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
@@ -126,17 +126,17 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
-  - name: external-homepage
+  - name: homepage
     type: LOGICAL_DNS
     load_assignment:
-      cluster_name: external-homepae
+      cluster_name: homepage
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: homepage-external
-                port_value: 8080
+                address: status.buc.sh
+                port_value: 80
     health_checks:
     - timeout: 3s
       interval: 30s
