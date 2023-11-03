@@ -69,8 +69,7 @@ static_resources:
               - match:
                   headers:
                   - name: ":method"
-                    string_match:
-                      exact": "POST"
+                    exact_match: "POST"
                 direct_response:
                   status: 444
             - name: apps-cloud-buc-sh
