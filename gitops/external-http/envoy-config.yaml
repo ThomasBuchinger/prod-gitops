@@ -138,13 +138,13 @@ static_resources:
               socket_address:
                 address: 10.0.0.16
                 port_value: 80
-    health_checks:
-    - timeout: 3s
-      interval: 30s
-      unhealthy_threshold: 3
-      healthy_threshold: 1
-      http_health_check:
-        path: "/"
+    # health_checks:
+    # - timeout: 3s
+    #   interval: 30s
+    #   unhealthy_threshold: 3
+    #   healthy_threshold: 1
+    #   http_health_check:
+    #     path: "/external"
     # transport_socket:
     #   name: envoy.transport_sockets.tls
     #   typed_config:
