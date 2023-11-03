@@ -93,12 +93,12 @@ spec:
           containerPort: 8080
         livenessProbe:
           httpGet:
-            path: /livez
-            port: http
+            path: /
+            port: ui
         readinessProbe:
           httpGet:
-            path: /livez
-            port: http
+            path: /
+            port: ui
         resources:
           requests:
             cpu: 5m
