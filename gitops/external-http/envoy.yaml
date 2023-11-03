@@ -101,7 +101,6 @@ spec:
             path: /
             scheme: http
             port: ui
-        terminationGracePeriodSeconds: 1
         resources:
           requests:
             cpu: 5m
@@ -109,6 +108,7 @@ spec:
           limits: {}
 
       securityContext: {}
+      terminationGracePeriodSeconds: 10
       volumes:
       - name: envoy-cm
         configMap:
