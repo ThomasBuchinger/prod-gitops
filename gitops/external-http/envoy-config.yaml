@@ -133,7 +133,7 @@ static_resources:
       endpoints:
       - lb_endpoints:
         - endpoint:
-            hostname: status.buc.sh
+            hostname: status.10.0.0.16.nip.io
             address:
               socket_address:
                 address: 10.0.0.16
