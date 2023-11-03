@@ -13,13 +13,26 @@ static_resources:
       socket_address:
         address: 0.0.0.0
         port_value: 8080
-    per_connection_buffer_limit_bytes: 32768 # 32 KB. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
+    per_connection_buffer_limit_bytes: 32768                        # 32 KB. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
     filter_chains:
     - filters:
       - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
           stat_prefix: public_http
+          use_remote_address: true
+          normalize_path: true
+          merge_slashes: true
+          path_with_escaped_slashes_action: UNESCAPE_AND_REDIRECT
+          common_http_protocol_options:
+            idle_timeout: 600s  # 10 mins
+            headers_with_underscores_action: REJECT_REQUEST
+          http2_protocol_options:
+            max_concurrent_streams: 100
+            initial_stream_window_size: 65536  # 64 KiB
+            initial_connection_window_size: 1048576  # 1 MiB
+          stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
+          request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
           access_log:
           - name: envoy.access_loggers.stdout
             typed_config:
@@ -46,6 +59,11 @@ static_resources:
       socket_address:
         address: "0.0.0.0"
         port_value: 8443
+    listener_filters:
+    - name: "envoy.filters.listener.tls_inspector"
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.filters.listener.tls_inspector.v3.TlsInspector
+    per_connection_buffer_limit_bytes: 32768                        # 32 KB. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
     filter_chains:
     - transport_socket:
         name: envoy.transport_sockets.tls
@@ -55,11 +73,26 @@ static_resources:
             tls_certificates:
             - certificate_chain: {filename: "cert/tls.crt"}
               private_key: {filename: "cert/tls.key"}
+            alpn_protocols: ["h2,http/1.1"]
+
       filters:
       - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
           stat_prefix: public_https
+          use_remote_address: true
+          normalize_path: true
+          merge_slashes: true
+          path_with_escaped_slashes_action: UNESCAPE_AND_REDIRECT
+          common_http_protocol_options:
+            idle_timeout: 600s  # 10 mins
+            headers_with_underscores_action: REJECT_REQUEST
+          http2_protocol_options:
+            max_concurrent_streams: 100
+            initial_stream_window_size: 65536  # 64 KiB
+            initial_connection_window_size: 1048576  # 1 MiB
+          stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
+          request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
           route_config:
             name: main_router
             virtual_hosts:
@@ -115,6 +148,13 @@ static_resources:
     #   typed_config:
     #     "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
     #     sni: www.envoyproxy.io
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options:
+            initial_stream_window_size: 65536  # 64 KiB
+            initial_connection_window_size: 1048576  # 1 MiB
 
 # Overload Manager stops accepting connection if memory is running out
 # [Recommended Settings](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
@@ -133,18 +173,28 @@ overload_manager:
   actions:
   - name: "envoy.overload_actions.disable_http_keepalive"
     triggers:
-      - name: "envoy.resource_monitors.fixed_heap"
-        threshold:
-          value: 0.92
+    - name: "envoy.resource_monitors.fixed_heap"
+      threshold:
+        value: 0.92
   - name: "envoy.overload_actions.stop_accepting_requests"
     triggers:
-      - name: "envoy.resource_monitors.fixed_heap"
-        threshold:
-          value: 0.95
+    - name: "envoy.resource_monitors.fixed_heap"
+      threshold:
+        value: 0.95
   loadshed_points:
   - name: "envoy.load_shed_points.tcp_listener_accept"
     triggers:
       - name: "envoy.resource_monitors.fixed_heap"
         threshold:
           value: 0.95
-
+layered_runtime:
+  layers:
+  - name: static_layer_0
+    static_layer:
+      envoy:
+        resource_limits:
+          listener:
+            example_listener_name:
+              connection_limit: 10000
+      overload:
+        global_downstream_max_connections: 50000
