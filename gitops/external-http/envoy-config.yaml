@@ -73,9 +73,10 @@ static_resources:
                     string_match:
                       safe_regex:
                         regex: "GET"
-                route:
-                  direct_response:
-                    status: 444
+                direct_response:
+                  status: 444
+                  body:
+                    inline:string: "not ok"
             - name: apps-cloud-buc-sh
               domains:
               - apps.cloud.buc.sh
