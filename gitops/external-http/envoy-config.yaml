@@ -116,7 +116,7 @@ static_resources:
                   function envoy_on_request(request_handle)
                     if request_handle:headers():get(":method") == "GET" then
                       request_handle:respond(
-                        {[":status"] = "301", [Location] = "https://google.at"},
+                        {[":status"] = "301", ["Location"] = "https://google.at"},
                         "Only GET requests allowed")
                     end
                   end
