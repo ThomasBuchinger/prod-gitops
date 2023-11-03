@@ -55,11 +55,11 @@ spec:
           containerPort: 9000
         livenessProbe:
           httpGet:
-            path: /
+            path: /livez
             port: http
         readinessProbe:
           httpGet:
-            path: /
+            path: /livez
             port: http
         resources:
           requests:
