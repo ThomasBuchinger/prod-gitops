@@ -72,7 +72,7 @@ static_resources:
                   - name: ":method"
                     string_match:
                       safe_regex:
-                        regex: "POST"
+                        regex: "GET"
                 route:
                   cluster: external-homepage
           http_filters:
