@@ -133,9 +133,10 @@ static_resources:
       endpoints:
       - lb_endpoints:
         - endpoint:
+            hostname: status.buc.sh
             address:
               socket_address:
-                address: status.10.0.0.16.nip.io
+                address: 10.0.0.16
                 port_value: 80
     health_checks:
     - timeout: 3s
