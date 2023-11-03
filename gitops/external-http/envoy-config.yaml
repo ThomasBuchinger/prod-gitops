@@ -148,13 +148,13 @@ static_resources:
     #   typed_config:
     #     "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
     #     sni: www.envoyproxy.io
-    typed_extension_protocol_options:
-      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
-        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
-        explicit_http_config:
-          http2_protocol_options:
-            initial_stream_window_size: 65536  # 64 KiB
-            initial_connection_window_size: 1048576  # 1 MiB
+    # typed_extension_protocol_options:
+    #   envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+    #     "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+    #     explicit_http_config:
+    #       http2_protocol_options:
+    #         initial_stream_window_size: 65536  # 64 KiB
+    #         initial_connection_window_size: 1048576  # 1 MiB
 
 # Overload Manager stops accepting connection if memory is running out
 # [Recommended Settings](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
@@ -191,12 +191,12 @@ layered_runtime:
   layers:
   - name: static_layer_0
     static_layer:
-      # envoy:
-      #   resource_limits:
-      #     listener:
-      #       http:
-      #         connection_limit: 10000
-      #       https:
-      #         connection_limit: 10000
+      envoy:
+        resource_limits:
+          listener:
+            http:
+              connection_limit: 10000
+            https:
+              connection_limit: 10000
       overload:
         global_downstream_max_connections: 50000
