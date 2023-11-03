@@ -62,21 +62,6 @@ static_resources:
           route_config:
             name: main_router
             virtual_hosts:
-            # - name: blackhole
-            #   domains:
-            #   - "*.cloud.buc.sh"
-            #   routes:
-            #   - match:
-            #       prefix: "/"
-            #       headers:
-            #       - name: ":method"
-            #         string_match:
-            #           safe_regex:
-            #             regex: "GET"
-            #     direct_response:
-            #       status: 444
-            #       body:
-            #         inline_string: "not ok"
             - name: apps-cloud-buc-sh
               domains:
               - apps.cloud.buc.sh
@@ -86,6 +71,9 @@ static_resources:
                 route:
                   cluster: external-homepage
           http_filters:
+          # Blocking any Request ype that is not GET.
+          # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
+          #
           - name: envoy.filters.http.lua
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
