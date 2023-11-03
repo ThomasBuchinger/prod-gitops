@@ -62,21 +62,21 @@ static_resources:
           route_config:
             name: main_router
             virtual_hosts:
-            - name: blackhole
-              domains:
-              - "*.cloud.buc.sh"
-              routes:
-              - match:
-                  prefix: "/"
-                  headers:
-                  - name: ":method"
-                    string_match:
-                      safe_regex:
-                        regex: "GET"
-                direct_response:
-                  status: 444
-                  body:
-                    inline_string: "not ok"
+            # - name: blackhole
+            #   domains:
+            #   - "*.cloud.buc.sh"
+            #   routes:
+            #   - match:
+            #       prefix: "/"
+            #       headers:
+            #       - name: ":method"
+            #         string_match:
+            #           safe_regex:
+            #             regex: "GET"
+            #     direct_response:
+            #       status: 444
+            #       body:
+            #         inline_string: "not ok"
             - name: apps-cloud-buc-sh
               domains:
               - apps.cloud.buc.sh
@@ -86,6 +86,19 @@ static_resources:
                 route:
                   cluster: external-homepage
           http_filters:
+          - name: envoy.filters.http.lua
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+              default_source_code:
+                inline_string: |
+                  function envoy_on_request(request_handle)
+                    if request_handle:headers():get(":method") == "GET" then
+                      request_handle:respond(
+                        {[":status"] = "403",
+                        ["upstream_foo"] = headers["foo"]},
+                        "nope")
+                    end
+                  end
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
