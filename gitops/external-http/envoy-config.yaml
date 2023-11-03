@@ -13,6 +13,7 @@ static_resources:
       socket_address:
         address: 0.0.0.0
         port_value: 8080
+    per_connection_buffer_limit_bytes: 32768 # 32 KB. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
     filter_chains:
     - filters:
       - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
@@ -114,3 +115,36 @@ static_resources:
     #   typed_config:
     #     "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
     #     sni: www.envoyproxy.io
+
+# Overload Manager stops accepting connection if memory is running out
+# [Recommended Settings](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
+overload_manager:
+  refresh_interval:
+    # Check 4 times per second
+    seconds: 0
+    nanos: 250000000
+  resource_monitors:
+  # We only monitor HEAP space.
+  - name: "envoy.resource_monitors.fixed_heap"
+    typed_config:
+      "@type": type.googleapis.com/envoy.extensions.resource_monitors.fixed_heap.v3.FixedHeapConfig
+      max_heap_size_bytes: 2147483648  # 2GB
+  # Try closing connections at 95% HEAP, stop accepting new requests at 95% HEAP
+  actions:
+  - name: "envoy.overload_actions.disable_http_keepalive"
+    triggers:
+      - name: "envoy.resource_monitors.fixed_heap"
+        threshold:
+          value: 0.92
+  - name: "envoy.overload_actions.stop_accepting_requests"
+    triggers:
+      - name: "envoy.resource_monitors.fixed_heap"
+        threshold:
+          value: 0.95
+  loadshed_points:
+  - name: "envoy.load_shed_points.tcp_listener_accept"
+    triggers:
+      - name: "envoy.resource_monitors.fixed_heap"
+        threshold:
+          value: 0.95
+
