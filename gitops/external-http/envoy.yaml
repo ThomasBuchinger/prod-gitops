@@ -51,8 +51,8 @@ spec:
           containerPort: 8080
         - name: https
           containerPort: 8443
-        - name: ui
-          containerPort: 9000
+        - name: admin
+          containerPort: 9901
         livenessProbe:
           httpGet:
             path: /livez
@@ -90,7 +90,7 @@ spec:
         env: []
         ports:
         - name: ui
-          containerPort: 8080
+          containerPort: 9000
         livenessProbe:
           httpGet:
             path: /
