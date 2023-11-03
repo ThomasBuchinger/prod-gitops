@@ -177,10 +177,17 @@ spec:
   - host: external-http.10.0.0.21.nip.io
     http:
       paths:
-      - path: /
+      - path: /ui
         pathType: Prefix
         backend:
           service:
             name: external-http
             port:
               name: ui
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: external-http
+            port:
+              name: admin
