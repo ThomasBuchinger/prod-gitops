@@ -76,7 +76,7 @@ static_resources:
                 direct_response:
                   status: 444
                   body:
-                    inline:string: "not ok"
+                    inline_string: "not ok"
             - name: apps-cloud-buc-sh
               domains:
               - apps.cloud.buc.sh
