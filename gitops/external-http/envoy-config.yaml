@@ -94,8 +94,7 @@ static_resources:
                   function envoy_on_request(request_handle)
                     if request_handle:headers():get(":method") == "GET" then
                       request_handle:respond(
-                        {[":status"] = "403",
-                        ["upstream_foo"] = headers["foo"]},
+                        {[":status"] = "403"},
                         "nope")
                     end
                   end
