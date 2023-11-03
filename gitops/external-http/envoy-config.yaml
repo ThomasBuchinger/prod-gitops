@@ -67,6 +67,7 @@ static_resources:
               - "*"
               routes:
               - match:
+                  prefix: "/"
                   headers:
                   - name: ":method"
                     exact_match: "POST"
