@@ -104,7 +104,8 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: homepage
-                  prefix_rewrite: /external/api
+                  prefix_rewrite: /external/
+                  auto_host_rewrite: true
           http_filters:
           # Blocking any Request ype that is not GET.
           # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
@@ -135,7 +136,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: vault.buc.sh
+                address: status.10.0.0.16.nip.io
                 port_value: 80
     # health_checks:
     # - timeout: 3s
