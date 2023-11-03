@@ -64,7 +64,7 @@ static_resources:
             virtual_hosts:
             - name: blackhole
               domains:
-              - "*.cloud.buc.sh"
+              - "*"
               routes:
               - match:
                   prefix: "/"
