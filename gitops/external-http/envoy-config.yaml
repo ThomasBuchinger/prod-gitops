@@ -70,7 +70,7 @@ static_resources:
                   prefix: "/"
                   headers:
                   - name: ":method"
-                    exact_match: "POST"
+                    exact_match: "GET"
                 direct_response:
                   status: 444
             - name: apps-cloud-buc-sh
