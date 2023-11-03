@@ -94,12 +94,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            scheme: http
+            scheme: HTTP
             port: ui
         readinessProbe:
           httpGet:
             path: /
-            scheme: http
+            scheme: HTTP
             port: ui
         resources:
           requests:
