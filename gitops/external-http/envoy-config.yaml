@@ -62,6 +62,19 @@ static_resources:
           route_config:
             name: main_router
             virtual_hosts:
+            - name: blackhole
+              domains:
+              - "*"
+              routes:
+              - match:
+                  headers:
+                  - name: ":method"
+                    string_match:
+                      exact": "POST"
+                direct_response:
+                  status: 444
+                  body:
+                    inline_body: "invalid request: try again"
             - name: apps-cloud-buc-sh
               domains:
               - apps.cloud.buc.sh
