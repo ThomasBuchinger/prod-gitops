@@ -73,8 +73,6 @@ static_resources:
                       exact": "POST"
                 direct_response:
                   status: 444
-                  body:
-                    inline_body: "invalid request: try again"
             - name: apps-cloud-buc-sh
               domains:
               - apps.cloud.buc.sh
