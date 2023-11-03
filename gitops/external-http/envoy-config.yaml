@@ -104,7 +104,7 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: homepage
-                  prefix_rewrite: /external/
+                  prefix_rewrite: /external
                   auto_host_rewrite: true
           http_filters:
           # Blocking any Request ype that is not GET.
