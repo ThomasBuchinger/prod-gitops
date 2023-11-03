@@ -86,7 +86,8 @@ spec:
         imagePullPolicy: IfNotPresent
         command:
         - envoy-ui/envoy-ui
-        - --listen-port 9000
+        - -listen-port
+        - "9000"
         env: []
         ports:
         - name: ui
