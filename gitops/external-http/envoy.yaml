@@ -69,6 +69,8 @@ spec:
         volumeMounts:
         - name: envoy-cm
           mountPath: /config
+        - name: wildcard-cert
+          mountPath: /cert
 
         # securityContext:
         #   allowPrivilegeEscalation: false
@@ -84,6 +86,9 @@ spec:
       - name: envoy-cm
         configMap:
           name: envoy-cm
+      - name: wildcard-cert
+        secret:
+          secretName: cert-cloud-buc-sh
 
 ---
 kind: Service
