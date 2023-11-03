@@ -62,9 +62,9 @@ static_resources:
           route_config:
             name: main_router
             virtual_hosts:
-            - name: apps-cloud-buc-sh
+            - name: blackhole
               domains:
-              - apps.cloud.buc.sh
+              - "*.cloud.buc.sh"
               routes:
               - match:
                   prefix: "/"
@@ -73,6 +73,15 @@ static_resources:
                     string_match:
                       safe_regex:
                         regex: "GET"
+                route:
+                  direct_response:
+                    status: 444
+            - name: apps-cloud-buc-sh
+              domains:
+              - apps.cloud.buc.sh
+              routes:
+              - match:
+                  prefix: "/"
                 route:
                   cluster: external-homepage
           http_filters:
