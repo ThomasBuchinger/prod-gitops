@@ -135,7 +135,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: status.buc.sh
+                address: status.10.0.0.16.nip.io
                 port_value: 443
     # health_checks:
     # - timeout: 3s
