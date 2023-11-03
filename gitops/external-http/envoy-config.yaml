@@ -136,7 +136,7 @@ static_resources:
             address:
               socket_address:
                 address: status.10.0.0.16.nip.io
-                port_value: 443
+                port_value: 80
     # health_checks:
     # - timeout: 3s
     #   interval: 30s
@@ -144,11 +144,11 @@ static_resources:
     #   healthy_threshold: 1
     #   http_health_check:
     #     path: "/external"
-    transport_socket:
-      name: envoy.transport_sockets.tls
-      typed_config:
-        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-        sni: status.buc.sh
+    # transport_socket:
+    #   name: envoy.transport_sockets.tls
+    #   typed_config:
+    #     "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+    #     sni: status.buc.sh
     # typed_extension_protocol_options:
     #   envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
     #     "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
