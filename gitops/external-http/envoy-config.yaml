@@ -104,7 +104,7 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: homepage
-                  prefix_rewrite: /external/
+                  prefix_rewrite: /external
           http_filters:
           # Blocking any Request ype that is not GET.
           # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
