@@ -55,12 +55,12 @@ spec:
           containerPort: 9901
         livenessProbe:
           httpGet:
-            path: /livez
-            port: http
+            path: /ready
+            port: admin
         readinessProbe:
           httpGet:
-            path: /livez
-            port: http
+            path: /ready
+            port: admin
         resources:
           requests:
             cpu: 5m
