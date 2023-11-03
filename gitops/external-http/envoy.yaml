@@ -81,6 +81,30 @@ spec:
         #     - ALL
         #   seccompProfile:
         #     type: RuntimeDefault
+      - name: envoy-ui
+        image: gonitro/envoy-ui:42bae1c
+        imagePullPolicy: IfNotPresent
+        command:
+        - envoy-ui/envoy-ui
+        - --listen-port 9000
+        env: []
+        ports:
+        - name: ui
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /livez
+            port: http
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits: {}
+
       securityContext: {}
       volumes:
       - name: envoy-cm
@@ -109,6 +133,9 @@ spec:
     port: 443
     nodePort: 32443
     targetPort: 8443
+  - name: admin-api
+    port: 9901
+    targetPort: 9901
   - name: ui
     port: 9000
     targetPort: 9000
