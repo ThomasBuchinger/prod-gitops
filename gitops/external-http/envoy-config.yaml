@@ -100,32 +100,32 @@ static_resources:
               domains:
               - api.cloud.buc.sh
               routes:
-              # - match:
-              #     safe_regex: 
-              #       regex: "/(index.html|404.html|favicon.ico)$"
-              #   route:
-              #     cluster: homelabapi
-              #     auto_host_rewrite: true
-              # - match:
-              #     prefix: "/_next"
-              #   route:
-              #     cluster: homelabapi
-              #     auto_host_rewrite: true
-              # - match:
-              #     prefix: "/icons"
-              #   route:
-              #     cluster: homelabapi
-              #     auto_host_rewrite: true
-              # - match:
-              #     prefix: "/api/public"
-              #   route:
-              #     cluster: homelabapi
-              #     auto_host_rewrite: true
               - match:
-                  prefix: "/"
+                  safe_regex:
+                    regex: "/(index.html|404.html|favicon.ico)$"
                 route:
                   cluster: homelabapi
                   auto_host_rewrite: true
+              - match:
+                  prefix: "/_next"
+                route:
+                  cluster: homelabapi
+                  auto_host_rewrite: true
+              - match:
+                  prefix: "/icons"
+                route:
+                  cluster: homelabapi
+                  auto_host_rewrite: true
+              - match:
+                  prefix: "/api/public"
+                route:
+                  cluster: homelabapi
+                  auto_host_rewrite: true
+              # - match:
+              #     prefix: "/"
+              #   route:
+              #     cluster: homelabapi
+              #     auto_host_rewrite: true
           http_filters:
           # Blocking any Request ype that is not GET.
           # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
