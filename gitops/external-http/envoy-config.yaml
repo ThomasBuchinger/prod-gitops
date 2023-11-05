@@ -100,24 +100,29 @@ static_resources:
               domains:
               - api.cloud.buc.sh
               routes:
+              # - match:
+              #     safe_regex: 
+              #       regex: "/(index.html|404.html|favicon.ico)$"
+              #   route:
+              #     cluster: homelabapi
+              #     auto_host_rewrite: true
+              # - match:
+              #     prefix: "/_next"
+              #   route:
+              #     cluster: homelabapi
+              #     auto_host_rewrite: true
+              # - match:
+              #     prefix: "/icons"
+              #   route:
+              #     cluster: homelabapi
+              #     auto_host_rewrite: true
+              # - match:
+              #     prefix: "/api/public"
+              #   route:
+              #     cluster: homelabapi
+              #     auto_host_rewrite: true
               - match:
-                  safe_regex: 
-                    regex: "/(index.html|404.html|favicon.ico)$"
-                route:
-                  cluster: homelabapi
-                  auto_host_rewrite: true
-              - match:
-                  prefix: "/_next"
-                route:
-                  cluster: homelabapi
-                  auto_host_rewrite: true
-              - match:
-                  prefix: "/icons"
-                route:
-                  cluster: homelabapi
-                  auto_host_rewrite: true
-              - match:
-                  prefix: "/api/public"
+                  prefix: "/"
                 route:
                   cluster: homelabapi
                   auto_host_rewrite: true
