@@ -101,7 +101,8 @@ static_resources:
               - api.cloud.buc.sh
               routes:
               - match:
-                  safe_regex: "/(index.html|404.html|favicon.ico)$"
+                  safe_regex: 
+                    regex: "/(index.html|404.html|favicon.ico)$"
                 route:
                   cluster: homelabapi
                   auto_host_rewrite: true

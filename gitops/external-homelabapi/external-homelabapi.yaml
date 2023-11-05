@@ -23,7 +23,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: homelap-api
-    app.kubernetes.io/instance: external
+        app.kubernetes.io/instance: external
     spec:
       containers:
       - name: homelab-api
