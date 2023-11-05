@@ -1,46 +1,59 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-homelabapi
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: homepage-external
-  namespace: external-http
+  name: external-homelab-api
+  namespace: external-homelabapi
   labels:
-    app.kubernetes.io/name: homepage-external
+    app.kubernetes.io/name: homelab-api
+    app.kubernetes.io/instance: external
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: homepage-external
+      app.kubernetes.io/name: homelap-api
+    app.kubernetes.io/instance: external
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: homepage-external
+        app.kubernetes.io/name: homelap-api
+    app.kubernetes.io/instance: external
     spec:
       containers:
-      - name: homepage
-        image: ghcr.io/thomasbuchinger/homepage-external:main
+      - name: homelab-api
+        image: ghcr.io/thomasbuchinger/homelab-api:main
         imagePullPolicy: Always
+        env:
+        - name: MODE
+          value: public
         ports:
         - name: http
           containerPort: 8080
         livenessProbe:
           httpGet:
-            path: /
+            path: /livez
             port: 8080
         readinessProbe:
           httpGet:
-            path: /
+            path: /readyz
             port: 8080
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: homepage-external
-  namespace: external-http
+  name: external-homelab-api
+  namespace: external-homelabapi
 spec:
   selector:
-    app.kubernetes.io/name: homepage-external
+    app.kubernetes.io/name: homelab-api
+    app.kubernetes.io/instance: external
   ports:
     - protocol: TCP
       port: 8080
@@ -75,18 +88,18 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: homepage-external-http
-  namespace: external-http
+  name: external-homelab-api-http
+  namespace: external-homelabapi
 spec:
   rules:
-  - host: apps.10.0.0.21.nip.io
+  - host: api.10.0.0.21.nip.io
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: homepage-external
+            name: external-homelab-api
             port:
               number: 8080
 
@@ -95,11 +108,12 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: block-homepage-egress
-  namespace: external-http
+  namespace: external-homelabapi
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: external-http
+      app.kubernetes.io/name: homelab-api
+      app.kubernetes.io/instance: external
   policyTypes:
     - Egress
     # - Ingress
