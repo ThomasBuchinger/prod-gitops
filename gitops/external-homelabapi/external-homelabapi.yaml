@@ -17,12 +17,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: homelap-api
+      app.kubernetes.io/name: homelab-api
       app.kubernetes.io/instance: external
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: homelap-api
+        app.kubernetes.io/name: homelab-api
         app.kubernetes.io/instance: external
     spec:
       containers:
