@@ -151,7 +151,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: homelabapi.external-homelabapi.svc.cluster.local
+                address: external-homelab-api.external-homelabapi.svc
                 port_value: 8080
     # health_checks:
     # - timeout: 3s
