@@ -50,6 +50,10 @@ spec:
         rev: nginx
         path: gitops/external-http
         wave: "2"
+      - name: external-homelabapi
+        rev: nginx
+        path: gitops/external-homelabapi
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
