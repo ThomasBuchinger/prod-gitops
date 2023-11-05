@@ -1,7 +1,6 @@
 resources:
 # - deployment.yaml
 # - config.yaml
-- homepage-deploy.yaml
 - envoy.yaml
 
 configMapGenerator:

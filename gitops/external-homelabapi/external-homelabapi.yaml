@@ -18,7 +18,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: homelap-api
-    app.kubernetes.io/instance: external
+      app.kubernetes.io/instance: external
   template:
     metadata:
       labels:
