@@ -102,7 +102,7 @@ static_resources:
               routes:
               - match:
                   safe_regex:
-                    regex: "/(index.html|404.html|favicon.ico)$"
+                    regex: "/(index.html|404.html|favicon.ico)?$"
                 route:
                   cluster: homelabapi
                   auto_host_rewrite: true
