@@ -37,11 +37,11 @@ spec:
           containerPort: 8080
         livenessProbe:
           httpGet:
-            path: /livez
+            path: /api/livez
             port: 8080
         readinessProbe:
           httpGet:
-            path: /readyz
+            path: /api/readyz
             port: 8080
 
 ---
