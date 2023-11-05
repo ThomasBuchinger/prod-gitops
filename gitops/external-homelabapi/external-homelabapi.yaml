@@ -51,7 +51,6 @@ metadata:
   name: external-homelab-api
   namespace: external-homelabapi
 spec:
-  externalTrafficPolicy: Local
   selector:
     app.kubernetes.io/name: homelab-api
     app.kubernetes.io/instance: external

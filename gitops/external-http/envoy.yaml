@@ -123,6 +123,7 @@ apiVersion: v1
 metadata:
   name: external-http
 spec:
+  externalTrafficPolicy: Local
   selector:
     app.kubernetes.io/name: envoy
     app.kubernetes.io/instance: external-http
