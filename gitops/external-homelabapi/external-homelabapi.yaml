@@ -59,31 +59,6 @@ spec:
       port: 8080
       targetPort: 8080
 
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: homepage
-#   namespace: homepage
-#   annotations:
-#     cert-manager.io/cluster-issuer: letsencrypt-prod-cloudflare-dns
-# spec:
-#   tls:
-#   - hosts:
-#     - status.buc.sh
-#     secretName: cert-status-buc-sh
-#   rules:
-#   - host: status.buc.sh
-#     http:
-#       paths:
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: homepage
-#             port:
-#               number: 80
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -116,18 +91,21 @@ spec:
       app.kubernetes.io/instance: external
   policyTypes:
     - Egress
-    # - Ingress
+    - Ingress
   egress:
   - to:
     - ipBlock:
         cidr: "0.0.0.0/0"
-  # ingress:
-  # # Allow Ingress
-  # - from:
-  #   - namespaceSelector:
-  #       matchLabels:
-  #         kubernetes.io/metadata.name: traefik
-  #   ports:
-  #   - protocol: TCP
-  #     port: 8080
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-http
+    ports:
+    - protocol: TCP
+      port: 8080
 

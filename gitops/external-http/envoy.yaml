@@ -71,16 +71,15 @@ spec:
           mountPath: /config
         - name: wildcard-cert
           mountPath: /cert
-
-        # securityContext:
-        #   allowPrivilegeEscalation: false
-        #   capabilities:
-        #     add:
-        #     - NET_BIND_SERVICE
-        #     drop:
-        #     - ALL
-        #   seccompProfile:
-        #     type: RuntimeDefault
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       - name: envoy-ui
         image: gonitro/envoy-ui:42bae1c
         imagePullPolicy: IfNotPresent
