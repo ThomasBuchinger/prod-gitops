@@ -235,13 +235,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: external-http
-  # annotations:
-  #   cert-manager.io/cluster-issuer: letsencrypt-prod-cloudflare-dns
 spec:
-  # tls:
-  # - hosts:
-  #   - prod-console.buc.sh
-  #   secretName: cert-evergreen-console-buc-sh
   rules:
   - host: external-http.buc.sh
     http:

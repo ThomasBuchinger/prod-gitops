@@ -92,10 +92,6 @@ spec:
   policyTypes:
     - Egress
     - Ingress
-  egress:
-  - to:
-    - ipBlock:
-        cidr: "0.0.0.0/0"
   ingress:
   # Allow Ingress
   - from:
