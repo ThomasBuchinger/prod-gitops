@@ -1,0 +1,136 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  apps.conf: |
+    server {
+      listen 8080;
+      listen 8443 default_server ssl;
+      server_name apps.cloud.buc.sh;
+
+      ssl_certificate     /etc/nginx/certs/tls.crt;
+      ssl_certificate_key /etc/nginx/certs/tls.key;
+      
+      ssl_protocols       TLSv1.2 TLSv1.3;
+      ssl_ciphers         HIGH:!aNULL:!MD5;
+      ssl_session_cache   shared:SSL:10m;
+      ssl_session_timeout 10m;
+
+      location / {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_upgrade;
+        client_max_body_size 1000m;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://homepage-external:8080/;
+      }
+    }
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-ui
+data:
+  prep_nginx_config.sh: |
+    # Copy nginx-ui config
+    cp /conf/app.ini /etc/nginx-ui/
+    
+    # Build NGINX configuration directory
+    cp /conf/nginx.conf /usr/etc/nginx/mime.types /etc/nginx
+
+    mkdir -p /etc/nginx/sites-available
+    mkdir -p /etc/nginx/sites-enabled
+    for site in $(ls /sites); do
+      cp /sites/$site /etc/nginx/sites-available
+      ln -s /etc/nginx/sites-available/$site /etc/nginx/sites-enabled/$site
+    done
+  nginx.conf: |
+    worker_processes  auto;
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
+    events {
+        worker_connections  1024;
+    }
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+        access_log  /var/log/nginx/access.log  main;
+        sendfile        on;
+        #tcp_nopush     on;
+        keepalive_timeout  65;
+        gzip  on;
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*.conf;
+    }
+  
+  app.ini: |
+    [server]
+    HttpPort          = 9000
+    RunMode           = debug
+    JwtSecret         = 76187bdd-9e40-4b06-b59f-f1689433251f
+    NodeSecret        = 37295599-404e-41bd-b82f-1684432fcdea
+    HTTPChallengePort = 9180
+    Email             = admin@buc.sh
+    Database          = database
+    StartCmd          = login
+    CADir             = 
+    Demo              = false
+    PageSize          = 10
+    GithubProxy       = 
+    
+    
+    [nginx]
+    AccessLogPath = /var/log/nginx
+    ErrorLogPath  = /var/log/nginx
+    ConfigDir     = 
+    PIDPath       = /run/nginx.pid
+    ReloadCmd     = 
+    RestartCmd    = 
+
+    [openai]
+    BaseUrl = 
+    Token   = 
+    Proxy   = 
+    Model   = 
+
+    [git]
+    Url                = 
+    AuthMethod         = 
+    Username           = 
+    Password           = 
+    PrivateKeyFilePath = 
+
+  dump.sql: |
+    PRAGMA foreign_keys=OFF;
+    BEGIN TRANSACTION;
+    CREATE TABLE `auth_tokens` (`token` text);
+    CREATE TABLE IF NOT EXISTS "chat_gpt_logs" (`name` text,`content` text);
+    CREATE TABLE IF NOT EXISTS "config_backups" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`file_path` text,`content` text,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "auths" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`password` text,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "dns_credentials" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`config` text,`provider` text,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "certs" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`domain` text, `domains` text[], `filename` text, `ssl_certificate_path` text, `ssl_certificate_key_path` text, `auto_cert` integer, `name` text, `log` text, `challenge_method` text, `dns_credential_id` integer,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "sites" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`path` text,`advanced` numeric,PRIMARY KEY (`id`));
+    CREATE TABLE IF NOT EXISTS "environments" (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text,`url` text,`token` text,PRIMARY KEY (`id`));
+    CREATE INDEX `idx_config_backups_deleted_at` ON `config_backups`(`deleted_at`);
+    CREATE INDEX `idx_auths_deleted_at` ON `auths`(`deleted_at`);
+    CREATE INDEX `idx_dns_credentials_deleted_at` ON `dns_credentials`(`deleted_at`);
+    CREATE INDEX `idx_certs_deleted_at` ON `certs`(`deleted_at`);
+    CREATE INDEX `idx_sites_deleted_at` ON `sites`(`deleted_at`);
+    CREATE INDEX `idx_environments_deleted_at` ON `environments`(`deleted_at`);
+
+    INSERT INTO auth_tokens VALUES('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJleHAiOjE2OTg5NDkwOTd9.0CScgDY9hq9E0Rl8CWL7Kl8ULiQTSmtGJOlqDcYZb7U');
+    INSERT INTO auths VALUES(2,'2023-11-01 18:18:09.759995967+00:00','2023-11-01 18:18:09.759995967+00:00',NULL,'admin','$2a$10$vcgq7YtzUZeIvItLFDTeu.t5IxhE0xI16rDdEwZj6xAWgUT3.iaZO');
+    COMMIT;
+

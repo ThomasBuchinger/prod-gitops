@@ -28,8 +28,16 @@ machine:
   #         address = "0.0.0.0:11234"
   #     path: /var/cri/conf.d/metrics.toml
   #     op: create
-
+  features:
+    kubePrism:
+      enabled: true
+      port: 7445
 cluster:
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true
   # apiServer:
   #   extraArgs:
   #     oidc-issuer-url:
@@ -45,7 +53,9 @@ cluster:
     contents:  ""
   - name: infra-argocd
     contents: ""
-  - name: infra-ingress
+  - name: infra-cillium
+    contents: ""
+  - name: infra-traefik
     contents: ""
   - name: infra-auto-untaint
     contents: ""
