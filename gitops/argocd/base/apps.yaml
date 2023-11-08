@@ -38,20 +38,12 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "2"
-      # - name: cert-manager
-      #   rev: kong
-      #   path: gitops/cert-manager
-      #   wave: "2"
-      # - name: kong
-      #   rev: kong
-      #   path: gitops/kong
-      #   wave: "2"
       - name: external-http
-        rev: nginx
+        rev: waf
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
-        rev: nginx
+        rev: waf
         path: gitops/external-homelabapi
         wave: "2"
   template:
