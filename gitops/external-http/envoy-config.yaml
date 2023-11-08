@@ -93,6 +93,10 @@ static_resources:
             initial_connection_window_size: 1048576  # 1 MiB
           stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
           request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
+          access_log:
+          - name: envoy.access_loggers.stdout
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
           route_config:
             name: main_router
             virtual_hosts:
