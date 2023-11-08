@@ -1,5 +1,5 @@
 secrets
 out
 bin
-infra/traefik/charts
+infra/*/charts
 kubeconfig
