@@ -23,6 +23,7 @@ kustomize:
 	mkdir -p out
 	kubectl kustomize ./infra/argocd > $(OUTPUT_DIR)/infra-argocd.yaml
 	kubectl kustomize --enable-helm ./infra/traefik > $(OUTPUT_DIR)/infra-traefik.yaml
+	kubectl kustomize --enable-helm ./infra/cillium > $(OUTPUT_DIR)/infra-cillium.yaml
 
 talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	mkdir -p $(OUTPUT_DIR)/talos
@@ -34,8 +35,9 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	yq eval $(YQ_ARGS) '.machine.network.interfaces[0].addresses[0] = "$(NODE_IP)/24"'                       $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[0].contents = load_str("secrets/vault-secretid.yaml")' $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/infra-argocd.yaml")'  $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[3].contents = load_str("infra/auto-untaint.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)//infra-cillium.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[3].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[4].contents = load_str("infra/auto-untaint.yaml")'  $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.contexts.prod.endpoints[0] = "$(NODE_IP)"'                                          $(TALOS_CONFIG)
 
 talos-init: talos-config
