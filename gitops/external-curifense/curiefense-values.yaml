@@ -1,12 +1,11 @@
 ---
-# use this file to override default values from ../values.yaml
-# ./deploy.sh -f curiefense/use-gs.yaml
 global:
+  proxy:
+    frontend: istio
   settings:
     curieconf_manifest_url: 'file:///bucket/prod/manifest.json'
     curiefense_bucket_type: 'local-bucket'
   storage:
-    # use the default storage class if null
     storage_class_name: local-path
   enable:
     minio: false

@@ -1,15 +1,6 @@
-helmCharts:
-- name: curiefense
-  repo: https://helm.curiefense.io/
-  # version: 44.0.0
-  # releaseName: prometheus
-  namespace: external-http
-  valuesFile: curiefense-values.yaml
-  includeCRDs: true
 
 resources:
 - envoy.yaml
-- curiefense.yaml
 
 configMapGenerator:
 - name: envoy-cm

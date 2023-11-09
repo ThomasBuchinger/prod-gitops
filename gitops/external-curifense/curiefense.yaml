@@ -1,3 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: curiefense
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
 
 ---
 apiVersion: networking.k8s.io/v1
