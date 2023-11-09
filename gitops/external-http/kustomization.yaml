@@ -8,9 +8,8 @@ helmCharts:
   includeCRDs: true
 
 resources:
-# - deployment.yaml
-# - config.yaml
 - envoy.yaml
+- curiefense.yaml
 
 configMapGenerator:
 - name: envoy-cm
