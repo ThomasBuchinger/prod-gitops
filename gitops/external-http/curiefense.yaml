@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: external-http
+  name: curiefense-http
 spec:
   rules:
   - host: waf.10.0.0.21.nip.io
