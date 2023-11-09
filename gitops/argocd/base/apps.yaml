@@ -46,6 +46,10 @@ spec:
         rev: waf
         path: gitops/external-homelabapi
         wave: "2"
+      - name: curiefense
+        rev: waf
+        path: gitops/external-curiefense
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
