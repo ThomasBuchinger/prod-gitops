@@ -1,0 +1,4 @@
+apiVersion: v1
+description: 'provides services that support curiefense-proxy: redis'
+name: curiefense-proxy
+version: 1.0.0

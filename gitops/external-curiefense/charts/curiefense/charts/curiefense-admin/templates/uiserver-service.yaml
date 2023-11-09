@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: uiserver
+    app.kubernetes.io/part-of: "curiefense"
+  name: uiserver
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app.kubernetes.io/name: uiserver
