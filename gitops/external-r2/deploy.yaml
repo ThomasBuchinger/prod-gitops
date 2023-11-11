@@ -114,25 +114,25 @@ spec:
     port: 8080
     targetPort: http
 
-# ---
-# apiVersion: external-secrets.io/v1beta1
-# kind: ExternalSecret
-# metadata:
-#   name: syncthing-cert
-#   namespace: syncthing
-# spec:
-#   refreshInterval: 1h
-#   secretStoreRef:
-#     name: vault-approle-cluster
-#     kind: ClusterSecretStore
-#   target:
-#     name: cert-syncthing-buc-sh
-#     creationPolicy: Owner
-#   dataFrom:
-#   - extract:
-#       conversionStrategy: Default
-#       decodingStrategy: None
-#       key: cert/cert-syncthing-buc-sh
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: r2-cert
+  namespace: external-r2
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-r2-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-r2-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -141,10 +141,10 @@ metadata:
   name: r2-http
   namespace: external-r2
 spec:
-  # tls:
-  # - hosts:
-  #     - r2.buc.sh
-  #   secretName: cert-r2-buc-sh
+  tls:
+  - hosts:
+      - r2.buc.sh
+    secretName: cert-r2-buc-sh
   rules:
   - host: "r2.buc.sh"
     http:
