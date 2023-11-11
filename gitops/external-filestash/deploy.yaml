@@ -38,7 +38,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: ENDPOINT
-          value: "s3.buc.sh"
+          value: "s3.buc.sh:9000"
         - name: SKIP_SSL_VERIFICATION
           value: "true"
         - name: ALLOW_DELETE
@@ -55,14 +55,14 @@ spec:
           requests:
             cpu: 10m
             memory: 60M
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: http
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
+        # livenessProbe:
+        #   failureThreshold: 3
+        #   httpGet:
+        #     path: /
+        #     port: http
+        #   periodSeconds: 10
+        #   successThreshold: 1
+        #   timeoutSeconds: 1
       # securityContext:
       #   runAsNonRoot: true
       #   runAsUser: 1000
