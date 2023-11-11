@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/part-of: prometheus-node-exporter
     app.kubernetes.io/version: 1.6.1
     helm.sh/chart: prometheus-node-exporter-4.23.2
-    jobLabel: node-exporter
+    jobLabel: envoy
     release: release-name
     app.kubernetes.io/name: envoy
     app.kubernetes.io/instance: external-http
