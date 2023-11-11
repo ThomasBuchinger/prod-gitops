@@ -186,7 +186,7 @@ spec:
   endpoints:
   - honorLabels: true
     port: admin
-    path: stats/prometheus
+    path: /stats/prometheus
   jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
