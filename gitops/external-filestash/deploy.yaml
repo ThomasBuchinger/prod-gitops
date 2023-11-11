@@ -46,7 +46,7 @@ spec:
         - name: USE_IAM
           value: "true"
         - name: IAM_ENDPOINT
-          value: https://s3.buc.sh:9000
+          value: http://s3.buc.sh:9000
         ports:
         - containerPort: 8080
           name: http
