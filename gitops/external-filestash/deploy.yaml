@@ -44,10 +44,10 @@ spec:
         # TODO: remove temp keys!!!!!!
         #
         #
-        - name: ACCESS_KEY_ID
-          value: tXdVJ2bBTWN2XtFmflHr
-        - name: SECRET_ACCESS_KEY
-          value: kBrJkuF3i66EJ6mtu3JyHOuWlOGi9ecU7JRQchpg
+        # - name: ACCESS_KEY_ID
+        #   value: tXdVJ2bBTWN2XtFmflHr
+        # - name: SECRET_ACCESS_KEY
+        #   value: kBrJkuF3i66EJ6mtu3JyHOuWlOGi9ecU7JRQchpg
         #
         #
         #  TODO: Remove TEMP KEYS
@@ -58,10 +58,10 @@ spec:
           value: "false"
         - name: ALLOW_DELETE
           value: "false"
-        # - name: USE_IAM
-        #   value: "true"
-        # - name: IAM_ENDPOINT
-        #   value: http://s3.buc.sh:9000
+        - name: USE_IAM
+          value: "true"
+        - name: IAM_ENDPOINT
+          value: http://s3.buc.sh:9002
         ports:
         - containerPort: 8080
           name: http
