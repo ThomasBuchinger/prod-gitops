@@ -41,8 +41,6 @@ spec:
           value: "s3.buc.sh:9000"
         - name: USE_SSL
           value: "false"
-        - name: SKIP_SSL_VERIFICATION
-          value: "true"
         - name: ALLOW_DELETE
           value: "false"
         - name: USE_IAM
