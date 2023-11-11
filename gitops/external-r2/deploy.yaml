@@ -57,7 +57,7 @@ spec:
       containers:
       - name: r2
         image: docker.io/cloudlena/s3manager
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         envFrom:
         - secretRef:
             name: eso-r2-creds
