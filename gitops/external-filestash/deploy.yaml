@@ -52,14 +52,14 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-      securityContext:
-        runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
-        # fsGroup: 1000
-        # sysctls:
-        # - name: fs.inotify.max_user_watches
-        #   value: "204800"
+      # securityContext:
+      #   runAsNonRoot: true
+      #   runAsUser: 1000
+      #   runAsGroup: 1000
+      #   fsGroup: 1000
+      #   sysctls:
+      #   - name: fs.inotify.max_user_watches
+      #     value: "204800"
 ---
 apiVersion: v1
 kind: Service
