@@ -17,3 +17,21 @@ spec:
             name: prometheus-kube-state-metrics
             port:
               number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: expose-prometheus-api
+  namespace: monitoring
+spec:
+  rules:
+  - host: "prometheus.10.0.0.21.nip.io"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: monitoring-kube-prometheus-prometheus
+            port:
+              number: 9090
