@@ -39,6 +39,21 @@ spec:
         env:
         - name: ENDPOINT
           value: "s3.buc.sh:9000"
+        #
+        #
+        # TODO: remove temp keys!!!!!!
+        #
+        #
+        - name: ACCESS_KEY_ID
+          value: tXdVJ2bBTWN2XtFmflHr
+        - name: SECRET_ACCESS_KEY
+          value: kBrJkuF3i66EJ6mtu3JyHOuWlOGi9ecU7JRQchpg
+        #
+        #
+        #  TODO: Remove TEMP KEYS
+        #
+        #
+        
         - name: USE_SSL
           value: "false"
         - name: ALLOW_DELETE
