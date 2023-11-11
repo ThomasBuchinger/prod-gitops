@@ -45,6 +45,15 @@ spec:
           httpGet:
             path: /api/readyz
             port: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
 
 ---
 apiVersion: v1
