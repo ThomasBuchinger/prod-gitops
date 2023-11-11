@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: r2
-        image: docker.io/cloudlena/s3manager
+        image: docker.io/cloudlena/s3manager:latest
         imagePullPolicy: Always
         env:
         - name: ENDPOINT
