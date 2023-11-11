@@ -39,6 +39,8 @@ spec:
         env:
         - name: ENDPOINT
           value: "s3.buc.sh:9000"
+        - name: USE_SSL
+          value: "false"
         - name: SKIP_SSL_VERIFICATION
           value: "true"
         - name: ALLOW_DELETE
@@ -58,7 +60,7 @@ spec:
         # livenessProbe:
         #   failureThreshold: 3
         #   httpGet:
-        #     path: /
+        #     path: /static/js/materialize.min.js
         #     port: http
         #   periodSeconds: 10
         #   successThreshold: 1
