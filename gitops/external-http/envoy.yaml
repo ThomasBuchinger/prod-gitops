@@ -183,10 +183,10 @@ apiVersion: monitoring.coreos.com/v1
       app.kubernetes.io/name: envoy
       app.kubernetes.io/instance: external-http
 │ spec:
-│   endpoints:
-│   - honorLabels: true
-│     port: admin
-      path: metrics/prometheus
+    endpoints:
+    - honorLabels: true
+      port: admin
+      path: stats/prometheus
 │   jobLabel: app.kubernetes.io/name
 │   selector:
 │     matchLabels:
