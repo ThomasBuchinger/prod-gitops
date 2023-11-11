@@ -198,10 +198,10 @@ spec:
   - honorLabels: true
     port: "admin"
     path: /stats/prometheus
-  jobLabel: jobLabel
-  namespaceSelector:
-    matchNames:
-      - external-http
+  # jobLabel: jobLabel
+  # namespaceSelector:
+  #   matchNames:
+  #     - external-http
   selector:
     matchLabels:
       app.kubernetes.io/name: envoy
