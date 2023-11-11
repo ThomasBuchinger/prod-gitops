@@ -34,8 +34,8 @@ spec:
     spec:
       containers:
       - name: r2
-        image: docker.io/cloudlena/s3manager:latest
-        imagePullPolicy: Always
+        image: docker.io/cloudlena/s3manager
+        imagePullPolicy: IfNotPresent
         env:
         - name: ENDPOINT
           value: "s3.buc.sh:9000"
