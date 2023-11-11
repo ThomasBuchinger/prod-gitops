@@ -34,11 +34,14 @@ spec:
     spec:
       containers:
       - name: r2
-        image: docker.io/machines/filestash:latest
+        image: docker.io/drakkan/sftpgo
         imagePullPolicy: Always
         ports:
-        - containerPort: 8334
+        - containerPort: 8080
           name: http
+          protocol: TCP
+        - containerPort: 8022
+          name: ftp
           protocol: TCP
         resources:
           requests:
@@ -73,7 +76,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 8334
+    port: 8080
     targetPort: http
 
 # ---
