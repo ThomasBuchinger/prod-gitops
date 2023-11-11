@@ -1,0 +1,190 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-r2
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: r2-credentials
+  namespace: external-r2
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: eso-r2-creds
+    creationPolicy: Owner
+  data:
+  - secretKey: ACCESS_KEY_ID
+    remoteRef:
+      key: access/nas
+      property: s3_ro_accesskey
+      conversionStrategy: Default
+      decodingStrategy: None
+  - secretKey: SECRET_ACCESS_KEY
+    remoteRef:
+      key: access/nas
+      property: s3_ro_secretkey
+      conversionStrategy: Default
+      decodingStrategy: None
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3manager
+  namespace: external-r2
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: s3manager
+      app.kubernetes.io/instance: r2
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: s3manager
+        app.kubernetes.io/instance: r2
+    spec:
+      containers:
+      - name: r2
+        image: docker.io/cloudlena/s3manager
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: eso-r2-creds
+        env:
+        - name: ENDPOINT
+          value: "s3.buc.sh:9000"
+        - name: USE_SSL
+          value: "false"
+        - name: ALLOW_DELETE
+          value: "false"
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 10m
+            memory: 60M
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /static/js/materialize.min.js
+            port: http
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: r2
+  namespace: external-r2
+spec:
+  selector:
+    app.kubernetes.io/app: s3manager
+    app.kubernetes.io/instance: r2
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: r2-cert
+  namespace: external-r2
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-r2-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-r2-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: r2-http
+  namespace: external-r2
+spec:
+  tls:
+  - hosts:
+      - r2.buc.sh
+    secretName: cert-r2-buc-sh
+  rules:
+  - host: "r2.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: r2
+            port:
+              name: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-r2-egress
+  namespace: external-r2
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: homelab-api
+      app.kubernetes.io/instance: external
+  policyTypes:
+    - Egress
+    - Ingress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.20/32"
+    ports:
+    - port: 9090
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-http
+    ports:
+    - protocol: TCP
+      port: 8080
+
