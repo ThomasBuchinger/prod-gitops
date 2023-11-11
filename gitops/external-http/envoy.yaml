@@ -196,7 +196,7 @@ metadata:
 spec:
   endpoints:
   - honorLabels: true
-    port: 9901
+    port: "9901"
     path: /stats/prometheus
   jobLabel: jobLabel
   selector:
