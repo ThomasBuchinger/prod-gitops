@@ -38,7 +38,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: s3browser
+  name: s3manager
   namespace: external-r2
 spec:
   replicas: 1
@@ -46,12 +46,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/app: s3browser
+      app.kubernetes.io/app: s3manager
       app.kubernetes.io/instance: r2
   template:
     metadata:
       labels:
-        app.kubernetes.io/app: s3browser
+        app.kubernetes.io/app: s3manager
         app.kubernetes.io/instance: r2
     spec:
       containers:
@@ -104,7 +104,7 @@ metadata:
   namespace: external-r2
 spec:
   selector:
-    app.kubernetes.io/app: s3browser
+    app.kubernetes.io/app: s3manager
     app.kubernetes.io/instance: r2
   type: ClusterIP
   ports:
