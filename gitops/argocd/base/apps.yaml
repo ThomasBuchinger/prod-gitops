@@ -39,16 +39,16 @@ spec:
         path: gitops/stirling-pdf
         wave: "2"
       - name: external-http
-        rev: waf
+        rev: r2
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
-        rev: waf
+        rev: r2
         path: gitops/external-homelabapi
         wave: "2"
-      - name: curiefense
-        rev: waf
-        path: gitops/external-curiefense
+      - name: external-filestash
+        rev: r2
+        path: gitops/external-filestash
         wave: "2"
   template:
     metadata:
