@@ -1,0 +1,130 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-filestash
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: not-yet-used
+data: {}
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filestash
+  namespace: external-filestash
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: filestash
+      app.kubernetes.io/instance: r2
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: filestash
+        app.kubernetes.io/instance: r2
+    spec:
+      containers:
+      - name: r2
+        image: docker.io/machines/filestash:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8334
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 10m
+            memory: 60M
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      securityContext:
+        runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        # fsGroup: 1000
+        # sysctls:
+        # - name: fs.inotify.max_user_watches
+        #   value: "204800"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: r2
+  namespace: external-filestash
+spec:
+  selector:
+    app.kubernetes.io/app: filestash
+    app.kubernetes.io/instance: r2
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8334
+    targetPort: http
+
+# ---
+# apiVersion: external-secrets.io/v1beta1
+# kind: ExternalSecret
+# metadata:
+#   name: syncthing-cert
+#   namespace: syncthing
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: vault-approle-cluster
+#     kind: ClusterSecretStore
+#   target:
+#     name: cert-syncthing-buc-sh
+#     creationPolicy: Owner
+#   dataFrom:
+#   - extract:
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       key: cert/cert-syncthing-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: r2-http
+  namespace: external-filestash
+spec:
+  # tls:
+  # - hosts:
+  #     - r2.buc.sh
+  #   secretName: cert-r2-buc-sh
+  rules:
+  - host: "r2.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: r2
+            port:
+              name: http
+  - host: "r2.10.0.0.21.nip.io"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: r2
+            port:
+              name: http
