@@ -159,24 +159,6 @@ spec:
   - host: envoy.buc.sh
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: external-http
-            port:
-              name: ui
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: envoy-admin-http
-spec:
-  rules:
-  - host: envoy.10.0.0.21.nip.io
-    http:
-      paths:
       - path: /ui
         pathType: Prefix
         backend:
@@ -191,3 +173,22 @@ spec:
             name: external-http
             port:
               name: admin
+
+---
+apiVersion: monitoring.coreos.com/v1
+│ kind: ServiceMonitor
+│ metadata:
+│   name: envoy-metrics
+│   labels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/instance: external-http
+│ spec:
+│   endpoints:
+│   - honorLabels: true
+│     port: admin
+      path: metrics/prometheus
+│   jobLabel: app.kubernetes.io/name
+│   selector:
+│     matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/instance: external-http
