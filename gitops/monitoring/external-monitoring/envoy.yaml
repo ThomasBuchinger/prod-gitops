@@ -1,3 +1,36 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: envoy-metrics
+  # namespace: monitoring
+  labels:
+    app: kube-prometheus-stack-kube-controller-manager
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 52.1.0
+    chart: kube-prometheus-stack-52.1.0
+    heritage: Helm
+    jobLabel: envoy2
+    release: monitoring
+    # app.kubernetes.io/instance: monitoring
+    # jobLabel: envoy
+spec:
+  endpoints:
+  - honorLabels: true
+    port: admin
+    path: /stats/prometheus
+  jobLabel: app.kubernetes.io/name
+  namespaceSelector:
+    matchNames:
+      - external-http
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/instance: external-http
+
+
 
 
 # ---
