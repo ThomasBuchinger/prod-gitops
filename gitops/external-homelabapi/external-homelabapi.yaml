@@ -54,6 +54,8 @@ spec:
             type: RuntimeDefault
       securityContext:
         runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
 
 ---
 apiVersion: v1
