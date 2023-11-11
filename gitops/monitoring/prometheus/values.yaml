@@ -1,7 +1,8 @@
 
 grafana:
   enabled: false
-
   forceDeployDatasources: true
   forceDeployDashboards: true
   defaultDashboardsEnabled: true
+
+namespace: monitoring
