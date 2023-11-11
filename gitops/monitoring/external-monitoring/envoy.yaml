@@ -1,0 +1,23 @@
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: envoy-metrics
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: envoy
+    app.kubernetes.io/instance: external-http
+spec:
+  endpoints:
+  - honorLabels: true
+    port: admin
+    path: /stats/prometheus
+  jobLabel: app.kubernetes.io/name
+  namespaceSelector:
+    matchNames:
+      - external-http
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/instance: external-http
