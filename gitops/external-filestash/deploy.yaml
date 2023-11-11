@@ -13,6 +13,34 @@ data: {}
 
 
 ---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: r2-credentials
+  namespace: external-r2
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: eso-r2-creds
+    creationPolicy: Owner
+  data:
+  - secretKey: ACCESS_KEY_ID
+    remoteRef:
+      key: access/nas
+      property: 3_ro_accesskey
+      conversionStrategy: Default
+      decodingStrategy: None
+  - secretKey: SECRET_ACCESS_KEY
+    remoteRef:
+      key: access/nas
+      property: s3_ro_secretkey
+      conversionStrategy: Default
+      decodingStrategy: None
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,32 +64,16 @@ spec:
       - name: r2
         image: docker.io/cloudlena/s3manager
         imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: eso-r2-creds
         env:
         - name: ENDPOINT
           value: "s3.buc.sh:9000"
-        #
-        #
-        # TODO: remove temp keys!!!!!!
-        #
-        #
-        # - name: ACCESS_KEY_ID
-        #   value: tXdVJ2bBTWN2XtFmflHr
-        # - name: SECRET_ACCESS_KEY
-        #   value: kBrJkuF3i66EJ6mtu3JyHOuWlOGi9ecU7JRQchpg
-        #
-        #
-        #  TODO: Remove TEMP KEYS
-        #
-        #
-        
         - name: USE_SSL
           value: "false"
         - name: ALLOW_DELETE
           value: "false"
-        - name: USE_IAM
-          value: "true"
-        - name: IAM_ENDPOINT
-          value: http://s3.buc.sh:9002
         ports:
         - containerPort: 8080
           name: http
@@ -70,14 +82,14 @@ spec:
           requests:
             cpu: 10m
             memory: 60M
-        # livenessProbe:
-        #   failureThreshold: 3
-        #   httpGet:
-        #     path: /static/js/materialize.min.js
-        #     port: http
-        #   periodSeconds: 10
-        #   successThreshold: 1
-        #   timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /static/js/materialize.min.js
+            port: http
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
       # securityContext:
       #   runAsNonRoot: true
       #   runAsUser: 1000
