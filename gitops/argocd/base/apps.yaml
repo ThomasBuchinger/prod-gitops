@@ -46,9 +46,9 @@ spec:
         rev: r2
         path: gitops/external-homelabapi
         wave: "2"
-      - name: external-filestash
+      - name: external-r2
         rev: r2
-        path: gitops/external-filestash
+        path: gitops/external-r2
         wave: "2"
   template:
     metadata:
