@@ -85,15 +85,14 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
         securityContext:
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL
           seccompProfile:
             type: RuntimeDefault
-          
       securityContext:
         runAsNonRoot: true
-        allowPrivilegeEscalation: false
         runAsUser: 100
         runAsGroup: 101
       #   fsGroup: 1000
