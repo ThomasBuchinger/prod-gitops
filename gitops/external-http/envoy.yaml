@@ -190,7 +190,7 @@ metadata:
     chart: kube-prometheus-stack-52.1.0
     heritage: Helm
     jobLabel: envoy2
-    release: monitoring
+    # release: monitoring
     # app.kubernetes.io/instance: monitoring
     # jobLabel: envoy
 spec:
