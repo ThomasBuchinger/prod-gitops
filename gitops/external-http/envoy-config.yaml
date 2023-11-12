@@ -37,6 +37,34 @@ static_resources:
                   x_agent_name: "%REQ(X-AGENTNAME)%"
                   x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
           http_filters:
+          # Blocking any Request ype that is not GET.
+          # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
+          #
+          - &get_requests_only_lua
+            name: envoy.filters.http.lua
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+              default_source_code:
+                inline_string: |
+                  function envoy_on_request(request_handle)
+                    if request_handle:headers():get(":method") ~= "GET" then
+                      request_handle:respond(
+                        {[":status"] = "301", [":method"] = "GET", ["Location"] = "https://www.wikipedia.org"},
+                        "Only GET requests allowed")
+                    end
+                  end
+          - &cors
+            name: envoy.filters.http.cors
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+              # allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+              # allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
+              allow_credentials: true
+              max_age: "1728000"
+          - &csrf
+            name: envoy.filters.http.cor
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -74,6 +102,7 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
+          - *get_requests_only_lua
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -110,7 +139,6 @@ static_resources:
             - certificate_chain: {filename: "cert/tls.crt"}
               private_key: {filename: "cert/tls.key"}
             alpn_protocols: ["h2,http/1.1"]
-
       filters:
       - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
         typed_config:
@@ -130,21 +158,13 @@ static_resources:
           stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
           request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
           access_log:
-          - name: envoy.access_loggers.stdout
+          - *jsonlog
+          http_filters:
+          - *get_requests_only_lua
+          - *cors
+          - name: envoy.filters.http.router
             typed_config:
-              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
-              log_format:
-                jsonFormat:
-                  authority: "%REQ(:AUTHORITY)%"
-                  path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                  protocol: "%PROTOCOL%"
-                  response_code: "%RESPONSE_CODE%"
-                  response_flags: "%RESPONSE_FLAGS%"
-                  route_name: "%ROUTE_NAME%"
-                  upstream_host: "%UPSTREAM_HOST%"
-                  user_agent: "%REQ(USER-AGENT)%"
-                  x_agent_name: "%REQ(X-AGENTNAME)%"
-                  x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
           route_config:
             name: main_router
             virtual_hosts:
@@ -173,30 +193,6 @@ static_resources:
                 route:
                   cluster: homelabapi
                   auto_host_rewrite: true
-              # - match:
-              #     prefix: "/"
-              #   route:
-              #     cluster: homelabapi
-              #     auto_host_rewrite: true
-          http_filters:
-          # Blocking any Request ype that is not GET.
-          # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
-          #
-          - name: envoy.filters.http.lua
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-              default_source_code:
-                inline_string: |
-                  function envoy_on_request(request_handle)
-                    if request_handle:headers():get(":method") ~= "GET" then
-                      request_handle:respond(
-                        {[":status"] = "301", [":method"] = "GET", ["Location"] = "https://www.wikipedia.org"},
-                        "Only GET requests allowed")
-                    end
-                  end
-          - name: envoy.filters.http.router
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
   - name: homelabapi
