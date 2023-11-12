@@ -57,7 +57,7 @@ static_resources:
             name: envoy.filters.http.cors
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
-          - &enable_csrf
+          - &csrf
             name: envoy.filters.http.csrf
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
@@ -65,6 +65,50 @@ static_resources:
                 default_value:
                   numerator: 100
                   denominator: HUNDRED
+          # TODO: neet to find a way to get the geoIP database in the container (60MB)
+          # - &geoip
+          #   name: envoy.filters.http.geoip
+          #   typed_config:
+          #     "@type": type.googleapis.com/envoy.extensions.filters.http.geoip.v3.Geoip
+          #     xff_config:
+          #       xff_num_trusted_hops: 1
+          #     provider:
+          #         name: "envoy.geoip_providers.maxmind"
+          #         typed_config:
+          #           "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
+          #           common_provider_config:
+          #             geo_headers_to_add:
+          #               country: "x-geo-country"
+          #               region: "x-geo-region"
+          #               city: "x-geo-city"
+          #               asn: "x-geo-asn"
+          #           city_db_path: "geoip/GeoLite2-City.mmdb"
+          #           isp_db_path: "geoip/GeoLite2-ASN.mmdb"
+          - &ratelimit
+            name: envoy.filters.http.local_ratelimit
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+              stat_prefix: https_rate_limit
+              token_bucket:
+                max_tokens: 10000
+                tokens_per_fill: 10000
+                fill_interval: 10s
+              filter_enabled:
+                runtime_key: local_rate_limit_enabled
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+              filter_enforced:
+                runtime_key: local_rate_limit_enforced
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+              response_headers_to_add:
+              - append_action: OVERWRITE_IF_EXISTS_OR_ADD
+                header:
+                  key: x-local-rate-limit
+                  value: 'true'
+              local_rate_limit_per_downstream_connection: false
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -82,15 +126,8 @@ static_resources:
                   allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
                   allow_credentials: true
                   max_age: "86400"
-              typed_per_filter_config:
-                envoy.filters.http.csrf: &csrf
-                  "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
-                  filter_enabled:
-                    default_value:
-                      numerator: 100
-                      denominator: HUNDRED
-                    runtime_key: csrf.www.enabled
-
+              # typed_per_filter_config:
+ 
   # Handle HTTP Traffic: Redirect everything to https
   #
   - name: http
@@ -122,6 +159,7 @@ static_resources:
           - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
           - *get_requests_only_lua
+          - *ratelimit
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -181,7 +219,8 @@ static_resources:
           http_filters:
           - *get_requests_only_lua
           - *enable_cors
-          - *enable_csrf
+          - *csrf
+          - *ratelimit
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -191,8 +230,6 @@ static_resources:
             - name: apps-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
-              # typed_per_filter_config:
-              #   <<: *csrf
               cors: *cors_default
               routes:
               - match:

@@ -1,6 +1,5 @@
 resources:
 - envoy.yaml
-# - envoy-cm.yaml
 
 configMapGenerator:
 - name: envoy-cm
