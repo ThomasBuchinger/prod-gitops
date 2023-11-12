@@ -25,8 +25,9 @@ data:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
               access_log:
-              - name: envoy.access_loggers.stdout
-                typed_config: &jsonlog
+              - &jsonlog
+                name: envoy.access_loggers.stdout
+                typed_config:
                   "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
                   log_format:
                     jsonFormat:
@@ -69,8 +70,7 @@ data:
               stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
               request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
               access_log:
-              - name: envoy.access_loggers.stdout
-                <<: *jsonlog
+              - *jsonlog
               http_filters:                                             # Pass Request directly to the router, without any other filters
               - name: envoy.filters.http.router
                 typed_config:
