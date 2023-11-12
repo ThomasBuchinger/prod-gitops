@@ -183,9 +183,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: envoy-metrics
-  # namespace: monitoring
-  # labels:
-  #   release: monitoring
+  labels:
+    release: monitoring
 spec:
   endpoints:
   - honorLabels: true
