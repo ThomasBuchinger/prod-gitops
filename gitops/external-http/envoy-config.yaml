@@ -15,7 +15,7 @@ static_resources:
         port_value: 9999
     filter_chains:
     - filters:
-      - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
+      - name: envoy.filters.network.http_connection_manager
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
           stat_prefix: template
@@ -36,6 +36,20 @@ static_resources:
                   user_agent: "%REQ(USER-AGENT)%"
                   x_agent_name: "%REQ(X-AGENTNAME)%"
                   x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+          http_filters: []
+          # - name: envoy.filters.http.router
+          #   typed_config:
+          #     "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: template
+            virtual_hosts: []
+
+
+      - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: template
+          access_log:
 
   # Handle HTTP Traffic: Redirect everything to https
   #
