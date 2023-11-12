@@ -26,6 +26,10 @@ spec:
         rev: prometheus
         path: gitops/monitoring/all
         wave: "1"
+      - name: monitoring-loki
+        rev: prometheus
+        path: gitops/monitoring-loki
+        wave: "1"
       - name: paperless
         rev: main
         path: gitops/paperless
