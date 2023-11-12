@@ -37,6 +37,18 @@ static_resources:
           - name: envoy.access_loggers.stdout
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+              log_format:
+                jsonFormat:
+                  authority: "%REQ(:AUTHORITY)%"
+                  path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                  protocol: "%PROTOCOL%"
+                  response_code: "%RESPONSE_CODE%"
+                  response_flags: "%RESPONSE_FLAGS%"
+                  route_name: "%ROUTE_NAME%"
+                  upstream_host: "%UPSTREAM_HOST%"
+                  user_agent: "%REQ(USER-AGENT)%"
+                  x_agent_name: "%REQ(X-AGENTNAME)%"
+                  x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
           http_filters:                                             # Pass Request directly to the router, without any other filters
           - name: envoy.filters.http.router
             typed_config:
