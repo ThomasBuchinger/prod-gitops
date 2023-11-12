@@ -36,6 +36,16 @@ static_resources:
                   user_agent: "%REQ(USER-AGENT)%"
                   x_agent_name: "%REQ(X-AGENTNAME)%"
                   x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+          tracing: &tracing
+            provider:
+              name: envoy.tracers.opentelemetry
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
+                grpc_service:
+                  envoy_grpc:
+                    cluster_name: opentelemetry_collector
+                  timeout: 0.250s
+                service_name: external-http
           http_filters:
           # Blocking any Request ype that is not GET.
           # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
@@ -109,6 +119,23 @@ static_resources:
                   key: x-local-rate-limit
                   value: 'true'
               local_rate_limit_per_downstream_connection: false
+          - &basicauth
+            name: envoy.lua
+            config:
+              inline_code: |
+                function envoy_on_request(request_handle)
+                  -- Surely you have to check if request_handle:metadata():get("credentials") has
+                  -- nothing then you need to decide what to do.
+                  for _, credential in pairs(request_handle:metadata():get("credentials")) do
+                    if request_handle:headers():get("authorization") == credential
+                    then
+                      return
+                    end
+                  end
+                  request_handle:respond(
+                    {[":status"] = "401", ["WWW-Authenticate"] = "Basic realm=\"Unknown\""}, "Unauthorized"
+                  )
+                  end
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -217,6 +244,7 @@ static_resources:
           generate_request_id: true
           preserve_external_request_id: true
           always_set_request_id_in_response: true
+          tracing: *tracing
           access_log:
           - *jsonlog
           http_filters:
@@ -258,6 +286,23 @@ static_resources:
                   auto_host_rewrite: true
 
   clusters:
+  - name: opentelemetry_collector
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: {}
+    load_assignment:
+      cluster_name: opentelemetry_collector
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: tempo.monitoring.svc
+                port_value: 4317
   - name: homelabapi
     type: LOGICAL_DNS
     load_assignment:
