@@ -6,8 +6,8 @@ helmCharts:
   repo: https://prometheus-community.github.io/helm-charts
   # version: 44.0.0
   # BUG: release-name must be the same as namespace. Or Prometheus' ServiceMonitor will be wrong
-  releaseName: monitoring
-  namespace: monitoring
+  releaseName: loki
+  namespace: monitoring-loki
   valuesFile: values.yaml
   includeCRDs: true
 
