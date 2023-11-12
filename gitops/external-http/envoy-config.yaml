@@ -68,7 +68,7 @@ static_resources:
             name: dummy
             virtual_hosts:
             - name: dummy
-              domains: []
+              domains: ["*"]
               routes: []
               typed_per_filter_config:
                 envoy.filters.http.cors: &cors_default
