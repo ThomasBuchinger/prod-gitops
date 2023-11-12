@@ -19,12 +19,12 @@ loki:
     retention_delete_worker_count: 150
   commonConfig:
     replication_factor: 1 # needed since we only run one Loki instance
-  rulerConfig:
-    alertmanager_url: http://monitoring-kube-prometheus-alertmanager.monitoring:9093
-    storage:
-      type: local
-      local:
-        directory: /var/loki/rules
+  # rulerConfig:
+  #   alertmanager_url: http://monitoring-kube-prometheus-alertmanager.monitoring:9093
+  #   storage:
+  #     type: local
+  #     local:
+  #       directory: /var/loki/rules
     ring:
       kvstore:
         store: inmemory
@@ -42,16 +42,16 @@ monitoring:
 
 singleBinary:
   replicas: 1
-  extraVolumeMounts:
-    - name: rules
-      mountPath: /var/loki/rules/socradev
-  extraVolumes:
-    - name: rules
-      configMap:
-        name: alerting-rules
+  # extraVolumeMounts:
+  #   - name: rules
+  #     mountPath: /var/loki/rules/socradev
+  # extraVolumes:
+  #   - name: rules
+  #     configMap:
+  #       name: alerting-rules
   persistence:
-    enabled: true
-    size: 30Gi
-    storageClass: cstor-rep3
-    enableStatefulSetAutoDeletePVC: false
+    enabled: false
+    # size: 30Gi
+    # storageClass: cstor-rep3
+    # enableStatefulSetAutoDeletePVC: false
 
