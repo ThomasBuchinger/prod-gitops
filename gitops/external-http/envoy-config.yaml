@@ -66,7 +66,7 @@ static_resources:
             name: dummy
             virtual_hosts:
             - name: dummy
-              domains: ["non-existent.cloud.buc.sh"]
+              domains: ["non-existent.example.lan"]
               routes: []
               cors: &cors_default
                   # allow_origin_string_match:
@@ -83,6 +83,7 @@ static_resources:
                     default_value:
                       numerator: 100
                       denominator: HUNDRED
+                    runtime_key: csrf.www.enabled
 
   # Handle HTTP Traffic: Redirect everything to https
   #
