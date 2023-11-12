@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: external-node-exporter
+  namespace: monitoring
+  labels:
+    prometheus: system-monitoring-prometheus
+    release: monitoring
+spec:
+  staticConfigs:
+  - labels:
+      job: external-evergreen
+    targets:
+      - metrics.10.0.0.16.nip.io:9100
+  - labels:
+      job: external-nas
+    targets:
+      - metrics.10.0.0.20.nip.io:9100
+  - labels:
+      job: external-h3
+    targets:
+      - metrics.10.0.0.14.nip.io:9100
+  - labels:
+      job: external-passive
+    targets:
+      - metrics.10.0.0.15.nip.io:9100
