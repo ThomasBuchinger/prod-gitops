@@ -42,7 +42,7 @@ dashboardProviders:
       editable: true
       allowUiUpdates: true
       options:
-        path: /tmp/mydashbaords
+        path: /var/lib/grafana/dashboards/custom
 
 datasources:
  datasources.yaml:
@@ -54,7 +54,7 @@ datasources:
      access: proxy
      isDefault: true
 dashboards:
-  mydashbaords:
+  custom:
     # dashboard-landing:
     #   # This is a path to a file inside the dashboards directory inside the chart directory
     #   file: dashboard-landing.json
