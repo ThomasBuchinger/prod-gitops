@@ -9,18 +9,18 @@ metadata:
 spec:
   staticConfigs:
   - labels:
-      job: external-evergreen
+      job: node-exporter
     targets:
-      - metrics.10.0.0.16.nip.io:9100
+      - 10.0.0.16:9100
   - labels:
-      job: external-nas
+      job: node-exporter
     targets:
-      - metrics.10.0.0.20.nip.io:9100
+      - 10.0.0.20:9100
   - labels:
-      job: external-h3
+      job: node-exporter
     targets:
-      - metrics.10.0.0.14.nip.io:9100
-  - labels:
-      job: external-passive
-    targets:
-      - metrics.10.0.0.15.nip.io:9100
+      - 10.0.0.14:9100
+  # - labels:
+  #     job: node-exporter
+  #   targets:
+  #     - 10.0.0.15:9100
