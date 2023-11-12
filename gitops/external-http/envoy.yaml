@@ -185,9 +185,9 @@ metadata:
   name: envoy-metrics
   # namespace: monitoring
   labels:
-    app: kube-prometheus-stack-kube-controller-manager
+    # app: kube-prometheus-stack-kube-controller-manager
     jobLabel: envoy
-    # release: monitoring
+    release: monitoring
 spec:
   endpoints:
   - honorLabels: true
