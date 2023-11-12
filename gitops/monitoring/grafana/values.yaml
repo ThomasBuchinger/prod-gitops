@@ -52,3 +52,8 @@ dashboards:
     cluster-dashboard:
       gnetId: 315
       datasource: Prometheus
+    envoy-dashboard:
+      gnetId: 11021
+      datasource: Prometheus
+
+      
