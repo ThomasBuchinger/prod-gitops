@@ -36,10 +36,10 @@ static_resources:
                   user_agent: "%REQ(USER-AGENT)%"
                   x_agent_name: "%REQ(X-AGENTNAME)%"
                   x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
-          http_filters: []
-          # - name: envoy.filters.http.router
-          #   typed_config:
-          #     "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
           route_config:
             name: template
             virtual_hosts: []
