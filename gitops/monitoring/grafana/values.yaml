@@ -46,12 +46,13 @@ datasources:
      isDefault: true
 dashboards:
   default:
-    dashboard-landing.json:
-      # This is a path to a file inside the dashboards directory inside the chart directory
-      file: dashboard-landing.json
+    # dashboard-landing:
+    #   # This is a path to a file inside the dashboards directory inside the chart directory
+    #   file: dashboard-landing.json
     cluster-dashboard:
       gnetId: 315
       datasource: Prometheus
+  envoy:
     envoy-dashboard:
       gnetId: 11021
       datasource: Prometheus
