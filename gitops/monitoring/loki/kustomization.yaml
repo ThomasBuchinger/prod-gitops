@@ -12,18 +12,5 @@ helmCharts:
   namespace: monitoring
   valuesFile: "promtail-values.yaml"
 
-# patches:
-# - target:
-#     version: v1
-#     kind: StatefulSet
-#     name: loki
-#   patch: |-
-#     - op: add
-#       path: "/spec/volumeClaimTemplates/0/metadata/labels"
-#       value: {"velero.io/exclude-from-backup": "true"}
-
-
-
-
 resources:
-- stuff.yaml
+- resources.yaml
