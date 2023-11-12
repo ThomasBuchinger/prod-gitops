@@ -1,10 +1,9 @@
-
 helmCharts:
-- name: loki-simple-scalable
-  repo: https://grafana.github.io/helm-charts
+- name: kube-prometheus-stack
+  repo: https://prometheus-community.github.io/helm-charts
   # version: 44.0.0
   # BUG: release-name must be the same as namespace. Or Prometheus' ServiceMonitor will be wrong
-  releaseName: loki
+  releaseName: monitoring
   namespace: monitoring
   valuesFile: values.yaml
   includeCRDs: true
