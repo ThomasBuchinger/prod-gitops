@@ -1,8 +1,57 @@
 
+# loki:
+#   commonConfig:
+#     replication_factor: 1
+#   storage:
+#     type: 'filesystem'
+# singleBinary:
+#   replicas: 1
+
+
+
 loki:
+  limits_config:
+    retention_period: 1d
+  compactor:
+    retention_enabled: true
+    compaction_interval: 10m
+    retention_delete_delay: 2h
+    retention_delete_worker_count: 150
   commonConfig:
-    replication_factor: 1
+    replication_factor: 1 # needed since we only run one Loki instance
+  rulerConfig:
+    alertmanager_url: http://monitoring-kube-prometheus-alertmanager.monitoring:9093
+    storage:
+      type: local
+      local:
+        directory: /var/loki/rules
+    ring:
+      kvstore:
+        store: inmemory
   storage:
-    type: 'filesystem'
+    type: filesystem # trying to disable boltdb-shipper s3 object_store configuration
+
+test:
+  enabled: false
+
+monitoring:
+  selfMonitoring:
+    enabled: false
+    grafanaAgent:
+      installOperator: false
+
 singleBinary:
   replicas: 1
+  extraVolumeMounts:
+    - name: rules
+      mountPath: /var/loki/rules/socradev
+  extraVolumes:
+    - name: rules
+      configMap:
+        name: alerting-rules
+  persistence:
+    enabled: true
+    size: 30Gi
+    storageClass: cstor-rep3
+    enableStatefulSetAutoDeletePVC: false
+

@@ -8,6 +8,25 @@ helmCharts:
   namespace: monitoring-loki
   valuesFile: values.yaml
   includeCRDs: true
+- name: promtail
+  repo: https://grafana.github.io/helm-charts
+  # version: 6.14.1
+  releaseName: promtail
+  namespace: monitoring-loki
+  valuesFile: "promtail-values.yaml"
+
+patches:
+- target:
+    version: v1
+    kind: StatefulSet
+    name: loki
+  patch: |-
+    - op: add
+      path: "/spec/volumeClaimTemplates/0/metadata/labels"
+      value: {"velero.io/exclude-from-backup": "true"}
+
+
+
 
 # resources:
 # - resources.yaml
