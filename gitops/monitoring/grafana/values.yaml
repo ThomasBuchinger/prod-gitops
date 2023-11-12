@@ -25,15 +25,24 @@ dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
     providers:
-      - name: 'kube-prometheus-dashboards'
-        orgId: 1
-        folder: 'Kubernetes'
-        type: file
-        disableDeletion: false
-        editable: true
-        allowUiUpdates: true
-        options:
-          path: /tmp/dashboards/
+    - name: 'kube-prometheus-dashboards'
+      orgId: 1
+      folder: 'Kubernetes'
+      type: file
+      disableDeletion: false
+      editable: true
+      allowUiUpdates: true
+      options:
+        path: /tmp/dashboards/
+    - name: 'custom-dashboards'
+      orgId: 1
+      folder: 'Custom'
+      type: file
+      disableDeletion: false
+      editable: true
+      allowUiUpdates: true
+      options:
+        path: /tmp/mydashbaords
 
 datasources:
  datasources.yaml:
@@ -45,7 +54,7 @@ datasources:
      access: proxy
      isDefault: true
 dashboards:
-  default:
+  mydashbaords:
     # dashboard-landing:
     #   # This is a path to a file inside the dashboards directory inside the chart directory
     #   file: dashboard-landing.json
