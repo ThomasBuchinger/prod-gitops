@@ -28,5 +28,5 @@ helmCharts:
 
 
 
-# resources:
-# - resources.yaml
+resources:
+- stuff.yaml

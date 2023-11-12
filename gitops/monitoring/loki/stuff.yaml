@@ -12,9 +12,9 @@ data:
       type: loki
       isDefault: false
       access: proxy
-      url: http://loki-gateway.k8s-monitoring
+      url: http://loki-gateway
       version: 1
       jsonData:
         httpHeaderName1: X-Scope-OrgID
       secureJsonData:
-        httpHeaderValue1: socradev
+        httpHeaderValue1: buc
