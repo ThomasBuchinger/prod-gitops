@@ -6,5 +6,6 @@ resources:
 - ../grafana
 - ../prometheus
 - ../loki
+- ../tempo
 - ../metrics-server
 - ../external-monitoring
