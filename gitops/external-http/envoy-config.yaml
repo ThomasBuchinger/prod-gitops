@@ -79,6 +79,10 @@ static_resources:
               typed_per_filter_config:
                 envoy.filters.http.csrf: &csrf
                   "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
+                  filter_enabled:
+                    default_value:
+                      numerator: 100
+                      denominator: HUNDRED
 
   # Handle HTTP Traffic: Redirect everything to https
   #
