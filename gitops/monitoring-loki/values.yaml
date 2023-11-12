@@ -50,8 +50,8 @@ singleBinary:
   #     configMap:
   #       name: alerting-rules
   persistence:
-    enabled: false
-    # size: 30Gi
-    # storageClass: cstor-rep3
-    # enableStatefulSetAutoDeletePVC: false
+    enabled: true
+    size: 3Gi
+    storageClass: local-path
+    enableStatefulSetAutoDeletePVC: true
 
