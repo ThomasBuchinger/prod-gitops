@@ -18,3 +18,22 @@ data:
         httpHeaderName1: X-Scope-OrgID
       secureJsonData:
         httpHeaderValue1: buc
+
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: loki-metrics
+  labels:
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/name: loki
+    release: monitoring
+spec:
+  endpoints:
+  - honorLabels: true
+    port: "http-metrics"
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: monitoring
+      app.kubernetes.io/name: loki
