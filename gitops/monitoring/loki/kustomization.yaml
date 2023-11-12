@@ -5,14 +5,14 @@ helmCharts:
   # version: 44.0.0
   # BUG: release-name must be the same as namespace. Or Prometheus' ServiceMonitor will be wrong
   releaseName: loki
-  namespace: monitoring-loki
+  namespace: monitoring
   valuesFile: values.yaml
   includeCRDs: true
 - name: promtail
   repo: https://grafana.github.io/helm-charts
   # version: 6.14.1
   releaseName: promtail
-  namespace: monitoring-loki
+  namespace: monitoring
   valuesFile: "promtail-values.yaml"
 
 # patches:

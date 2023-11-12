@@ -4,7 +4,7 @@ config:
   serverPort: 3101
   clients:
     - url: http://loki-gateway/loki/api/v1/push
-      tenant_id: socradev
+      tenant_id: buc
   snippets:
     extraScrapeConfigs: |
       - job_name: journal
