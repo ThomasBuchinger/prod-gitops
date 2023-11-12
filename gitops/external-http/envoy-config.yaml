@@ -53,14 +53,10 @@ static_resources:
                         "Only GET requests allowed")
                     end
                   end
-          - &cors
+          - &enable_cors
             name: envoy.filters.http.cors
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
-              # allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
-              # allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
-              allow_credentials: true
-              max_age: "1728000"
           - &csrf
             name: envoy.filters.http.cor
             typed_config:
@@ -69,8 +65,31 @@ static_resources:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
           route_config:
-            name: template
-            virtual_hosts: []
+            name: dummy
+            virtual_hosts:
+            - name: dummy
+              domain: []
+              routes: []
+              typed_per_filter_config:
+                envoy.filters.http.cors: &cors_default
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                  # allow_origin_string_match:
+                  # - safe_regex:
+                  #     regex: \*
+                  allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+                  allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
+                  allow_credentials: true
+                  max_age: "1728000"
+                envoy.filters.http.cors2: &cors_strict
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                  # allow_origin_string_match:
+                  # - safe_regex:
+                  #     regex: \*
+                  allow_methods: "GET,OPTIONS"
+                  allow_headers: "Cache-Control,Content-Type,Access-Control-Allow-Origin"
+                  allow_credentials: false
+                  max_age: "1728000"
+
 
   # Handle HTTP Traffic: Redirect everything to https
   #
