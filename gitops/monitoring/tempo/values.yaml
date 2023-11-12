@@ -11,6 +11,22 @@ tempo:
         path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
+
+  tempoQuery:
+    repository: grafana/tempo-query
+    enabled: true
+    service:
+      port: 16686
+    ingress:
+      enabled: true
+      path: /
+      hosts:
+      - tracing.buc.sh
+      - tracing.10.0.0.21.nip.io
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 4Gi
 minio:
   enabled: false
 traces:
