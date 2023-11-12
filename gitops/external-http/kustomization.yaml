@@ -1,10 +1,8 @@
 resources:
-# - deployment.yaml
-# - config.yaml
 - envoy.yaml
-- envoy-cm.yaml
+# - envoy-cm.yaml
 
-# configMapGenerator:
-# - name: envoy-cm
-#   files:
-#   - envoy-config.yaml
+configMapGenerator:
+- name: envoy-cm
+  files:
+  - envoy-config.yaml

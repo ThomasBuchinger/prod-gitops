@@ -18,8 +18,10 @@ static_resources:
       - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: template
           access_log:
-          - &jsonlog name: envoy.access_loggers.stdout
+          - &jsonlog
+            name: envoy.access_loggers.stdout
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
               log_format:
