@@ -186,14 +186,10 @@ metadata:
   # namespace: monitoring
   labels:
     app: kube-prometheus-stack-kube-controller-manager
-    # app.kubernetes.io/instance: monitoring
-    # app.kubernetes.io/managed-by: Helm
-    # app.kubernetes.io/part-of: kube-prometheus-stack
-    # app.kubernetes.io/version: 52.1.0
-    chart: kube-prometheus-stack-52.1.0
-    heritage: Helm
+    # chart: kube-prometheus-stack-52.1.0
+    # heritage: Helm
     jobLabel: envoy
-    release: monitoring
+    # release: monitoring
 spec:
   endpoints:
   - honorLabels: true
