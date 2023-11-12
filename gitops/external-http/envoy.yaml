@@ -186,10 +186,10 @@ metadata:
   # namespace: monitoring
   labels:
     app: kube-prometheus-stack-kube-controller-manager
-    # chart: kube-prometheus-stack-52.1.0
-    # heritage: Helm
+    chart: kube-prometheus-stack-52.1.0
+    heritage: Helm
     jobLabel: envoy
-    # release: monitoring
+    release: monitoring
 spec:
   endpoints:
   - honorLabels: true
