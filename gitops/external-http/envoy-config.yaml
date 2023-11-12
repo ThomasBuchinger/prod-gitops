@@ -44,13 +44,6 @@ static_resources:
             name: template
             virtual_hosts: []
 
-
-      - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-          stat_prefix: template
-          access_log:
-
   # Handle HTTP Traffic: Redirect everything to https
   #
   - name: http
