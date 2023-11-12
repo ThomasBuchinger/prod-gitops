@@ -190,8 +190,9 @@ static_resources:
             - name: apps-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
-              typed_per_filter_config:
-                envoy.filters.http.cors: *cors_strict
+              # typed_per_filter_config:
+              #   envoy.filters.http.cors: 
+              cors: *cors_strict
               routes:
               - match:
                   safe_regex:
