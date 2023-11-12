@@ -1,11 +1,16 @@
 ---
-storage:
-  trace:
-    backend: local
-    local:
-      path: /var/tempo/traces
-    wal:
-      path: /var/tempo/wal
+tempo:
+  serviceMonitor:
+    enabled: true
+  metricsGenerator:
+    enables: true
+  storage:
+    trace:
+      backend: local
+      local:
+        path: /var/tempo/traces
+      wal:
+        path: /var/tempo/wal
 minio:
   enabled: false
 traces:
