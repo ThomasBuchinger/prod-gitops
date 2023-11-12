@@ -180,7 +180,7 @@ static_resources:
           - *jsonlog
           http_filters:
           - *get_requests_only_lua
-          - *cors
+          - *enable_cors
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -190,6 +190,8 @@ static_resources:
             - name: apps-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
+              typed_per_filter_config:
+                envoy.filters.http.cors: *cors_default
               routes:
               - match:
                   safe_regex:
