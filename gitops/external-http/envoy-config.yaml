@@ -57,10 +57,8 @@ static_resources:
             name: envoy.filters.http.cors
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
-          - &csrf
-            name: envoy.filters.http.cor
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+          - &enable_csrf
+            name: envoy.filters.http.csrf
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -78,13 +76,9 @@ static_resources:
                   allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
                   allow_credentials: true
                   max_age: "86400"
-              # typed_per_filter_config:
-              #   cors2: &cors_strict
-              #     allow_methods: "GET,OPTIONS"
-              #     allow_headers: "Cache-Control,Content-Type,Access-Control-Allow-Origin"
-              #     allow_credentials: false
-              #     max_age: "86400"
-
+              typed_per_filter_config:
+                envoy.filters.http.csrf: &csrf
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
 
   # Handle HTTP Traffic: Redirect everything to https
   #
@@ -176,6 +170,7 @@ static_resources:
           http_filters:
           - *get_requests_only_lua
           - *enable_cors
+          - *enable_csrf
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -185,8 +180,8 @@ static_resources:
             - name: apps-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
-              # typed_per_filter_config:
-              #   envoy.filters.http.cors: 
+              typed_per_filter_config:
+                <<: *csrf
               cors: *cors_default
               routes:
               - match:
