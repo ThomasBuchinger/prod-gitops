@@ -191,7 +191,7 @@ static_resources:
               domains:
               - api.cloud.buc.sh
               typed_per_filter_config:
-                envoy.filters.http.cors: *cors_default
+                envoy.filters.http.cors: *cors_strict
               routes:
               - match:
                   safe_regex:
