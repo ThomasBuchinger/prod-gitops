@@ -27,7 +27,7 @@ dashboardProviders:
     providers:
     - name: 'kube-prometheus-dashboards'
       orgId: 1
-      folder: 'Kubernetes'
+      folder: 'Node Exporter'
       type: file
       disableDeletion: false
       editable: true
@@ -64,5 +64,9 @@ dashboards:
     envoy-dashboard:
       gnetId: 11021
       datasource: Prometheus
+    nodeexporter-full:
+      gnetId: 1860
+      datasource: Prometheus
+    
 
       
