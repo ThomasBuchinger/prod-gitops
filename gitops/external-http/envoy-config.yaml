@@ -119,23 +119,9 @@ static_resources:
                   key: x-local-rate-limit
                   value: 'true'
               local_rate_limit_per_downstream_connection: false
-          - &basicauth
-            name: envoy.lua
-            config:
-              inline_code: |
-                function envoy_on_request(request_handle)
-                  -- Surely you have to check if request_handle:metadata():get("credentials") has
-                  -- nothing then you need to decide what to do.
-                  for _, credential in pairs(request_handle:metadata():get("credentials")) do
-                    if request_handle:headers():get("authorization") == credential
-                    then
-                      return
-                    end
-                  end
-                  request_handle:respond(
-                    {[":status"] = "401", ["WWW-Authenticate"] = "Basic realm=\"Unknown\""}, "Unauthorized"
-                  )
-                  end
+            # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
+            # TODO: implement a simple basic-auth service in internal API Or deploy keycloak?
+            # TODO: Iplement GeoIP in External API
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
