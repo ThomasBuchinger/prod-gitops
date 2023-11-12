@@ -10,6 +10,7 @@
 
 
 loki:
+  auth_enabled: false
   limits_config:
     retention_period: 1d
   compactor:
