@@ -1,12 +1,10 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
 
 helmCharts:
-- name: kube-prometheus-stack
-  repo: https://prometheus-community.github.io/helm-charts
+- name: loki
+  repo: https://grafana.github.io/helm-charts
   # version: 44.0.0
   # BUG: release-name must be the same as namespace. Or Prometheus' ServiceMonitor will be wrong
-  releaseName: monitoring
+  releaseName: loki
   namespace: monitoring
   valuesFile: values.yaml
   includeCRDs: true
