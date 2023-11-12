@@ -59,6 +59,12 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
           - &enable_csrf
             name: envoy.filters.http.csrf
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
+              filter_enabled:
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -185,8 +191,8 @@ static_resources:
             - name: apps-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
-              typed_per_filter_config:
-                <<: *csrf
+              # typed_per_filter_config:
+              #   <<: *csrf
               cors: *cors_default
               routes:
               - match:
