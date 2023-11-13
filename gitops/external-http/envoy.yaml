@@ -51,6 +51,8 @@ spec:
           containerPort: 8080
         - name: https
           containerPort: 8443
+        - name: apps
+          containerPort: 8444
         - name: admin
           containerPort: 9901
         livenessProbe:
@@ -139,6 +141,10 @@ spec:
     port: 443
     nodePort: 32443
     targetPort: 8443
+  - name: apps
+    port: 8444
+    nodePort: 32444
+    targetPort: 8444
   - name: admin
     port: 9901
     targetPort: 9901
