@@ -143,6 +143,7 @@ spec:
     targetPort: 8443
   - name: apps
     port: 8444
+    # 49791
     nodePort: 32444
     targetPort: 8444
   - name: admin

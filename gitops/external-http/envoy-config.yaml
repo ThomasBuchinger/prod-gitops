@@ -331,7 +331,7 @@ static_resources:
             virtual_hosts:
             - name: app-router
               domains:
-              - "*.cloud.buc.sh"
+              - "*"
               cors: *cors_default
               routes:
               - match:
