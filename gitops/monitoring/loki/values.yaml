@@ -13,6 +13,7 @@ loki:
   auth_enabled: false
   limits_config:
     retention_period: 1d
+    split_queries_by_interval: 1h
   compactor:
     retention_enabled: true
     compaction_interval: 10m
@@ -31,6 +32,13 @@ loki:
         store: inmemory
   storage:
     type: filesystem # trying to disable boltdb-shipper s3 object_store configuration
+
+  query_scheduler:
+    max_outstanding_requests_per_tenant: 4096
+  frontend:
+    max_outstanding_per_tenant: 4096
+  query_range:
+    parallelise_shardable_queries: true
 
 test:
   enabled: false
@@ -56,12 +64,3 @@ singleBinary:
     storageClass: local-path
     enableStatefulSetAutoDeletePVC: true
 
-query_scheduler:
-  max_outstanding_requests_per_tenant: 4096
-frontend:
-  max_outstanding_per_tenant: 4096
-query_range:
-  parallelise_shardable_queries: true
-limits_config:
-  split_queries_by_interval: 15m
-  max_query_parallelism: 32
