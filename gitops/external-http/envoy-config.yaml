@@ -337,7 +337,7 @@ static_resources:
               - match:
                   prefix: "/"
                 direct_response:
-                  statis: 201
+                  status: 201
                   body:
                     inline_string: "Hello"
 
