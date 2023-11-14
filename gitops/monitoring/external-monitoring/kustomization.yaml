@@ -1,4 +1,4 @@
 
 resources:
 - expose-kube-state-metrics.yaml
-- nodeexporter.yaml
+- exporters.yaml
