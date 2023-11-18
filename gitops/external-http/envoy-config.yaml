@@ -125,10 +125,10 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
               http_service:
                 server_uri:
-                  uri: https://internal-homelab-api.external-homelabapi.svc/api/auth/simple
+                  uri: http://internal-homelab-api.external-homelabapi.svc/api/auth/simple
                   cluster: internal-homelabapi
                   timeout: 0.25s
-                  # failure_mode_allow: false
+                  failure_mode_allow: false
               failure_mode_allow: false
               stat_prefix: "auth_simple"
             
