@@ -392,7 +392,7 @@ static_resources:
       unhealthy_threshold: 3
       healthy_threshold: 1
       http_health_check:
-        path: "/api/public/livez"
+        path: "/api/livez"
   - name: homelabapi
     type: LOGICAL_DNS
     load_assignment:
@@ -410,7 +410,7 @@ static_resources:
       unhealthy_threshold: 3
       healthy_threshold: 1
       http_health_check:
-        path: "/api/public/livez"
+        path: "/api/livez"
     # transport_socket:
     #   name: envoy.transport_sockets.tls
     #   typed_config:
