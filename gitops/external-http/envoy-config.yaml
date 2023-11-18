@@ -119,6 +119,17 @@ static_resources:
                   key: x-local-rate-limit
                   value: 'true'
               local_rate_limit_per_downstream_connection: false
+          - &auth_simple
+            name: envoy.filters.http.ext_authz
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+              http_service:
+                server_uri:
+                  uri: https://internal-homelab-api.external-homelabapi.svc/api/auth/simple
+                  cluster: internal-homelabapi
+              failure_mode_allow: false
+              stats_prefix: "auth_simple"
+            
             # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
             # TODO: implement a simple basic-auth service in internal API Or deploy keycloak?
             # TODO: Iplement GeoIP in External API
@@ -175,6 +186,7 @@ static_resources:
           http_filters:                                             # Pass Request directly to the router, without any other filters
           - *get_requests_only_lua
           - *ratelimit
+          - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -240,6 +252,7 @@ static_resources:
           - *enable_cors
           - *csrf
           - *ratelimit
+          - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -323,6 +336,7 @@ static_resources:
           - *enable_cors
           - *csrf
           - *ratelimit
+          - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -360,6 +374,17 @@ static_resources:
               socket_address:
                 address: tempo.monitoring.svc
                 port_value: 4317
+  - name: internal-homelabapi
+    type: LOGICAL_DNS
+    load_assignment:
+      cluster_name: internal-homelabapi
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: internal-homelab-api.external-homelabapi.svc
+                port_value: 8080
   - name: homelabapi
     type: LOGICAL_DNS
     load_assignment:

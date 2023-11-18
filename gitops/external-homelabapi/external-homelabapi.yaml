@@ -57,6 +57,64 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
 
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: internal-homelab-api
+  namespace: external-homelabapi
+  labels:
+    app.kubernetes.io/name: homelab-api
+    app.kubernetes.io/instance: internal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homelab-api
+      app.kubernetes.io/instance: internal
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: homelab-api
+        app.kubernetes.io/instance: internal
+    spec:
+      containers:
+      - name: homelab-api
+        image: ghcr.io/thomasbuchinger/homelab-api:main
+        imagePullPolicy: Always
+        env:
+        - name: MODE
+          value: internal
+        - name: AUTH_COUNTRIES
+          value: "AT, HR, IT, CZ"
+        - name: AUTH_USER
+          value: testuser
+        - name: AUTH_PASS
+          value: changeme
+        ports:
+        - name: http
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/livez
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /api/readyz
+            port: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+
 ---
 apiVersion: v1
 kind: Service
@@ -67,6 +125,21 @@ spec:
   selector:
     app.kubernetes.io/name: homelab-api
     app.kubernetes.io/instance: external
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-homelab-api
+  namespace: external-homelabapi
+spec:
+  selector:
+    app.kubernetes.io/name: homelab-api
+    app.kubernetes.io/instance: internal
   ports:
     - protocol: TCP
       port: 8080
@@ -87,7 +160,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: external-homelab-api
+            name: internal-homelab-api
             port:
               number: 8080
 
