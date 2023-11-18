@@ -130,6 +130,7 @@ static_resources:
                   timeout: 0.25s
               failure_mode_allow: false
               stat_prefix: "auth_simple"
+              transport_api_version: V3
             
             # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
             # TODO: implement a simple basic-auth service in internal API Or deploy keycloak?
