@@ -87,7 +87,8 @@ spec:
         - name: MODE
           value: internal
         - name: AUTH_COUNTRIES
-          value: "AT, HR, IT, CZ"
+          value: "CZ"
+          # value: "AT, HR, IT, CZ"
         - name: AUTH_USER
           value: testuser
         - name: AUTH_PASS
