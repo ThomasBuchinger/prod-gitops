@@ -128,7 +128,7 @@ static_resources:
                   uri: internal-homelab-api.external-homelabapi.svc:8080
                   cluster: internal-homelabapi
                   timeout: 0.25s
-                path_prefix: /auth/simple
+                path_prefix: /api/auth/simple
               failure_mode_allow: false
               stat_prefix: "auth_simple"
               transport_api_version: V3
