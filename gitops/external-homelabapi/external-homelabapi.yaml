@@ -81,7 +81,7 @@ spec:
     spec:
       containers:
       - name: homelab-api
-        image: nginx
+        image: cgr.dev/chainguard/nginx:latest
         # image: ghcr.io/thomasbuchinger/homelab-api:main
         imagePullPolicy: Always
         env:
@@ -105,17 +105,17 @@ spec:
         #   httpGet:
         #     path: /api/readyz
         #     port: 8080
-      #   securityContext:
-      #     allowPrivilegeEscalation: false
-      #     capabilities:
-      #       drop:
-      #       - ALL
-      #     seccompProfile:
-      #       type: RuntimeDefault
-      # securityContext:
-      #   runAsNonRoot: true
-      #   runAsUser: 1000
-      #   runAsGroup: 1000
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
 
 ---
 apiVersion: v1
