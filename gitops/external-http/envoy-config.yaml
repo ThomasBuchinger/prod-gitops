@@ -125,8 +125,9 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
               http_service:
                 server_uri:
-                  uri: http://internal-homelab-api.external-homelabapi.svc:8080/api/auth/simple
+                  uri: internal-homelab-api.external-homelabapi.svc:8080
                   cluster: internal-homelabapi
+                  path_prefix: /auth/simple
                   timeout: 0.25s
               failure_mode_allow: false
               stat_prefix: "auth_simple"
@@ -254,63 +255,7 @@ static_resources:
           - *enable_cors
           - *csrf
           - *ratelimit
-          - name: envoy.filters.http.ext_authz
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
-              http_service:
-                server_uri:
-                  uri: http://internal-homelab-api.external-homelabapi.svc:8080/api/auth/does_not_exist
-                  cluster: internal-homelabapi
-                  timeout: 0.25s
-                authorization_request:
-                  # headers_to_add:
-                  # - key: x-auth-request-redirect
-                  #   value: "https://httpbin.dev.kube....com.au"
-                  allowed_headers:
-                    patterns:
-                    - exact: "authorization"
-                    - exact: "x-forwarded-proto"
-                    - exact: "proxy-authorization"
-                    - exact: "user-agent"
-                    - exact: "x-forwarded-host"
-                    - exact: "x-forwarded-proto"
-                    - exact: "from"
-                    - exact: "accept"
-                    - prefix: "x-forwarded"
-                    - prefix: "x-auth-request"
-                    - prefix: "_oauth2_proxy"
-                    - exact: "cookie"
-                    - exact: "referer"
-                    - exact: "location"
-                    - exact: "set-cookie"
-                authorization_response:
-                  allowed_upstream_headers:
-                    patterns:
-                      - exact: "authorization"
-                      - exact: "Cookie"
-                      - exact: "cookie"
-                      - prefix: "_oauth2_proxy"
-                      - exact: "location"
-                      - exact: "proxy-authenticate"
-                      - exact: "set-cookie"
-                      - exact: "www-authenticate"
-                      - prefix: "x-forwarded"
-                      - prefix: "x-auth-request"
-                      - exact: "referer"
-                  allowed_client_headers:
-                    patterns:
-                      - exact: "location"
-                      - exact: "proxy-authenticate"
-                      - exact: "set-cookie"
-                      - exact: "authorization"
-                      - exact: "www-authenticate"
-                      - prefix: "x-forwarded"
-                      - prefix: "x-auth-request"
-                      - exact: "referer"
-              failure_mode_allow: false
-              stat_prefix: "auth_simple_direct"
-              transport_api_version: V3
-
+          - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router

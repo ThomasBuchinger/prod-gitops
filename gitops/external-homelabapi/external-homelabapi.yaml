@@ -81,8 +81,7 @@ spec:
     spec:
       containers:
       - name: homelab-api
-        image: cgr.dev/chainguard/nginx:latest
-        # image: ghcr.io/thomasbuchinger/homelab-api:main
+        image: ghcr.io/thomasbuchinger/homelab-api:main
         imagePullPolicy: Always
         env:
         - name: MODE
@@ -97,14 +96,14 @@ spec:
         ports:
         - name: http
           containerPort: 8080
-        # livenessProbe:
-        #   httpGet:
-        #     path: /api/livez
-        #     port: 8080
-        # readinessProbe:
-        #   httpGet:
-        #     path: /api/readyz
-        #     port: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/livez
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /api/readyz
+            port: 8080
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
