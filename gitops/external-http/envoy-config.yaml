@@ -125,7 +125,7 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
               http_service:
                 server_uri:
-                  uri: http://internal-homelab-api.external-homelabapi.svc/api/auth/simple
+                  uri: http://internal-homelab-api.external-homelabapi.svc:8080/api/auth/simple
                   cluster: internal-homelabapi
                   timeout: 0.25s
               failure_mode_allow: false
@@ -254,7 +254,18 @@ static_resources:
           - *enable_cors
           - *csrf
           - *ratelimit
-          - *auth_simple
+          - name: envoy.filters.http.ext_authz
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+              http_service:
+                server_uri:
+                  uri: http://internal-homelab-api.external-homelabapi.svc:8080/api/auth/simple
+                  cluster: internal-homelabapi
+                  timeout: 0.25s
+              failure_mode_allow: false
+              stat_prefix: "auth_simple_direct"
+              transport_api_version: V3
+
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
