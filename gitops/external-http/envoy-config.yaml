@@ -262,6 +262,10 @@ static_resources:
                   uri: http://internal-homelab-api.external-homelabapi.svc:8080/api/auth/simple
                   cluster: internal-homelabapi
                   timeout: 0.25s
+                authorization_response:
+                  allowed_upstream_headers:
+                    patterns:
+                    - exact: x-allowed-by-api
               failure_mode_allow: false
               stat_prefix: "auth_simple_direct"
               transport_api_version: V3
