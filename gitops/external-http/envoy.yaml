@@ -39,11 +39,17 @@ spec:
     spec:
       initContainers:
       - name: download-geoip
-        image: busybox
-        command:
-        - /bin/sh
-        - -c
-        - "wget -o /geoip-envoy/GeoLite2-City.mmdb http://internal-homelab-api.external-homelabapi.svc:8080/geoip/GeoLite2-City.mmdb || true; ls -lh /geoip-envoy; cat /geoip-envoy/GeoLite2-City.mmdb"
+        image: ghcr.io/thomasbuchinger/homelab-api:main
+        imagePullPolicy: Always
+        env:
+        - name: GEOIP_DATABASE
+          value: /geoip/GeoLite2-City.mmdb
+        - name: COPY_GEOIP_DATABASE
+          value: /geoip-envoy/GeoLite2-City.mmdb
+        # command:
+        # - /bin/sh
+        # - -c
+        # - "wget -o /geoip-envoy/GeoLite2-City.mmdb http://internal-homelab-api.external-homelabapi.svc:8080/geoip/GeoLite2-City.mmdb || true; ls -lh /geoip-envoy; cat /geoip-envoy/GeoLite2-City.mmdb"
         volumeMounts:
         - name: geoip
           mountPath: /geoip-envoy
