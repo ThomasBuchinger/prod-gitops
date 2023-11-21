@@ -37,10 +37,20 @@ spec:
         app.kubernetes.io/name: envoy
         app.kubernetes.io/instance: external-http
     spec:
+      initContainers:
+      - name: download-geoip
+        image: ghcr.io/thomasbuchinger/homelab-api:main
+        command:
+        - /bin/sh
+        - -c
+        - "cp -rf /geoip /geoip-envoy"
+        volumeMounts:
+        - name: geoip
+          mountPath: /geoip-envoy
       containers:
       - name: envoy
-        image: envoyproxy/envoy:dev
-        imagePullPolicy: IfNotPresent
+        image: envoyproxy/envoy:latest
+        imagePullPolicy: Always
         command:
         - envoy
         - -c
@@ -73,6 +83,8 @@ spec:
           mountPath: /config
         - name: wildcard-cert
           mountPath: /cert
+        - name: geoip
+          mountPath: /geoip-envoy
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -117,6 +129,8 @@ spec:
       - name: wildcard-cert
         secret:
           secretName: cert-cloud-buc-sh
+      - name: geoip
+        emptyDir: {}
 
 ---
 kind: Service
