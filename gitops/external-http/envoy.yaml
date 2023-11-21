@@ -49,7 +49,7 @@ spec:
           mountPath: /geoip-envoy
       containers:
       - name: envoy
-        image: envoyproxy/envoy:latest
+        image: envoyproxy/envoy:dev
         imagePullPolicy: Always
         command:
         - envoy
