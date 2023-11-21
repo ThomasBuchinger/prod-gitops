@@ -43,7 +43,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "cd /geoip-envoy && curl -O http://internal-homelab-api.external-homelabapi.svc:8080/geoip/GeoLite2-City.mmdb || true"
+        - "wget -o /geoip-envoy/GeoLite2-City.mmdb http://internal-homelab-api.external-homelabapi.svc:8080/geoip/GeoLite2-City.mmdb || true"
         volumeMounts:
         - name: geoip
           mountPath: /geoip-envoy
