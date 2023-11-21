@@ -76,24 +76,24 @@ static_resources:
                   numerator: 100
                   denominator: HUNDRED
           # TODO: neet to find a way to get the geoIP database in the container (60MB)
-          # - &geoip
-          #   name: envoy.filters.http.geoip
-          #   typed_config:
-          #     "@type": type.googleapis.com/envoy.extensions.filters.http.geoip.v3.Geoip
-          #     xff_config:
-          #       xff_num_trusted_hops: 1
-          #     provider:
-          #         name: "envoy.geoip_providers.maxmind"
-          #         typed_config:
-          #           "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
-          #           common_provider_config:
-          #             geo_headers_to_add:
-          #               country: "x-geo-country"
-          #               region: "x-geo-region"
-          #               city: "x-geo-city"
-          #               asn: "x-geo-asn"
-          #           city_db_path: "geoip/GeoLite2-City.mmdb"
-          #           isp_db_path: "geoip/GeoLite2-ASN.mmdb"
+          - &geoip
+            name: envoy.filters.http.geoip
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.geoip.v3.Geoip
+              xff_config:
+                xff_num_trusted_hops: 1
+              provider:
+                  name: "envoy.geoip_providers.maxmind"
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
+                    common_provider_config:
+                      geo_headers_to_add:
+                        country: "x-geo-country"
+                        # region: "x-geo-region"
+                        city: "x-geo-city"
+                        # asn: "x-geo-asn"
+                    city_db_path: "/geoip-envoy/GeoLite2-City.mmdb"
+                    # isp_db_path: "geoip/GeoLite2-ASN.mmdb"
           - &ratelimit
             name: envoy.filters.http.local_ratelimit
             typed_config:
@@ -194,6 +194,7 @@ static_resources:
           http_filters:                                             # Pass Request directly to the router, without any other filters
           - *get_requests_only_lua
           - *ratelimit
+          - *geoip
           - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
@@ -259,6 +260,7 @@ static_resources:
           - *get_requests_only_lua
           - *enable_cors
           - *csrf
+          - *geoip
           - *ratelimit
           - *auth_simple
           - name: envoy.filters.http.router
@@ -344,6 +346,7 @@ static_resources:
           - *enable_cors
           - *csrf
           - *ratelimit
+          - *geoip
           - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
