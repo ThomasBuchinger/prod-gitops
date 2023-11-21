@@ -131,31 +131,17 @@ static_resources:
                 path_prefix: /api/auth/simple
                 authorization_request:
                   headers_to_add:
-                  - key: x_custom_authority
+                  - key: X-Envoy-Authority
                     value: "%REQ(:AUTHORITY)%"
-                  - key: x_custom_path
+                  - key: X-Envoy-Path
                     value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                  - key: x_custom_forwarded_for
+                  - key: X-Envoy-Forwarded-For
                     value: "%REQ(X-FORWARDED-FOR)%"
               failure_mode_allow: false
               stat_prefix: "auth_simple"
               transport_api_version: V3
 
-                  # authority: 
-                  # path: 
-                  # protocol: "%PROTOCOL%"
-                  # response_code: "%RESPONSE_CODE%"
-                  # response_flags: "%RESPONSE_FLAGS%"
-                  # route_name: "%ROUTE_NAME%"
-                  # upstream_host: "%UPSTREAM_HOST%"
-                  # user_agent: "%REQ(USER-AGENT)%"
-                  # x_agent_name: "%REQ(X-AGENTNAME)%"
-                  # x_forwarded_for: 
-
             # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
-            # TODO: implement a simple basic-auth service in internal API Or deploy keycloak?
-            # TODO: Iplement GeoIP in External API
-            # TODO: HomeLAB Grafana Dashbaord
             # TODO: Add More info to ENVOY logs (e.g. body_size, Original HOST Header)
           - name: envoy.filters.http.router
             typed_config:
