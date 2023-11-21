@@ -131,11 +131,11 @@ static_resources:
                 path_prefix: /api/auth/simple
                 authorization_request:
                   headers_to_add:
-                  - name: x_custom_authority
+                  - key: x_custom_authority
                     value: "%REQ(:AUTHORITY)%"
-                  - name: x_custom_path
+                  - key: x_custom_path
                     value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                  - name: x_custom_forwarded_for
+                  - key: x_custom_forwarded_for
                     value: "%REQ(X-FORWARDED-FOR)%"
               failure_mode_allow: false
               stat_prefix: "auth_simple"
