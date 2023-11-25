@@ -4,3 +4,19 @@ grafana:
   forceDeployDatasources: true
   forceDeployDashboards: true
   defaultDashboardsEnabled: true
+
+defaultRules.rules.kubeProxy: false
+kubeProxy:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+        storageClassName: local-path
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+      
