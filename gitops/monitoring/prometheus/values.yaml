@@ -9,8 +9,8 @@ defaultRules.rules.kubeProxy: false
 kubeProxy:
   enabled: false
 
-prometheus:
-  prometheusSpec:
+# prometheus:
+#   prometheusSpec:
     # storageSpec:
     #   volumeClaimTemplate:
     #     spec:
