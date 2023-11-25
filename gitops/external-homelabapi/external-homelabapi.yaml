@@ -201,32 +201,33 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: external-homelab-api-metrics
+  name: homelab-api-metrics
+  namespace: external-homelabapi
   labels:
     release: monitoring
 spec:
   endpoints:
   - honorLabels: true
-    port: "http"
+    port: 8080
     path: /metrics
   selector:
     matchLabels:
       app.kubernetes.io/name: homelab-api
-      app.kubernetes.io/instance: external
+      # app.kubernetes.io/instance: external
 
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: internal-homelab-api-metrics
-  labels:
-    release: monitoring
-spec:
-  endpoints:
-  - honorLabels: true
-    port: "http"
-    path: /metrics
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: homelab-api
-      app.kubernetes.io/instance: internal
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: internal-homelab-api-metrics
+#   labels:
+#     release: monitoring
+# spec:
+#   endpoints:
+#   - honorLabels: true
+#     port: "http"
+#     path: /metrics
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/name: homelab-api
+#       app.kubernetes.io/instance: internal
