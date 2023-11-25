@@ -129,7 +129,8 @@ spec:
     app.kubernetes.io/name: homelab-api
     app.kubernetes.io/instance: external
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8080
       targetPort: 8080
 
@@ -147,7 +148,8 @@ spec:
     app.kubernetes.io/name: homelab-api
     app.kubernetes.io/instance: internal
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8080
       targetPort: 8080
 
@@ -208,7 +210,7 @@ metadata:
 spec:
   endpoints:
   - honorLabels: true
-    port: 8080
+    port: http
     path: /metrics
   selector:
     matchLabels:
