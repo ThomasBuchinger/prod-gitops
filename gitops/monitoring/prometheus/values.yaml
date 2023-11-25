@@ -24,13 +24,17 @@ prometheus:
     #   runAsNonRoot: true
     #   runAsUser: 65534
     #   fsGroup: 65534
-
-    # - name: "init-chmod-data"
-    #   image: "busybox"
-    #   command: ["chmod", "-R", "o+rw", /var/prometheus/data]
-    #   volumeMounts:
-    #   - name: prometheus-monitoring-kube-prometheus-prometheus-db-prometheus-monitoring-kube-prometheus-prometheus-0
-    #     mountPath: /var/prometheus/data
+    initContainers:
+    - name: "init-chmod-data"
+      image: "busybox"
+      command:
+      - sh
+      - -c
+      - 'ls -ld /prometheus; chmod -R o+rw /prometheus'
+      # command: ["chmod", "-R", "o+rw", /var/prometheus/data]
+      volumeMounts:
+      - name: prometheus-monitoring-kube-prometheus-prometheus-db
+        mountPath: /prometheus
     securityContext:
       runAsGroup: 1000
       runAsNonRoot: true
