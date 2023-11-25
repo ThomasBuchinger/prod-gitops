@@ -19,13 +19,13 @@ prometheus:
           resources:
             requests:
               storage: 3Gi
-    securityContext:
-      runAsGroup: 65534
-      runAsNonRoot: true
-      runAsUser: 65534
-      fsGroup: 65534
     # securityContext:
-    #   runAsGroup: 2000
+    #   runAsGroup: 65534
     #   runAsNonRoot: true
-    #   runAsUser: 1000
-    #   fsGroup: 2000
+    #   runAsUser: 65534
+    #   fsGroup: 65534
+    securityContext:
+      runAsGroup: 2000
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 1000
