@@ -191,3 +191,18 @@ spec:
     - protocol: TCP
       port: 8080
 
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: homelab-api-metrics
+  labels:
+    release: monitoring
+spec:
+  endpoints:
+  - honorLabels: true
+    port: "http"
+    path: /metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homelab-api
