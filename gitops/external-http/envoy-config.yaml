@@ -192,10 +192,10 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
+          - *auth_simple
+          - *geoip
           - *get_requests_only_lua
           - *ratelimit
-          - *geoip
-          - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -257,12 +257,12 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:
+          - *geoip
+          - *auth_simple
           - *get_requests_only_lua
+          - *ratelimit
           - *enable_cors
           - *csrf
-          - *geoip
-          - *ratelimit
-          - *auth_simple
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -342,12 +342,12 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:
-          - *get_requests_only_lua
-          - *enable_cors
-          - *csrf
-          - *ratelimit
           - *geoip
           - *auth_simple
+          - *get_requests_only_lua
+          - *ratelimit
+          - *enable_cors
+          - *csrf
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
