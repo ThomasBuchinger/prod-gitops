@@ -30,7 +30,7 @@ prometheus:
       command:
       - sh
       - -c
-      - 'ls -ld /prometheus; chmod -R o+rw /prometheus'
+      - 'id; ls -ld /prometheus; chmod -R o+rw /prometheus'
       # command: ["chmod", "-R", "o+rw", /var/prometheus/data]
       volumeMounts:
       - name: prometheus-monitoring-kube-prometheus-prometheus-db
