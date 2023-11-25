@@ -121,6 +121,9 @@ kind: Service
 metadata:
   name: external-homelab-api
   namespace: external-homelabapi
+  labels:
+    app.kubernetes.io/name: homelab-api
+    app.kubernetes.io/instance: external
 spec:
   selector:
     app.kubernetes.io/name: homelab-api
@@ -136,6 +139,9 @@ kind: Service
 metadata:
   name: internal-homelab-api
   namespace: external-homelabapi
+  labels:
+    app.kubernetes.io/name: homelab-api
+    app.kubernetes.io/instance: internal
 spec:
   selector:
     app.kubernetes.io/name: homelab-api
