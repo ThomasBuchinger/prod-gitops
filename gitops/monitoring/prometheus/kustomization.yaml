@@ -10,3 +10,31 @@ helmCharts:
 
 # resources:
 # - resources.yaml
+
+
+patches:
+- target:
+    kind: StatefulSet
+    name: prometheus-monitoring-kube-prometheus-prometheus
+  patch: |-
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: prometheus-monitoring-kube-prometheus-prometheus
+    spec:
+      template:
+        spec:
+          initContainers:
+          - name: init-chmod-data
+            securityContext:
+              runAsGroup: 2000
+              runAsNonRoot: true
+              runAsUser: 1000
+              fsGroup: 2000
+          containers:
+          - name: prometheus
+            securityContext:
+              runAsGroup: 2000
+              runAsNonRoot: true
+              runAsUser: 1000
+              fsGroup: 2000
