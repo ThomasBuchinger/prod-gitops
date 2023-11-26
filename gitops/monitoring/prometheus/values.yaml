@@ -1,7 +1,40 @@
 
 grafana:
   enabled: false
-
   forceDeployDatasources: true
   forceDeployDashboards: true
   defaultDashboardsEnabled: true
+
+defaultRules.rules.kubeProxy: false
+kubeProxy:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 3Gi
+
+
+    # Workaround for: https://github.com/prometheus-community/helm-charts/issues/1162
+    # Tested on: 25.11.2023 and ChartVersion 54.2.2
+    # It should work with the default securityContext according to the issue, but apparently the decurityContext neds to be applied to the 
+    # ContainerSpec AND the PodSpec (I think, but I am not sure). Anyway Running Prometheus as root is a workaround
+    # Re-Test it again with a higher Chart Version
+    #
+    securityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+      runAsGroup: 0
+      fsGroup: 0
+    # default SecurityContext for reference
+    # securityContext:
+    #   runAsGroup: 2000
+    #   runAsNonRoot: true
+    #   runAsUser: 1000
+    #   fsGroup: 2000

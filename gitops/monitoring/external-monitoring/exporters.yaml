@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: external-node-exporter
+  namespace: monitoring
+  labels:
+    prometheus: system-monitoring-prometheus
+    release: monitoring
+spec:
+  staticConfigs:
+  - labels:
+      job: node-exporter
+    targets:
+      - 10.0.0.13:9100
+      - 10.0.0.20:9100
+      - 10.0.0.16:9100
+      - 10.0.0.14:9100
+      # - 10.0.0.15:9100
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: external-kubestate-metrics
+  namespace: monitoring
+  labels:
+    prometheus: system-monitoring-prometheus
+    release: monitoring
+spec:
+  staticConfigs:
+  - labels:
+      job: kube-state-metrics
+    targets:
+      - 10.0.0.20:8080
+
+
+

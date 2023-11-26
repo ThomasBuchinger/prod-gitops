@@ -37,10 +37,22 @@ spec:
         app.kubernetes.io/name: envoy
         app.kubernetes.io/instance: external-http
     spec:
+      initContainers:
+      - name: download-geoip
+        image: ghcr.io/thomasbuchinger/homelab-api:main
+        imagePullPolicy: Always
+        env:
+        - name: GEOIP_DATABASE
+          value: /geoip/GeoLite2-City.mmdb
+        - name: COPY_GEOIP_DATABASE
+          value: /geoip-envoy/GeoLite2-City.mmdb
+        volumeMounts:
+        - name: geoip
+          mountPath: /geoip-envoy
       containers:
       - name: envoy
         image: envoyproxy/envoy:dev
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         command:
         - envoy
         - -c
@@ -51,6 +63,8 @@ spec:
           containerPort: 8080
         - name: https
           containerPort: 8443
+        - name: apps
+          containerPort: 8444
         - name: admin
           containerPort: 9901
         livenessProbe:
@@ -71,6 +85,8 @@ spec:
           mountPath: /config
         - name: wildcard-cert
           mountPath: /cert
+        - name: geoip
+          mountPath: /geoip-envoy
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -115,12 +131,17 @@ spec:
       - name: wildcard-cert
         secret:
           secretName: cert-cloud-buc-sh
+      - name: geoip
+        emptyDir: {}
 
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: external-http
+  labels:
+    app.kubernetes.io/name: envoy
+    app.kubernetes.io/instance: external-http
 spec:
   externalTrafficPolicy: Local
   selector:
@@ -136,6 +157,11 @@ spec:
     port: 443
     nodePort: 32443
     targetPort: 8443
+  - name: apps
+    port: 8444
+    # 49791
+    nodePort: 32444
+    targetPort: 8444
   - name: admin
     port: 9901
     targetPort: 9901
@@ -159,24 +185,6 @@ spec:
   - host: envoy.buc.sh
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: external-http
-            port:
-              name: ui
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: envoy-admin-http
-spec:
-  rules:
-  - host: envoy.10.0.0.21.nip.io
-    http:
-      paths:
       - path: /ui
         pathType: Prefix
         backend:
@@ -191,3 +199,22 @@ spec:
             name: external-http
             port:
               name: admin
+
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: envoy-metrics
+  labels:
+    release: monitoring
+spec:
+  endpoints:
+  - honorLabels: true
+    port: "admin"
+    path: /stats/prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/instance: external-http
+

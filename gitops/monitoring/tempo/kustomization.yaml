@@ -1,0 +1,8 @@
+helmCharts:
+- name: tempo
+  repo: https://grafana.github.io/helm-charts
+  # version: 44.0.0
+  releaseName: tempo
+  namespace: monitoring
+  valuesFile: values.yaml
+  includeCRDs: true

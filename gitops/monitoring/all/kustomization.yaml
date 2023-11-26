@@ -5,5 +5,7 @@ resources:
 - ns.yaml
 - ../grafana
 - ../prometheus
+- ../loki
+- ../tempo
 - ../metrics-server
 - ../external-monitoring

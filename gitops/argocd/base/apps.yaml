@@ -23,7 +23,7 @@ spec:
         path: gitops/okd-console
         wave: "1"
       - name: monitoring
-        rev: prometheus
+        rev: services
         path: gitops/monitoring/all
         wave: "1"
       - name: monitoring-loki
@@ -43,15 +43,15 @@ spec:
         path: gitops/stirling-pdf
         wave: "2"
       - name: external-http
-        rev: prometheus
+        rev: services
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
-        rev: prometheus
+        rev: services
         path: gitops/external-homelabapi
         wave: "2"
       - name: external-r2
-        rev: prometheus
+        rev: services
         path: gitops/external-r2
         wave: "2"
   template:

@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
 - name: grafana
   repo: https://grafana.github.io/helm-charts
-  version: 6.50.0
+  # version: 6.50.0
   releaseName: grafana
   namespace: monitoring
   valuesFile: values.yaml
@@ -12,3 +12,15 @@ helmCharts:
 
 resources:
 - resources.yaml
+
+configMapGenerator:
+- name: homelab-dashboards
+  files:
+    - HomeLAB-Dashboard.json
+
+generatorOptions:
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: "HomeLAB"
+

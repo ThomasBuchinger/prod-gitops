@@ -1,0 +1,16 @@
+
+helmCharts:
+- name: loki
+  repo: https://grafana.github.io/helm-charts
+  releaseName: loki
+  namespace: monitoring
+  valuesFile: values.yaml
+  includeCRDs: true
+- name: promtail
+  repo: https://grafana.github.io/helm-charts
+  releaseName: promtail
+  namespace: monitoring
+  valuesFile: "promtail-values.yaml"
+
+resources:
+- resources.yaml

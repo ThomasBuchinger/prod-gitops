@@ -6,6 +6,166 @@ admin:
 
 static_resources:
   listeners:
+  # This is a template listener with YAML-Anchors to be reused
+  #
+  - name: template-listener
+    address:
+      socket_address:
+        address: 127.0.0.1
+        port_value: 9999
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: template
+          access_log:
+          - &jsonlog
+            name: envoy.access_loggers.stdout
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+              log_format:
+                jsonFormat:
+                  authority: "%REQ(:AUTHORITY)%"
+                  method: "%REQ(:METHOD)%"
+                  referer: "%REQ(REFERER)%"
+                  request_id: "%REQ(X-REQUEST-ID)%"
+                  path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                  protocol: "%PROTOCOL%"
+                  response_code: "%RESPONSE_CODE%"
+                  response_flags: "%RESPONSE_FLAGS%"
+                  route_name: "%ROUTE_NAME%"
+                  upstream_host: "%UPSTREAM_HOST%"
+                  user_agent: "%REQ(USER-AGENT)%"
+                  x_agent_name: "%REQ(X-AGENTNAME)%"
+                  x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+                  x_geo_country: "%REQ(x-geo-country)%"
+          tracing: &tracing
+            provider:
+              name: envoy.tracers.opentelemetry
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
+                grpc_service:
+                  envoy_grpc:
+                    cluster_name: opentelemetry_collector
+                  timeout: 0.250s
+                service_name: external-http
+          http_filters:
+          # Blocking any Request ype that is not GET.
+          # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
+          #
+          - &get_requests_only_lua
+            name: envoy.filters.http.lua
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+              default_source_code:
+                inline_string: |
+                  function envoy_on_request(request_handle)
+                    if request_handle:headers():get(":method") ~= "GET" then
+                      request_handle:respond(
+                        {[":status"] = "301", [":method"] = "GET", ["Location"] = "https://www.wikipedia.org"},
+                        "Only GET requests allowed")
+                    end
+                  end
+          - &enable_cors
+            name: envoy.filters.http.cors
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+          - &csrf
+            name: envoy.filters.http.csrf
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
+              filter_enabled:
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+          # TODO: neet to find a way to get the geoIP database in the container (60MB)
+          - &geoip
+            name: envoy.filters.http.geoip
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.geoip.v3.Geoip
+              xff_config:
+                xff_num_trusted_hops: 1
+              provider:
+                  name: "envoy.geoip_providers.maxmind"
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
+                    common_provider_config:
+                      geo_headers_to_add:
+                        country: "x-geo-country"
+                        # region: "x-geo-region"
+                        city: "x-geo-city"
+                        # asn: "x-geo-asn"
+                    city_db_path: "/geoip-envoy/GeoLite2-City.mmdb"
+                    # isp_db_path: "geoip/GeoLite2-ASN.mmdb"
+          - &ratelimit
+            name: envoy.filters.http.local_ratelimit
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+              stat_prefix: https_rate_limit
+              token_bucket:
+                max_tokens: 2000
+                tokens_per_fill: 100
+                fill_interval: 1s
+              filter_enabled:
+                runtime_key: local_rate_limit_enabled
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+              filter_enforced:
+                runtime_key: local_rate_limit_enforced
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+              response_headers_to_add:
+              - append_action: OVERWRITE_IF_EXISTS_OR_ADD
+                header:
+                  key: x-local-rate-limit
+                  value: 'true'
+              local_rate_limit_per_downstream_connection: false
+          - &auth_api
+            name: envoy.filters.http.ext_authz
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+              http_service:
+                server_uri:
+                  uri: internal-homelab-api.external-homelabapi.svc:8080
+                  cluster: internal-homelabapi
+                  timeout: 0.25s
+                path_prefix: /api/auth/
+                authorization_request:
+                  headers_to_add:
+                  - key: X-Envoy-Authority
+                    value: "%REQ(:AUTHORITY)%"
+                  - key: X-Envoy-Path
+                    value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                  - key: X-Envoy-Forwarded-For
+                    value: "%REQ(X-FORWARDED-FOR)%"
+              failure_mode_allow: false
+              stat_prefix: "auth_api"
+              transport_api_version: V3
+
+            # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
+            # TODO: Add More info to ENVOY logs (e.g. body_size, Original HOST Header)
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: dummy
+            virtual_hosts:
+            - name: dummy
+              domains: ["non-existent.example.lan"]
+              routes: []
+              cors: &cors_default
+                  # allow_origin_string_match:
+                  # - safe_regex:
+                  #     regex: \*
+                  allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+                  allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
+                  allow_credentials: true
+                  max_age: "86400"
+              # typed_per_filter_config:
+ 
   # Handle HTTP Traffic: Redirect everything to https
   #
   - name: http
@@ -34,10 +194,12 @@ static_resources:
           stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
           request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
           access_log:
-          - name: envoy.access_loggers.stdout
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+          - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
+          - *auth_api
+          - *geoip
+          - *get_requests_only_lua
+          - *ratelimit
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -74,7 +236,6 @@ static_resources:
             - certificate_chain: {filename: "cert/tls.crt"}
               private_key: {filename: "cert/tls.key"}
             alpn_protocols: ["h2,http/1.1"]
-
       filters:
       - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
         typed_config:
@@ -93,16 +254,29 @@ static_resources:
             initial_connection_window_size: 1048576  # 1 MiB
           stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
           request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
+          generate_request_id: true
+          preserve_external_request_id: true
+          always_set_request_id_in_response: true
+          tracing: *tracing
           access_log:
-          - name: envoy.access_loggers.stdout
+          - *jsonlog
+          http_filters:
+          - *geoip
+          - *auth_api
+          - *get_requests_only_lua
+          - *ratelimit
+          - *enable_cors
+          - *csrf
+          - name: envoy.filters.http.router
             typed_config:
-              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
           route_config:
             name: main_router
             virtual_hosts:
             - name: apps-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
+              cors: *cors_default
               routes:
               - match:
                   safe_regex:
@@ -125,32 +299,114 @@ static_resources:
                 route:
                   cluster: homelabapi
                   auto_host_rewrite: true
-              # - match:
-              #     prefix: "/"
-              #   route:
-              #     cluster: homelabapi
-              #     auto_host_rewrite: true
+  # App Router for "hidden" (high-port) Services
+  #
+  - name: hidden_apps
+    address:
+      socket_address:
+        address: "0.0.0.0"
+        port_value: 8444
+    listener_filters:
+    - name: "envoy.filters.listener.tls_inspector"
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.filters.listener.tls_inspector.v3.TlsInspector
+    per_connection_buffer_limit_bytes: 32768                        # 32 KB. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
+    filter_chains:
+    - transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_certificates:
+            - certificate_chain: {filename: "cert/tls.crt"}
+              private_key: {filename: "cert/tls.key"}
+            alpn_protocols: ["h2,http/1.1"]
+      filters:
+      - name: envoy.filters.network.http_connection_manager         # Assume all traffic is http and use the http-configuration (as opposed to TCP/UDP configuration)
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: hidden_apps
+          use_remote_address: true
+          normalize_path: true
+          merge_slashes: true
+          path_with_escaped_slashes_action: UNESCAPE_AND_REDIRECT
+          common_http_protocol_options:
+            idle_timeout: 600s  # 10 mins
+            headers_with_underscores_action: REJECT_REQUEST
+          http2_protocol_options:
+            max_concurrent_streams: 100
+            initial_stream_window_size: 65536  # 64 KiB
+            initial_connection_window_size: 1048576  # 1 MiB
+          stream_idle_timeout: 600s  # 10 mins, must be disabled for long-lived and streaming requests
+          request_timeout: 60s  # 1 min, must be disabled for long-lived and streaming requests                               # Don't Trust remote address in header. Use IP instead. [Recommended Setting](https://www.envoyproxy.io/docs/envoy/v1.28.0/configuration/best_practices/edge)
+          generate_request_id: true
+          preserve_external_request_id: true
+          always_set_request_id_in_response: true
+          tracing: *tracing
+          access_log:
+          - *jsonlog
           http_filters:
-          # Blocking any Request ype that is not GET.
-          # We could have used RBAC configuration (https://www.envoyproxy.io/docs/envoy/v1.28.0/start/sandboxes/rbac), but that would have been more verbose
-          #
-          - name: envoy.filters.http.lua
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-              default_source_code:
-                inline_string: |
-                  function envoy_on_request(request_handle)
-                    if request_handle:headers():get(":method") ~= "GET" then
-                      request_handle:respond(
-                        {[":status"] = "301", [":method"] = "GET", ["Location"] = "https://www.wikipedia.org"},
-                        "Only GET requests allowed")
-                    end
-                  end
+          - *geoip
+          - *auth_api
+          - *get_requests_only_lua
+          - *ratelimit
+          - *enable_cors
+          - *csrf
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: main_router
+            virtual_hosts:
+            - name: app-router
+              domains:
+              - "*"
+              cors: *cors_default
+              routes:
+              - match:
+                  prefix: "/"
+                direct_response:
+                  status: 201
+                  body:
+                    inline_string: "Hello"
+
 
   clusters:
+  - name: opentelemetry_collector
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: {}
+    load_assignment:
+      cluster_name: opentelemetry_collector
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: tempo.monitoring.svc
+                port_value: 4317
+  - name: internal-homelabapi
+    type: LOGICAL_DNS
+    load_assignment:
+      cluster_name: internal-homelabapi
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: internal-homelab-api.external-homelabapi.svc
+                port_value: 8080
+    health_checks:
+    - timeout: 3s
+      interval: 30s
+      unhealthy_threshold: 3
+      healthy_threshold: 1
+      http_health_check:
+        path: "/api/livez"
   - name: homelabapi
     type: LOGICAL_DNS
     load_assignment:
@@ -162,13 +418,13 @@ static_resources:
               socket_address:
                 address: external-homelab-api.external-homelabapi.svc
                 port_value: 8080
-    # health_checks:
-    # - timeout: 3s
-    #   interval: 30s
-    #   unhealthy_threshold: 3
-    #   healthy_threshold: 1
-    #   http_health_check:
-    #     path: "/external"
+    health_checks:
+    - timeout: 3s
+      interval: 30s
+      unhealthy_threshold: 3
+      healthy_threshold: 1
+      http_health_check:
+        path: "/api/livez"
     # transport_socket:
     #   name: envoy.transport_sockets.tls
     #   typed_config:

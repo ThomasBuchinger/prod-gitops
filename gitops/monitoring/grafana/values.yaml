@@ -25,30 +25,66 @@ dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
     providers:
-      - name: 'kube-prometheus-dashboards'
-        orgId: 1
-        folder: 'Kubernetes'
-        type: file
-        disableDeletion: false
-        editable: true
-        allowUiUpdates: true
-        options:
-          path: /tmp/dashboards/
+    - name: 'kube-prometheus-dashboards'
+      orgId: 1
+      folder: 'Custom'
+      type: file
+      disableDeletion: false
+      editable: true
+      allowUiUpdates: true
+      options:
+        path: /tmp/dashboards/
+    - name: 'custom-dashboards'
+      orgId: 1
+      folder: 'Grafana.com'
+      type: file
+      disableDeletion: false
+      editable: true
+      allowUiUpdates: true
+      options:
+        path: /var/lib/grafana/dashboards/custom
 
 datasources:
- datasources.yaml:
-   apiVersion: 1
-   datasources:
-   - name: Prometheus
-     type: prometheus
-     url: http://prometheus-kube-prometheus-prometheus:9090
-     access: proxy
-     isDefault: true
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://monitoring-kube-prometheus-prometheus:9090
+      access: proxy
+      isDefault: true
+  loki.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      isDefault: false
+      access: proxy
+      url: http://loki-gateway
+      version: 1
+      jsonData:
+        httpHeaderName1: X-Scope-OrgID
+      secureJsonData:
+        httpHeaderValue1: buc
+  tempo.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Tempo
+      type: tempo
+      isDefault: false
+      url: http://tempo:3100
+      version: 1
 dashboards:
-  default:
-    dashboard-landing.json:
-      # This is a path to a file inside the dashboards directory inside the chart directory
-      file: dashboard-landing.json
+  custom:
     cluster-dashboard:
       gnetId: 315
       datasource: Prometheus
+    envoy-dashboard:
+      gnetId: 11021
+      datasource: Prometheus
+    nodeexporter-full:
+      gnetId: 1860
+      datasource: Prometheus
+    
+
+      
