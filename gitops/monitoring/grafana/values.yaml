@@ -27,7 +27,7 @@ dashboardProviders:
     providers:
     - name: 'kube-prometheus-dashboards'
       orgId: 1
-      folder: 'Node Exporter'
+      folder: 'Custom'
       type: file
       disableDeletion: false
       editable: true
@@ -36,7 +36,7 @@ dashboardProviders:
         path: /tmp/dashboards/
     - name: 'custom-dashboards'
       orgId: 1
-      folder: 'Custom'
+      folder: 'Grafana.com'
       type: file
       disableDeletion: false
       editable: true

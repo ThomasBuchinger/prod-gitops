@@ -19,28 +19,20 @@ prometheus:
           resources:
             requests:
               storage: 3Gi
+
+
+    # Workaround for: https://github.com/prometheus-community/helm-charts/issues/1162
+    # Tested on: 25.11.2023 and ChartVersion 54.2.2
+    # It should work with the default securityContext according to the issue, but apparently the decurityContext neds to be applied to the 
+    # ContainerSpec AND the PodSpec (I think, but I am not sure). Anyway Running Prometheus as root is a workaround
+    # Re-Test it again with a higher Chart Version
+    #
     securityContext:
       runAsUser: 0
       runAsNonRoot: false
       runAsGroup: 0
       fsGroup: 0
-    
-    # securityContext:
-    #   runAsGroup: 65534
-    #   runAsNonRoot: true
-    #   runAsUser: 65534
-    #   fsGroup: 65534
-    # initContainers:
-    # - name: "init-chmod-data"
-    #   image: "busybox"
-    #   command:
-    #   - sh
-    #   - -c
-    #   - 'id; ls -ldR /prometheus'
-    #   # command: ["chmod", "-R", "o+rw", /var/prometheus/data]
-    #   volumeMounts:
-    #   - name: prometheus-monitoring-kube-prometheus-prometheus-db
-    #     mountPath: /prometheus
+    # default SecurityContext for reference
     # securityContext:
     #   runAsGroup: 2000
     #   runAsNonRoot: true
