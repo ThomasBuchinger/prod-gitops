@@ -29,7 +29,7 @@ static_resources:
                   authority: "%REQ(:AUTHORITY)%"
                   method: "%REQ(:METHOD)%"
                   referer: "%REQ(REFERER)%"
-                  request_id: "%REQ(X-CLIENT-TRACE-ID)%"
+                  request_id: "%REQ(X-REQUEST-ID)%"
                   path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
                   protocol: "%PROTOCOL%"
                   response_code: "%RESPONSE_CODE%"
