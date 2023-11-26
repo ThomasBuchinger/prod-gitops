@@ -36,6 +36,7 @@ static_resources:
                   user_agent: "%REQ(USER-AGENT)%"
                   x_agent_name: "%REQ(X-AGENTNAME)%"
                   x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+                  x_geo_country: "%REQ(x-geo-country)%"
           tracing: &tracing
             provider:
               name: envoy.tracers.opentelemetry
@@ -119,7 +120,7 @@ static_resources:
                   key: x-local-rate-limit
                   value: 'true'
               local_rate_limit_per_downstream_connection: false
-          - &auth_simple
+          - &auth_api
             name: envoy.filters.http.ext_authz
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
@@ -128,7 +129,7 @@ static_resources:
                   uri: internal-homelab-api.external-homelabapi.svc:8080
                   cluster: internal-homelabapi
                   timeout: 0.25s
-                path_prefix: /api/auth/simple
+                path_prefix: /api/auth/
                 authorization_request:
                   headers_to_add:
                   - key: X-Envoy-Authority
@@ -138,7 +139,7 @@ static_resources:
                   - key: X-Envoy-Forwarded-For
                     value: "%REQ(X-FORWARDED-FOR)%"
               failure_mode_allow: false
-              stat_prefix: "auth_simple"
+              stat_prefix: "auth_api"
               transport_api_version: V3
 
             # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
@@ -192,7 +193,7 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
-          - *auth_simple
+          - *auth_api
           - *geoip
           - *get_requests_only_lua
           - *ratelimit
@@ -258,7 +259,7 @@ static_resources:
           - *jsonlog
           http_filters:
           - *geoip
-          - *auth_simple
+          - *auth_api
           - *get_requests_only_lua
           - *ratelimit
           - *enable_cors
@@ -343,7 +344,7 @@ static_resources:
           - *jsonlog
           http_filters:
           - *geoip
-          - *auth_simple
+          - *auth_api
           - *get_requests_only_lua
           - *ratelimit
           - *enable_cors

@@ -6,6 +6,3 @@ helmCharts:
   namespace: monitoring
   valuesFile: values.yaml
   includeCRDs: true
-
-resources:
-- resources.yaml

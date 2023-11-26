@@ -76,9 +76,6 @@ datasources:
       version: 1
 dashboards:
   custom:
-    # dashboard-landing:
-    #   # This is a path to a file inside the dashboards directory inside the chart directory
-    #   file: dashboard-landing.json
     cluster-dashboard:
       gnetId: 315
       datasource: Prometheus
