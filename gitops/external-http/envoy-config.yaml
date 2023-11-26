@@ -27,6 +27,9 @@ static_resources:
               log_format:
                 jsonFormat:
                   authority: "%REQ(:AUTHORITY)%"
+                  method: "%REQ(:METHOD)%"
+                  referer: "%REQ(REFERER)%"
+                  request_id: "%REQ(X-CLIENT-TRACE-ID)%"
                   path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
                   protocol: "%PROTOCOL%"
                   response_code: "%RESPONSE_CODE%"
