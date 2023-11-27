@@ -64,7 +64,7 @@ spec:
             name: eso-r2-creds
         env:
         - name: ENDPOINT
-          value: "s3.buc.sh:9000"
+          # value: "s3.buc.sh:9000"
         - name: USE_SSL
           value: "false"
         - name: ALLOW_DELETE
@@ -174,14 +174,27 @@ spec:
       app.kubernetes.io/app: s3manager
       app.kubernetes.io/instance: r2
   policyTypes:
-    # - Egress
+    - Egress
     - Ingress
-  # egress:
-  # - to:
-  #   - ipBlock:
-  #       cidr: "10.0.0.20/32"
-  #   ports:
-  #   - port: 9000
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+      
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.20/32"
+    ports:
+    - port: 9000
   ingress:
   # Allow Ingress
   - from:
