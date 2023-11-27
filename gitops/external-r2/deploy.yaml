@@ -56,8 +56,9 @@ spec:
     spec:
       containers:
       - name: r2
-        image: docker.io/cloudlena/s3manager
-        imagePullPolicy: Always
+        # Upstream is currently rebuilding in with HTMX using the latest tag. We want to stay on v0.5.0 until it is donw
+        image: docker.io/cloudlena/s3manager:v0.5.0
+        # imagePullPolicy: Always
         envFrom:
         - secretRef:
             name: eso-r2-creds
@@ -77,10 +78,15 @@ spec:
             cpu: 10m
             memory: 60M
         livenessProbe:
-          failureThreshold: 3
+          # # Liveness Probe for new HTMX frontend
+          # httpGet:
+          #   path: /static/pico@1.5.10.min.css
+          #   port: http
+
+          # Lveness Probe for v0.5.0
           httpGet:
-            path: /static/pico@1.5.10.min.css
-            port: http
+            path: /static/js/materialize.min.js
+          failureThreshold: 3
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
