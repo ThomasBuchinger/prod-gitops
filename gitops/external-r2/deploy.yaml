@@ -86,6 +86,7 @@ spec:
           # Lveness Probe for v0.5.0
           httpGet:
             path: /static/js/materialize.min.js
+            port: http
           failureThreshold: 3
           periodSeconds: 10
           successThreshold: 1
