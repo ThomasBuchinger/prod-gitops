@@ -174,14 +174,14 @@ spec:
       app.kubernetes.io/app: s3manager
       app.kubernetes.io/instance: r2
   policyTypes:
-    - Egress
+    # - Egress
     - Ingress
-  egress:
-  - to:
-    - ipBlock:
-        cidr: "10.0.0.20/32"
-    ports:
-    - port: 9000
+  # egress:
+  # - to:
+  #   - ipBlock:
+  #       cidr: "10.0.0.20/32"
+  #   ports:
+  #   - port: 9000
   ingress:
   # Allow Ingress
   - from:
