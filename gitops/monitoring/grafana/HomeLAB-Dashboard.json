@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 49,
+  "id": 2,
   "links": [],
   "liveNow": true,
   "panels": [
@@ -1862,6 +1862,7 @@
             "fields": {},
             "sort": [
               {
+                "desc": true,
                 "field": "Value"
               }
             ]
@@ -2085,6 +2086,54 @@
         }
       ],
       "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 25,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "",
+          "gridPos": {
+            "h": 10,
+            "w": 22,
+            "x": 2,
+            "y": 28
+          },
+          "id": 24,
+          "options": {
+            "alertInstanceLabelFilter": "",
+            "alertName": "",
+            "dashboardAlerts": false,
+            "folder": "",
+            "groupBy": [],
+            "groupMode": "default",
+            "maxItems": 20,
+            "sortOrder": 5,
+            "stateFilter": {
+              "error": true,
+              "firing": true,
+              "noData": true,
+              "normal": false,
+              "pending": true
+            },
+            "viewMode": "list"
+          },
+          "transparent": true,
+          "type": "alertlist"
+        }
+      ],
+      "title": "Alerts",
+      "type": "row"
     }
   ],
   "refresh": "5m",
@@ -2114,6 +2163,6 @@
   "timezone": "",
   "title": "HomeLAB Dashboard",
   "uid": "ead0bda3-7415-44d3-a9cf-a3cd933c2e47",
-  "version": 9,
+  "version": 4,
   "weekStart": ""
 }

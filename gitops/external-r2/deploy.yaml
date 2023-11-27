@@ -79,7 +79,7 @@ spec:
         livenessProbe:
           failureThreshold: 3
           httpGet:
-            path: /static/js/materialize.min.js
+            path: /js/materialize.min.js
             port: http
           periodSeconds: 10
           successThreshold: 1
