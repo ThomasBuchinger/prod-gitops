@@ -64,7 +64,7 @@ spec:
             name: eso-r2-creds
         env:
         - name: ENDPOINT
-          # value: "s3.buc.sh:9000"
+          value: "s3.buc.sh:9000"
         - name: USE_SSL
           value: "false"
         - name: ALLOW_DELETE
