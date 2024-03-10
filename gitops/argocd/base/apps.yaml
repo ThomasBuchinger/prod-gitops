@@ -18,12 +18,16 @@ spec:
         rev: main
         path: gitops/local-path-storage/base
         wave: "1"
+      - name: csi-nfs-storage
+        rev: nfs
+        path: gitops/csi-nfs
+        wave: "1"
       - name: okd-console
         rev: main
         path: gitops/okd-console
         wave: "1"
       - name: monitoring
-        rev: services
+        rev: main
         path: gitops/monitoring/all
         wave: "1"
       - name: monitoring-loki
@@ -43,15 +47,15 @@ spec:
         path: gitops/stirling-pdf
         wave: "2"
       - name: external-http
-        rev: services
+        rev: main
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
-        rev: services
+        rev: main
         path: gitops/external-homelabapi
         wave: "2"
       - name: external-r2
-        rev: services
+        rev: main
         path: gitops/external-r2
         wave: "2"
   template:
