@@ -120,9 +120,9 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /data
+        - mountPath: /old-data
           name: paperless-data
-        - mountPath: /new-data
+        - mountPath: /data
           name: paperless-nfs
       volumes:
       - name: paperless-data
