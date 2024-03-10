@@ -60,7 +60,7 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: ""
-  volumeName: nfs-k8s-rw
+  volumeName: paperless-nfs
 
 ---
 apiVersion: v1
@@ -83,3 +83,27 @@ spec:
     chapAuthSession: true
     secretRef:
       name: eso-nas-credentials
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-nfs
+spec:
+  capacity:
+    storage: 4Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes/paperless
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
