@@ -44,9 +44,11 @@ spec:
   capacity:
     storage: 4Ti
   accessModes:
-    - ReadWritMany
+    - ReadWriteMany
     - ReadOnlyMany
   nfs:
     server: 10.0.0.20
     path: /mnt/raidpool/kubernetes
     readOnly: true
+  mountOptions:
+    - nfsvers=4.2
