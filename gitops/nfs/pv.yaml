@@ -30,7 +30,7 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          c`laimName: test-pvc
+          claimName: test-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
