@@ -152,9 +152,9 @@ spec:
             memory: 60M
         volumeMounts:
         - mountPath: /var/syncthing/
-          name: data-root
-        - mountPath: /var/syncthing-old/
           name: data-root-old
+        - mountPath: /var/syncthing-new/
+          name: data-root
         livenessProbe:
           failureThreshold: 3
           httpGet:
