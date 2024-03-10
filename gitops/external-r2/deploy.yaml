@@ -56,8 +56,9 @@ spec:
     spec:
       containers:
       - name: r2
-        image: docker.io/cloudlena/s3manager
-        imagePullPolicy: Always
+        # Upstream is currently rebuilding in with HTMX using the latest tag. We want to stay on v0.5.0 until it is donw
+        image: docker.io/cloudlena/s3manager:v0.5.0
+        # imagePullPolicy: Always
         envFrom:
         - secretRef:
             name: eso-r2-creds
@@ -77,10 +78,16 @@ spec:
             cpu: 10m
             memory: 60M
         livenessProbe:
-          failureThreshold: 3
+          # # Liveness Probe for new HTMX frontend
+          # httpGet:
+          #   path: /static/pico@1.5.10.min.css
+          #   port: http
+
+          # Lveness Probe for v0.5.0
           httpGet:
             path: /static/js/materialize.min.js
             port: http
+          failureThreshold: 3
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
@@ -164,17 +171,30 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: homelab-api
-      app.kubernetes.io/instance: external
+      app.kubernetes.io/app: s3manager
+      app.kubernetes.io/instance: r2
   policyTypes:
     - Egress
     - Ingress
   egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
   - to:
     - ipBlock:
         cidr: "10.0.0.20/32"
     ports:
-    - port: 9090
+    - port: 9000
   ingress:
   # Allow Ingress
   - from:

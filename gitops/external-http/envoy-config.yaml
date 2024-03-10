@@ -146,7 +146,6 @@ static_resources:
               transport_api_version: V3
 
             # TODO: Conget lua GET-only-filter to RABAC (for metrics support)
-            # TODO: Add More info to ENVOY logs (e.g. body_size, Original HOST Header)
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
