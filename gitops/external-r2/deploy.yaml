@@ -177,6 +177,7 @@ spec:
     - Egress
     - Ingress
   egress:
+  # Allow DNS Resolution
   - to:
     - namespaceSelector:
         matchLabels:
@@ -189,7 +190,6 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
-      
   - to:
     - ipBlock:
         cidr: "10.0.0.20/32"
