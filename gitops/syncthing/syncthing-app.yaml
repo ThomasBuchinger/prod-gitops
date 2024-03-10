@@ -155,6 +155,8 @@ spec:
           name: data-root-old
         - mountPath: /var/syncthing-new/
           name: data-root
+        - mountPath: /var/syncthing-new/bs13
+          name: data-bs13
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -184,6 +186,9 @@ spec:
       - name: data-root
         persistentVolumeClaim:
           claimName: syncthing-root
+      - name: data-bs13
+        persistentVolumeClaim:
+          claimName: syncthing-bs13
       - name: data-root-old
         persistentVolumeClaim:
           claimName: syncthing-data

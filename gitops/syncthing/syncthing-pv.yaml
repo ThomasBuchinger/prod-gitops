@@ -82,7 +82,6 @@ spec:
       storage: 8Ti
   storageClassName: ""
   volumeName: syncthing-root
-
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -97,6 +96,43 @@ spec:
   nfs:
     server: 10.0.0.20
     path: /mnt/raidpool/kubernetes/syncthing
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-bs13
+  namespace: syncthing
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ""
+  volumeName: syncthing-bs13
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syncthing-bs13
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes-lfs/syncthing-bs13
   mountOptions:
   - nfsvers=4.2
   - retrans=3
