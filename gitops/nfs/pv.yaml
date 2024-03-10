@@ -6,21 +6,21 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: pvc-test
   labels:
-    app: nginx
+    app: pvc-test
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: pvc-test
   template:
     metadata:
       labels:
-        app: nginx
+        app: pvc-test
     spec:
       containers:
-      - name: nginx
+      - name: pvc-test
         image: nginx
         ports:
         - containerPort: 80
