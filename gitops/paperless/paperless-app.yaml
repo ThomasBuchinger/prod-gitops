@@ -128,9 +128,9 @@ spec:
       - name: paperless-nfs
         persistentVolumeClaim:
           claimName: paperless-nfs
-      - name: paperless-data
-        persistentVolumeClaim:
-          claimName: paperless-data
+      # - name: paperless-data
+      #   persistentVolumeClaim:
+      #     claimName: paperless-data
 ---
 apiVersion: v1
 kind: Service
