@@ -3,22 +3,34 @@ kind: Namespace
 metadata:
   name: nfs
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: test-pod
-  namespace: nfs
+  name: nginx-deployment
+  labels:
+    app: nginx
 spec:
-  containers:
-  - image: nginx
-    name: test-container
-    volumeMounts:
-    - mountPath: /data
-      name: data
-  volumes:
-  - name: data
-    persistentVolumeClaim:
-      claimName: test-pvc
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          c`laimName: test-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
