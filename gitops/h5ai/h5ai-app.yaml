@@ -41,31 +41,31 @@ spec:
         app.kubernetes.io/name: h5ai
     spec:
       containers:
-        - env:
+        - name: h5ai
+          env:
             - name: TZ
               value: Europe/Berlin
           image: 'awesometic/h5ai:latest'
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /
-              port: http
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: h5ai
           ports:
             - containerPort: 80
               name: http
           readinessProbe:
-            failureThreshold: 3
+            failureThreshold: 5
             httpGet:
               path: /
               port: http
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 1
+            timeoutSeconds: 60
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 60
           resources:
             limits: {}
             requests:
