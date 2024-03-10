@@ -53,7 +53,7 @@ spec:
           readinessProbe:
             failureThreshold: 5
             httpGet:
-              path: /
+              path: /dummy
               port: http
             periodSeconds: 10
             successThreshold: 1
@@ -61,7 +61,7 @@ spec:
           livenessProbe:
             failureThreshold: 5
             httpGet:
-              path: /
+              path: /dummy
               port: http
             periodSeconds: 10
             successThreshold: 1
@@ -84,6 +84,8 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
+            - mountPath: /h5ai/dummy
+              name: dummy
             - mountPath: /h5ai/files
               name: data-files
               readOnly: true
