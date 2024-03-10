@@ -121,6 +121,7 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - mountPath: /data
+          subPath: paperlessngx
           name: paperless-nfs
       volumes:
       - name: paperless-nfs
