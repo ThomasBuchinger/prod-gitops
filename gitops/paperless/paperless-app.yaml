@@ -120,14 +120,9 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /old-data
-          name: paperless-data
         - mountPath: /data
           name: paperless-nfs
       volumes:
-      - name: paperless-data
-        persistentVolumeClaim:
-          claimName: paperless-data
       - name: paperless-nfs
         persistentVolumeClaim:
           claimName: paperless-nfs
