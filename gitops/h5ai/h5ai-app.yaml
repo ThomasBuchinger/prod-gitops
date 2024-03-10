@@ -85,21 +85,34 @@ spec:
               type: RuntimeDefault
           volumeMounts:
             - mountPath: /h5ai/files
-              name: dummy
+              name: data-files
               readOnly: true
             - mountPath: /h5ai/backups
-              name: dummy
+              name: data-backups
               readOnly: true
             - mountPath: /h5ai/kubernetes
-              name: dummy
+              name: data-kubernetes
               readOnly: true
             - mountPath: /h5ai/kubernetes-lfs
-              name: dummy
+              name: data-kubernetes-lfs
               readOnly: true
       securityContext: {}
       volumes:
         - emptyDir: {}
           name: dummy
+        - name: data-files
+          persistentVolumeClaim:
+            claimName: data-files
+        - name: data-backups
+          persistentVolumeClaim:
+            claimName: data-backups
+        - name: data-kubernetes
+          persistentVolumeClaim:
+            claimName: data-kubernetes
+        - name: data-kubernetes-lfs
+          persistentVolumeClaim:
+            claimName: data-kubernetes-lfs
+          
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
