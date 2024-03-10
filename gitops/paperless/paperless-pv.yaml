@@ -98,7 +98,7 @@ spec:
   - ReadOnlyMany
   nfs:
     server: 10.0.0.20
-    path: /mnt/raidpool/kubernetes/paperlessngx
+    path: /mnt/raidpool/kubernetes/subdir
   mountOptions:
   - nfsvers=4.2
   - retrans=3
