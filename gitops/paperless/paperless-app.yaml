@@ -120,11 +120,9 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /olddata
-          # subPath: paperlessngx
-          name: paperless-data
+        # - mountPath: /olddata
+        #   name: paperless-data
         - mountPath: /data
-          # subPath: paperlessngx
           name: paperless-nfs
       volumes:
       - name: paperless-nfs
