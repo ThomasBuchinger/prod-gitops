@@ -62,12 +62,13 @@ spec:
     path: /mnt/raidpool/kubernetes
   mountOptions:
   - nfsvers=4.2
-  # - user=nas
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
   
   # # if NFS server is unreachable, block all IO
   - hard
-  - intr
-  - timeo=60
+  - timeo=600
   # # If NFS server is unavailable, wait for 60s and report an error
   # - soft
   # - timeo=60
