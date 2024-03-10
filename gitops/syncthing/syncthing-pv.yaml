@@ -142,3 +142,47 @@ spec:
   - hard
   - timeo=600
 
+
+
+###################################################################### DELETE ME @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-mover
+  labels:
+    app: pvc-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pvc-test
+  template:
+    metadata:
+      labels:
+        app: pvc-test
+    spec:
+      containers:
+      - name: pvc-test
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /old
+          name: old
+        - mountPath: /new
+          name: new
+        - mountPath: /new/bs13-data
+          name: bs13
+      volumes:
+      - name: old
+        persistentVolumeClaim:
+          claimName: syncthing-data
+      - name: new
+        persistentVolumeClaim:
+          claimName: syncthing-root
+      - name: bs13
+        persistentVolumeClaim:
+          claimName: syncthing-bs13
+---
