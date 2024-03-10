@@ -87,19 +87,15 @@ spec:
             - mountPath: /h5ai/files
               name: data-files
               readOnly: true
-              optional: true
             - mountPath: /h5ai/backup
               name: data-backup
               readOnly: true
-              optional: true
             - mountPath: /h5ai/kubernetes
               name: data-kubernetes
               readOnly: true
-              optional: true
             - mountPath: /h5ai/kubernetes-lfs
               name: data-kubernetes-lfs
               readOnly: true
-              optional: true
       securityContext: {}
       volumes:
         - emptyDir: {}
