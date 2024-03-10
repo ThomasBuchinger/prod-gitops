@@ -46,6 +46,22 @@ spec:
   storageClassName: ""
   volumeName: paperless
 
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-nfs
+  namespace: paperless
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: ""
+  volumeName: nfs-k8s-rw
+
 ---
 apiVersion: v1
 kind: PersistentVolume

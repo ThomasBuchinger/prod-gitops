@@ -28,10 +28,16 @@ spec:
         - mountPath: /data
           subPath: scratch
           name: data
+        - mountPath: /data-ro
+          subPath: scratch
+          name: data-ro
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: test-pvc
+      - name: data-ro
+        persistentVolumeClaim:
+          claimName: test--ro
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -45,13 +51,27 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: ""
-  volumeName: nfs-pv
+  volumeName: nfs-k8s-rw
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-pvc-ro
+  namespace: nfs
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: ""
+  volumeName: nfs-k8s-ro
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nfs-pv
+  name: nfs-k8s-rw
 spec:
   capacity:
     storage: 4Ti
@@ -66,7 +86,34 @@ spec:
   - retrans=3
   - ac         # Fileattribute cache
   - fsc        # File cache
-  
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+  # # If NFS server is unavailable, wait for 60s and report an error
+  # - soft
+  # - timeo=60
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-k8s-ro
+spec:
+  capacity:
+    storage: 4Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes
+    readOnly: true
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
   # # if NFS server is unreachable, block all IO
   - hard
   - timeo=600
