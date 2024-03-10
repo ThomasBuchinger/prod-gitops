@@ -37,7 +37,7 @@ spec:
           claimName: test-pvc
       - name: data-ro
         persistentVolumeClaim:
-          claimName: test--ro
+          claimName: test-pvc-ro
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
