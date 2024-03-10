@@ -18,9 +18,9 @@ spec:
         rev: main
         path: gitops/local-path-storage/base
         wave: "1"
-      - name: csi-nfs-storage
+      - name: nfs
         rev: nfs
-        path: gitops/csi-nfs
+        path: gitops/nfs
         wave: "1"
       - name: okd-console
         rev: main
@@ -35,11 +35,11 @@ spec:
         path: gitops/monitoring-loki
         wave: "1"
       - name: paperless
-        rev: main
+        rev: nfs
         path: gitops/paperless
         wave: "2"
       - name: syncthing
-        rev: main
+        rev: nfs
         path: gitops/syncthing
         wave: "2"
       - name: spdf
