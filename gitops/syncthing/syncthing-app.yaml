@@ -117,6 +117,8 @@ spec:
           mountPath: /tls-config
         - name: data-root
           mountPath: /var/syncthing/
+        - name: data-root-old
+          mountPath: /var/syncthing-old/
       containers:
       - name: syncthing
         command:
@@ -151,6 +153,8 @@ spec:
         volumeMounts:
         - mountPath: /var/syncthing/
           name: data-root
+        - mountPath: /var/syncthing-old/
+          name: data-root-old
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -178,6 +182,9 @@ spec:
       - name: config-root
         emptyDir: {}
       - name: data-root
+        persistentVolumeClaim:
+          claimName: syncthing-root
+      - name: data-root-old
         persistentVolumeClaim:
           claimName: syncthing-data
 

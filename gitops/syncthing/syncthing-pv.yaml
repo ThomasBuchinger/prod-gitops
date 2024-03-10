@@ -30,8 +30,6 @@ spec:
       conversionStrategy: Default
       decodingStrategy: None
       key: access/nas
-
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -46,7 +44,6 @@ spec:
       storage: 8Ti
   storageClassName: ""
   volumeName: syncthing
-
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -68,3 +65,44 @@ spec:
      chapAuthSession: true
      secretRef:
        name: eso-nas-credentials
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-root
+  namespace: syncthing
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ""
+  volumeName: syncthing-root
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syncthing-root
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes/syncthing
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
