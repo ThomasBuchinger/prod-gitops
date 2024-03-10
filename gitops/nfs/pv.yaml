@@ -30,6 +30,7 @@ spec:
           name: data
         - mountPath: /data-ro
           subPath: scratch
+          readOnly: true
           name: data-ro
       volumes:
       - name: data
