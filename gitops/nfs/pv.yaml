@@ -14,7 +14,6 @@ spec:
     name: test-container
     volumeMounts:
     - mountPath: /data
-      subPath: scratch
       name: data
   volumes:
   - name: data
