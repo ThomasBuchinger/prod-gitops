@@ -123,7 +123,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-backups
+  name: data-backup
   namespace: h5ai
 spec:
   accessModes:
@@ -132,12 +132,12 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: ""
-  volumeName: data-backups
+  volumeName: data-backup
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: data-backups
+  name: data-backup
 spec:
   capacity:
     storage: 8Ti
@@ -146,7 +146,7 @@ spec:
   - ReadOnlyMany
   nfs:
     server: 10.0.0.20
-    path: /mnt/raidpool/backups
+    path: /mnt/raidpool/backup
     readOnly: true
   mountOptions:
   - nfsvers=4.2

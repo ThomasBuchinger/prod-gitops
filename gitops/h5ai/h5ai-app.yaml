@@ -87,8 +87,8 @@ spec:
             - mountPath: /h5ai/files
               name: data-files
               readOnly: true
-            - mountPath: /h5ai/backups
-              name: data-backups
+            - mountPath: /h5ai/backup
+              name: data-backup
               readOnly: true
             - mountPath: /h5ai/kubernetes
               name: data-kubernetes
@@ -103,9 +103,9 @@ spec:
         - name: data-files
           persistentVolumeClaim:
             claimName: data-files
-        - name: data-backups
+        - name: data-backup
           persistentVolumeClaim:
-            claimName: data-backups
+            claimName: data-backup
         - name: data-kubernetes
           persistentVolumeClaim:
             claimName: data-kubernetes
