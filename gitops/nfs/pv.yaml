@@ -26,6 +26,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - mountPath: /data
+          subPath: scratch
           name: data
       volumes:
       - name: data
