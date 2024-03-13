@@ -116,8 +116,8 @@ spec:
         - name: tls-config
           mountPath: /tls-config
         - name: data-root
-          mountPath: /var/syncthing/
-        - name: data-root-old
+        #   mountPath: /var/syncthing/
+        # - name: data-root-old
           mountPath: /var/syncthing-old/
       containers:
       - name: syncthing
