@@ -5,11 +5,7 @@ metadata:
 spec:
   generators:
   - list:
-      elements:
-      - name: h5ai
-        rev: main
-        path: gitops/h5ai
-        wave: "1"
+      elements: []
   template:
     metadata:
       name: '{{name}}'

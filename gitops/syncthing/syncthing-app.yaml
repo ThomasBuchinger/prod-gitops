@@ -26,7 +26,7 @@ data:
         sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
     fi
 
-    find $DIR
+    find $DIR/config
 
 ---
 apiVersion: external-secrets.io/v1beta1
