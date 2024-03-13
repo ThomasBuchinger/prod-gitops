@@ -151,11 +151,11 @@ spec:
             cpu: 10m
             memory: 60M
         volumeMounts:
+        # - mountPath: /var/syncthing-old/
+        #   name: data-root-old
         - mountPath: /var/syncthing/
-          name: data-root-old
-        - mountPath: /var/syncthing-new/
           name: data-root
-        - mountPath: /var/syncthing-new/bs13
+        - mountPath: /var/syncthing/bs13
           name: data-bs13
         livenessProbe:
           failureThreshold: 3
@@ -189,9 +189,9 @@ spec:
       - name: data-bs13
         persistentVolumeClaim:
           claimName: syncthing-bs13
-      - name: data-root-old
-        persistentVolumeClaim:
-          claimName: syncthing-data
+      # - name: data-root-old
+      #   persistentVolumeClaim:
+      #     claimName: syncthing-data
 
 ---
 apiVersion: v1
