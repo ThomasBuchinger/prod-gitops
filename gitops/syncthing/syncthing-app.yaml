@@ -155,7 +155,7 @@ spec:
         #   name: data-root-old
         - mountPath: /var/syncthing/
           name: data-root
-        - mountPath: /var/syncthing/bs13
+        - mountPath: /var/syncthing/bs13-data
           name: data-bs13
         livenessProbe:
           failureThreshold: 3
