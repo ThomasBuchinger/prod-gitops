@@ -1,8 +1,0 @@
-apiVersion: v2
-name: fileproxy
-description: |
-  A Filebrowser for PVCs. This chart creates an h5ai (a web file browser) Deployment for each Namespace/PVC, that exposes the PVC's Content in a WebbUI.
-  It also manages Ingress, to expose everything in on a sinle Hostname.
-type: application
-version: 1.0.0
-appVersion: "1.30.0"

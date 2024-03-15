@@ -1,41 +1,8 @@
 ---
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: nas-credentials
-  namespace: paperless
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: vault-approle-secret
-    kind: ClusterSecretStore
-  target:
-    name: eso-nas-credentials
-    creationPolicy: Owner
-    template:
-      type: "kubernetes.io/iscsi-chap"
-      data:
-        # Authenticate Kubernetes to NAS
-        discovery.sendtargets.auth.username: "{{ .iscsi_user }}"
-        discovery.sendtargets.auth.password: "{{ .iscsi_password }}"
-        node.session.auth.username: "{{ .iscsi_user }}"
-        node.session.auth.password: "{{ .iscsi_password }}"
-        # Not Needed: mutual CHAP-authentication
-        discovery.sendtargets.auth.username_in: ""
-        discovery.sendtargets.auth.password_in: ""
-        node.session.auth.username_in: ""
-        node.session.auth.password_in: ""
-  dataFrom:
-  - extract:
-      conversionStrategy: Default
-      decodingStrategy: None
-      key: access/nas
-
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: paperless-data
+  name: paperless-nfs
   namespace: paperless
 spec:
   accessModes:
@@ -44,26 +11,27 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: ""
-  volumeName: paperless
+  volumeName: paperless-nfs
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: paperless
+  name: paperless-nfs
 spec:
   capacity:
     storage: 4Ti
   accessModes:
-    - ReadWriteOnce
-    - ReadOnlyMany
-  iscsi:
-    targetPortal: 10.0.0.20:3260
-    iqn: iqn.2005-10.org.freenas.ctl:paperless
-    lun: 0
-    fsType: 'xfs'
-    readOnly: false
-    chapAuthDiscovery: true
-    chapAuthSession: true
-    secretRef:
-      name: eso-nas-credentials
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes/paperlessngx
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600

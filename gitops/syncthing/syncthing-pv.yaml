@@ -1,42 +1,8 @@
 ---
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: nas-credentials
-  namespace: syncthing
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: vault-approle-secret
-    kind: ClusterSecretStore
-  target:
-    name: eso-nas-credentials
-    creationPolicy: Owner
-    template:
-      type: "kubernetes.io/iscsi-chap"
-      data:
-        # Authenticate Kubernetes to NAS
-        discovery.sendtargets.auth.username: "{{ .iscsi_user }}"
-        discovery.sendtargets.auth.password: "{{ .iscsi_password }}"
-        node.session.auth.username: "{{ .iscsi_user }}"
-        node.session.auth.password: "{{ .iscsi_password }}"
-        # Not Needed: mutual CHAP-authentication
-        discovery.sendtargets.auth.username_in: ""
-        discovery.sendtargets.auth.password_in: ""
-        node.session.auth.username_in: ""
-        node.session.auth.password_in: ""
-  dataFrom:
-  - extract:
-      conversionStrategy: Default
-      decodingStrategy: None
-      key: access/nas
-
-
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: syncthing-data
+  name: syncthing-root
   namespace: syncthing
 spec:
   accessModes:
@@ -45,26 +11,63 @@ spec:
     requests:
       storage: 8Ti
   storageClassName: ""
-  volumeName: syncthing
-
+  volumeName: syncthing-root
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: syncthing
+  name: syncthing-root
 spec:
   capacity:
     storage: 8Ti
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes/syncthing
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-bs13
+  namespace: syncthing
+spec:
+  accessModes:
     - ReadOnlyMany
-  iscsi:
-     targetPortal: 10.0.0.20:3260
-     iqn: iqn.2005-10.org.freenas.ctl:syncthing
-     lun: 0
-     fsType: 'xfs'
-     readOnly: false
-     chapAuthDiscovery: true
-     chapAuthSession: true
-     secretRef:
-       name: eso-nas-credentials
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ""
+  volumeName: syncthing-bs13
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syncthing-bs13
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes-lfs/syncthing-bs13
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600

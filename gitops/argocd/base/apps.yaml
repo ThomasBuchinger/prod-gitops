@@ -6,6 +6,7 @@ spec:
   generators:
   - list:
       elements:
+      # == Cluster Infra ===
       - name: external-secrets
         rev: main
         path: gitops/external-secrets/base
@@ -17,10 +18,6 @@ spec:
       - name: local-path-storage
         rev: main
         path: gitops/local-path-storage/base
-        wave: "1"
-      - name: nfs
-        rev: nfs
-        path: gitops/nfs
         wave: "1"
       - name: okd-console
         rev: main
@@ -34,6 +31,11 @@ spec:
         rev: prometheus
         path: gitops/monitoring-loki
         wave: "1"
+      # === Apps ===
+      - name: h5ai
+        rev: main
+        path: gitops/h5ai
+        wave: "1"
       - name: paperless
         rev: nfs
         path: gitops/paperless
@@ -45,7 +47,8 @@ spec:
       - name: spdf
         rev: main
         path: gitops/stirling-pdf
-        wave: "2"
+        wave: "1"
+      # === Internet Facing
       - name: external-http
         rev: main
         path: gitops/external-http

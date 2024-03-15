@@ -1,0 +1,119 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-kubernetes
+  namespace: h5ai
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""
+  volumeName: data-kubernetes
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-kubernetes
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes
+    readOnly: true
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+  - ro
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-kubernetes-lfs
+  namespace: h5ai
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""
+  volumeName: data-kubernetes-lfs
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-kubernetes-lfs
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/kubernetes-lfs
+    readOnly: true
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+  - ro
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-files
+  namespace: h5ai
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""
+  volumeName: data-files
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-files
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.20
+    path: /mnt/raidpool/files
+    readOnly: true
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+  - ro

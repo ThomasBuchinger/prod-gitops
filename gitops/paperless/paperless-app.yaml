@@ -121,11 +121,11 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - mountPath: /data
-          name: paperless-data
+          name: paperless-nfs
       volumes:
-      - name: paperless-data
+      - name: paperless-nfs
         persistentVolumeClaim:
-          claimName: paperless-data
+          claimName: paperless-nfs
 ---
 apiVersion: v1
 kind: Service

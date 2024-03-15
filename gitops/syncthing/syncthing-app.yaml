@@ -26,7 +26,7 @@ data:
         sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
     fi
 
-    find $DIR
+    find $DIR/config
 
 ---
 apiVersion: external-secrets.io/v1beta1
@@ -117,6 +117,8 @@ spec:
           mountPath: /tls-config
         - name: data-root
           mountPath: /var/syncthing/
+        # - name: data-root-old
+        #   mountPath: /var/syncthing-old/
       containers:
       - name: syncthing
         command:
@@ -149,22 +151,27 @@ spec:
             cpu: 10m
             memory: 60M
         volumeMounts:
+        # - mountPath: /var/syncthing-old/
+        #   name: data-root-old
         - mountPath: /var/syncthing/
           name: data-root
-        livenessProbe:
+        - mountPath: /var/syncthing/bs13-data
+          name: data-bs13
+        readinessProbe:
           failureThreshold: 3
           httpGet:
             path: /rest/noauth/health
             port: http
+          initialDelaySeconds: 60
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
       hostNetwork: true
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 3000
+        runAsGroup: 3000
+        fsGroup: 3000
         # sysctls:
         # - name: fs.inotify.max_user_watches
         #   value: "204800"
@@ -179,7 +186,10 @@ spec:
         emptyDir: {}
       - name: data-root
         persistentVolumeClaim:
-          claimName: syncthing-data
+          claimName: syncthing-root
+      - name: data-bs13
+        persistentVolumeClaim:
+          claimName: syncthing-bs13
 
 ---
 apiVersion: v1
