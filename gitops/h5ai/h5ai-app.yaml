@@ -53,20 +53,20 @@ spec:
           readinessProbe:
             failureThreshold: 5
             httpGet:
-              path: /_h5ai/
+              path: /
               port: http
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 60
-          livenessProbe:
-            failureThreshold: 5
-            httpGet:
-              path: /_h5ai/
-              port: http
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 60
+            timeoutSeconds: 120
+          # livenessProbe:
+          #   failureThreshold: 5
+          #   httpGet:
+          #     path: /_h5ai/
+          #     port: http
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   timeoutSeconds: 60
           resources:
             limits: {}
             requests:

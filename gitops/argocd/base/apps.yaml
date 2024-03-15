@@ -48,10 +48,6 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "1"
-      - name: jellyfin
-        rev: main
-        path: gitops/jellyfin
-        wave: "2"
       # === Internet Facing
       - name: external-http
         rev: main
