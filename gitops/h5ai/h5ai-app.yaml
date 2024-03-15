@@ -100,9 +100,6 @@ spec:
         - name: data-files
           persistentVolumeClaim:
             claimName: data-files
-        # - name: data-backup
-        #   persistentVolumeClaim:
-        #     claimName: data-backup
         - name: data-kubernetes
           persistentVolumeClaim:
             claimName: data-kubernetes

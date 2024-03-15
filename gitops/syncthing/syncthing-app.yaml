@@ -190,9 +190,6 @@ spec:
       - name: data-bs13
         persistentVolumeClaim:
           claimName: syncthing-bs13
-      # - name: data-root-old
-      #   persistentVolumeClaim:
-      #     claimName: syncthing-data
 
 ---
 apiVersion: v1
