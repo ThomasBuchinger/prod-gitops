@@ -157,7 +157,7 @@ spec:
           name: data-root
         - mountPath: /var/syncthing/bs13-data
           name: data-bs13
-        livenessProbe:
+        readinessProbe:
           failureThreshold: 3
           httpGet:
             path: /rest/noauth/health
