@@ -37,7 +37,7 @@ spec:
         path: gitops/h5ai
         wave: "1"
       - name: paperless
-        rev: nfs
+        rev: main
         path: gitops/paperless
         wave: "2"
       - name: syncthing
