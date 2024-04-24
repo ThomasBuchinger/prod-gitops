@@ -170,9 +170,9 @@ spec:
       hostNetwork: true
       securityContext:
         runAsNonRoot: true
-        runAsUser: 3000
-        runAsGroup: 3000
-        fsGroup: 3000
+        runAsUser: 99
+        runAsGroup: 100
+        fsGroup: 100
         # sysctls:
         # - name: fs.inotify.max_user_watches
         #   value: "204800"
