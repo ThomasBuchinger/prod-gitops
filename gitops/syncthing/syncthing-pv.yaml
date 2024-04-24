@@ -11,7 +11,7 @@ spec:
     requests:
       storage: 8Ti
   storageClassName: ""
-  volumeName: syncthing-root
+  volumeName: syncthing-root-nasv3
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -48,7 +48,7 @@ spec:
     requests:
       storage: 8Ti
   storageClassName: ""
-  volumeName: syncthing-bs13
+  volumeName: syncthing-bs13-nasv3
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -71,3 +71,57 @@ spec:
   # # if NFS server is unreachable, block all IO
   - hard
   - timeo=600
+
+
+
+
+
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syncthing-root-nasv3
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.19
+    path: /mnt/user/data/kubernetes/syncthing
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syncthing-bs13-nasv3
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.19
+    path: /mnt/user/lfs/kubernetes-lfs/syncthing-bs13
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+  
