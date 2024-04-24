@@ -127,7 +127,7 @@ spec:
         - --no-default-folder
         image: docker.io/syncthing/syncthing:1.25
         imagePullPolicy: IfNotPresent
-        hostname: syncthing.prod.buc.sh
+        hostname: syncthing
         env:
         - name: STGUIAPIKEY
           valueFrom:
