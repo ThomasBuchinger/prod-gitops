@@ -167,7 +167,7 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
       hostname: syncthing
-      subDomain:  prod.buc.sh
+      subdomain:  prod.buc.sh
       hostNetwork: true
       securityContext:
         runAsNonRoot: true
