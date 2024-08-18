@@ -33,11 +33,11 @@ spec:
         wave: "1"
       # === Apps ===
       - name: paperless
-        rev: nasv3
+        rev: main
         path: gitops/paperless
         wave: "2"
       - name: syncthing
-        rev: nasv3
+        rev: main
         path: gitops/syncthing
         wave: "2"
       - name: spdf
