@@ -32,10 +32,6 @@ spec:
         path: gitops/monitoring-loki
         wave: "1"
       # === Apps ===
-      - name: h5ai
-        rev: main
-        path: gitops/h5ai
-        wave: "1"
       - name: paperless
         rev: main
         path: gitops/paperless
