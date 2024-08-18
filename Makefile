@@ -1,6 +1,7 @@
 NODE_IP=10.0.0.21
 DHCP_IP=10.0.0.179
 
+TALOS_VERSION=v1.7.6
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
 TALOSCTL="./bin/talosctl"
@@ -13,7 +14,7 @@ build: talos-config kubeseal
 bin/talosctl:
 	@echo "Installing talosctl to $(TALOSCTL)"
 	mkdir -p bin
-	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/v1.5.0/talosctl-linux-amd64
+	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/$(TALOS_VERSION)/talosctl-linux-amd64
 	chmod +x $(TALOSCTL)
 
 $(OUTPUT_DIR)/talos-secrets.yaml:
