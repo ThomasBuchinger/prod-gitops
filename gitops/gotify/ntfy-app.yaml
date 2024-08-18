@@ -2,52 +2,58 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: app-config
+  name: ntfy
 data:
-  config.yml: ""
+  server.yml: |
+    # Template: https://github.com/binwiederhier/ntfy/blob/main/server/server.yml
+    base-url: http://push.10.0.0.21.nip.io
+    listen-http: ":8080"
+
+# NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
+# NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+# NTFY_AUTH_DEFAULT_ACCESS: deny-all
+# NTFY_BEHIND_PROXY: true
+# NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
+# NTFY_ENABLE_LOGIN: true
+
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gotify
-  labels:
-    app.kubernetes.io/name: gotify
+  name: ntfy
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: gotify
+      app: ntfy
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: gotify
+        app: ntfy
     spec:
       containers:
-      - name: gotify
-        image: ghcr.io/gotify/server
+      - name: ntfy
+        image: binwiederhier/ntfy
+        args: ["serve"]
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits:
+            memory: "128Mi"
         ports:
-        - name: http
-          containerPort: 8080
-        env:
-        - name: GOTIFY_SERVER_PORT
-          value: "8080"
+        - containerPort: 8080
+          name: http
         volumeMounts:
-        - name: data
-          mountPath: /data
-        # - name: configs
-        #   mountPath: /etc/gotify/
+        - name: config
+          mountPath: "/etc/ntfy"
+          readOnly: true
         livenessProbe:
           tcpSocket:
             port: 8080
         readinessProbe:
           tcpSocket:
             port: 8080
-        resources:
-          requests:
-            cpu: 5m
-            memory: 300Mi
-          limits: {}
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -56,32 +62,28 @@ spec:
           seccompProfile:
             type: RuntimeDefault
       volumes:
-      - name: data
-        emptyDir: {}
-      # - name: configs
-      #   configMap:
-      #     name: app-config
-
+        - name: config
+          configMap:
+            name: ntfy
 ---
-kind: Service
+# Basic service for port 80
 apiVersion: v1
+kind: Service
 metadata:
-  name: gotify
+  name: ntfy
 spec:
   selector:
-    app.kubernetes.io/name: gotify
-  type: ClusterIP
+    app: ntfy
   ports:
-    - name: http
-      port: 8080
-      targetPort: http
-      protocol: TCP
+  - port: 8080
+    targetPort: 8090
+
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gotify
+  name: ntfy
 spec:
   rules:
   - host: push.buc.sh
@@ -91,7 +93,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: gotify
+            name: ntfy
             port:
               name: http
   - host: push.10.0.0.21.nip.io
@@ -101,7 +103,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: gotify
+            name: ntfy
             port:
               name: http
 
@@ -112,18 +114,18 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: gotify
+            name: ntfy
             port:
               name: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: spdf
+  name: ntfy
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: gotify
+      app.kubernetes.io/name: ntfy
   policyTypes:
     - Ingress
     - Egress
