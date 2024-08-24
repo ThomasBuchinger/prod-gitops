@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
         - name: console-app
-          image: "quay.io/openshift/origin-console:4.15"
+          image: "quay.io/openshift/origin-console:4.17"
           env:
             - name: BRIDGE_USER_AUTH
               value: disabled # no authentication required
