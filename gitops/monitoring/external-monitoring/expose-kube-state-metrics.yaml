@@ -14,7 +14,7 @@ spec:
         path: "/"
         backend:
           service:
-            name: prometheus-kube-monitoring-kube-state-metrics
+            name: monitoring-kube-state-metrics
             port:
               number: 8080
 ---
