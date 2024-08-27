@@ -78,6 +78,8 @@ spec:
           mountPath: /logs
         - name: pipeline
           mountPath: /pipeline
+        - name: confdir
+          mountPath: /pipeline
         # - name: configs
         #   mountPath: /configs
         livenessProbe:
@@ -102,7 +104,7 @@ spec:
             - FOWNER
             - CHOWN
 
-            - DAC_OVERRIDE
+            # - DAC_OVERRIDE
             # - DAC_READ_SEARCH
             # - FSETID
             # - LINUX_IMMUTABLE
@@ -121,16 +123,16 @@ spec:
       - name: configs
         configMap:
           name: app-config
-
-      - name: scripts
-        emptyDir: {}
-      - name: conf
-        emptyDir: {}
-      - name: home
+      - name: confdir
         emptyDir: {}
       - name: logs
         emptyDir: {}
       - name: pipeline
+        emptyDir: {}
+
+      - name: scripts
+        emptyDir: {}
+      - name: home
         emptyDir: {}
       - name: test4
         emptyDir: {}
