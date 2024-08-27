@@ -55,11 +55,27 @@ spec:
         env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"
+        - name: SECURITY_ENABLELOGIN
+          value: "false"
+        - name: SECURITY_CSRFDISABLED
+          value: "true"
+        - name: SYSTEM_DEFAULTLOCALE
+          value: "en-US"
+        - name: SYSTEM_GOOGLEVISIBILITY
+          value: "false"
+        - name: UI_APPNAME
+          value: PDF-Tools
+        - name: UI_HOMEDESCRIPTION
+          value: Hosted on Kubernetes
+        - name: UI_APPNAMENAVBAR
+          value: PDF
+        - name: METRICS_ENABLED
+          value: "true"
         volumeMounts:
         - name: ocr
           mountPath: /usr/share/tesseract-ocr/4.00/tessdata
-        - name: configs
-          mountPath: /configs
+        # - name: configs
+        #   mountPath: /configs
         livenessProbe:
           tcpSocket:
             port: 8080
