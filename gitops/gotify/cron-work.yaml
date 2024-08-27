@@ -23,5 +23,9 @@ spec:
             - /bin/sh
             - -c
             - >-
-              curl -H "Title: Workday $(date '+%d.%m')" -d "How long did you work today?" http://push.10.0.0.21.nip.io/work_reminders
+              curl -H "Title: Workday $(date '+%d.%m')"
+                -d "How long did you work today?"
+                -H "Click: http://push.10.0.0.21.nip.io/work_reminders"
+                -H "Tags: clock8"
+                http://push.10.0.0.21.nip.io/work_reminders
           restartPolicy: OnFailure
