@@ -89,13 +89,14 @@ spec:
           limits: {}
         securityContext:
           allowPrivilegeEscalation: false
-          fsGroup: 1000
-          runAsNonRoot: true
           capabilities:
             drop:
             - ALL
           seccompProfile:
             type: RuntimeDefault
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
       volumes:
       - name: ocr
         emptyDir: {}
