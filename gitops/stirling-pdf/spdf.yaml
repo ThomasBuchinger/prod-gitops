@@ -54,6 +54,9 @@ spec:
         - name: confdir
           mountPath: /configs
         livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 10
           tcpSocket:
             port: 8080
         readinessProbe:
