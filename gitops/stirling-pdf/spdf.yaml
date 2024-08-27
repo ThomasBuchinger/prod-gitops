@@ -1,31 +1,4 @@
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  settings.yml: |
-    security:
-      enableLogin: false # set to 'true' to enable login
-      csrfDisabled: true
-
-    system:
-      defaultLocale: 'en-US' # Set the default language (e.g. 'de-DE', 'fr-FR', etc)
-      googlevisibility: false # 'true' to allow Google visibility (via robots.txt), 'false' to disallow
-    #  customStaticFilePath: '/customFiles/static/' # Directory path for custom static files
-    ui:
-      appName: PDF Tools
-      homeDescription: "Hosted on Kubernetes"
-      appNameNavbar: PDF
-
-    #endpoints:
-    #  toRemove: [] # List endpoints to disable (e.g. ['img-to-pdf', 'remove-pages'])
-    #  groupsToRemove: [] # List groups to disable (e.g. ['LibreOffice'])
-
-    metrics:
-      enabled: true # 'true' to enable Info APIs endpoints (view http://localhost:8080/swagger-ui/index.html#/API to learn more), 'false' to disable
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -80,8 +53,6 @@ spec:
           mountPath: /pipeline
         - name: confdir
           mountPath: /configs
-        # - name: configs
-        #   mountPath: /configs
         livenessProbe:
           tcpSocket:
             port: 8080
@@ -98,18 +69,6 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
           capabilities:
-            add:
-            - SETUID
-            - SETGID
-            - FOWNER
-            - CHOWN
-
-            # - DAC_OVERRIDE
-            # - DAC_READ_SEARCH
-            # - FSETID
-            # - LINUX_IMMUTABLE
-            # - MAC_OVERRIDE
-            # - MKNOD
             drop:
             - ALL
           seccompProfile:
@@ -129,56 +88,6 @@ spec:
         emptyDir: {}
       - name: pipeline
         emptyDir: {}
-
-      - name: scripts
-        emptyDir: {}
-      - name: home
-        emptyDir: {}
-      - name: test4
-        emptyDir: {}
-      - name: test5
-        emptyDir: {}
-
-# chown: /home/stirlingpdfuser: Operation not permitted
-# chown: /home/stirlingpdfuser: Operation not permitted
-# chown: /logs: Operation not permitted
-# chown: /logs: Operation not permitted
-# chown: /scripts/PropSync.java: Operation not permitted
-# chown: /scripts/counter_translation.py: Operation not permitted
-# chown: /scripts/download-security-jar.sh: Operation not permitted
-# chown: /scripts/ignore_translation.toml: Operation not permitted
-# chown: /scripts/init-without-ocr.sh: Operation not permitted
-# chown: /scripts/init.sh: Operation not permitted
-# chown: /scripts/installFonts.sh: Operation not permitted
-# chown: /scripts/png_to_webp.py: Operation not permitted
-# chown: /scripts/split_photos.py: Operation not permitted
-# chown: /scripts: Operation not permitted
-# chown: /scripts: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/Meiryo.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/NotoSans-Regular.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/NotoSansArabic-Regular.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/NotoSansJP-Regular.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/NotoSansSC-Regular.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/SimSun.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto/malgun.ttf: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto: Operation not permitted
-# chown: /usr/share/fonts/opentype/noto: Operation not permitted
-# chown: /configs: Operation not permitted
-# chown: /configs: Operation not permitted
-# chown: /customFiles: Operation not permitted
-# chown: /customFiles: Operation not permitted
-# chown: /pipeline/defaultWebUIConfigs/OCR images.json: Operation not permitted
-# chown: /pipeline/defaultWebUIConfigs/Prepare-pdfs-for-email.json: Operation not permitted
-# chown: /pipeline/defaultWebUIConfigs/split-rotate-auto-rename.json: Operation not permitted
-# chown: /pipeline/defaultWebUIConfigs: Operation not permitted
-# chown: /pipeline/defaultWebUIConfigs: Operation not permitted
-# chown: /pipeline/watchedFolders: Operation not permitted
-# chown: /pipeline/watchedFolders: Operation not permitted
-# chown: /pipeline/finishedFolders: Operation not permitted
-# chown: /pipeline/finishedFolders: Operation not permitted
-# chown: /pipeline: Operation not permitted
-# chown: /pipeline: Operation not permitted
-# chown: /app.jar: Operation not permitted
 
 ---
 kind: Service
