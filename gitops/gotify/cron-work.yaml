@@ -18,7 +18,7 @@ spec:
           containers:
           - name: workhours-reminder
             image: alpine/curl:latest
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             command:
             - /bin/sh
             - -c
