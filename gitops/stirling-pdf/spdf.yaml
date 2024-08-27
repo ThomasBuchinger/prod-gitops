@@ -74,8 +74,8 @@ spec:
         volumeMounts:
         - name: ocr
           mountPath: /usr/share/tesseract-ocr/4.00/tessdata
-        - name: log
-          mountPath: /log
+        - name: logs
+          mountPath: /logs
         - name: pipeline
           mountPath: /pipeline
         # - name: configs
@@ -102,7 +102,7 @@ spec:
             - FOWNER
             - CHOWN
 
-            # - DAC_OVERRIDE
+            - DAC_OVERRIDE
             # - DAC_READ_SEARCH
             # - FSETID
             # - LINUX_IMMUTABLE
@@ -128,7 +128,7 @@ spec:
         emptyDir: {}
       - name: home
         emptyDir: {}
-      - name: log
+      - name: logs
         emptyDir: {}
       - name: pipeline
         emptyDir: {}
