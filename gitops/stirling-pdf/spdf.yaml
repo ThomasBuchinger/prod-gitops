@@ -79,7 +79,7 @@ spec:
         - name: pipeline
           mountPath: /pipeline
         - name: confdir
-          mountPath: /pipeline
+          mountPath: /configs
         # - name: configs
         #   mountPath: /configs
         livenessProbe:
