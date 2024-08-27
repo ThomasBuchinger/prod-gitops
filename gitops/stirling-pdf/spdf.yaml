@@ -89,6 +89,8 @@ spec:
           limits: {}
         securityContext:
           allowPrivilegeEscalation: false
+          fsGroup: 1000
+          runAsNonRoot: true
           capabilities:
             drop:
             - ALL
