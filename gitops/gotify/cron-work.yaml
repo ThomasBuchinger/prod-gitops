@@ -11,7 +11,7 @@ spec:
   # │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday)
   # │ │ │ │ │                                   OR sun, mon, tue, wed, thu, fri, sat
   schedule: "0 18 * * 1-5"
-  timezone: Europe/Vienna
+  timeZone: Europe/Vienna
   jobTemplate:
     spec:
       template:
