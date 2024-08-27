@@ -89,8 +89,8 @@ spec:
           limits: {}
         securityContext:
           allowPrivilegeEscalation: false
-          # runAsUser: 1000
-          # runAsGroup: 1000
+          runAsUser: 0
+          runAsGroup: 0
           capabilities:
             add:
             - CHOWN
