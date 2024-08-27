@@ -41,7 +41,7 @@ spec:
         path: gitops/syncthing
         wave: "2"
       - name: spdf
-        rev: spdf
+        rev: main
         path: gitops/stirling-pdf
         wave: "1"
       - name: gotify
