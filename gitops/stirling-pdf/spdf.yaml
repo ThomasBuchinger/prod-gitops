@@ -45,10 +45,10 @@ spec:
       containers:
       - name: s-pdf
         image: ghcr.io/stirling-tools/s-pdf:0.28.2-fat
-        command:
-        - bash
-        - -c
-        - cp -f /myconfigs/settings.yml /configs/settings.yml && exec java -jar /app.jar
+        # command:
+        # - bash
+        # - -c
+        # - cp -f /myconfigs/settings.yml /configs/settings.yml && exec java -jar /app.jar
         ports:
         - name: http
           containerPort: 8080
@@ -59,7 +59,7 @@ spec:
         - name: ocr
           mountPath: /usr/share/tesseract-ocr/4.00/tessdata
         - name: configs
-          mountPath: /myconfigs
+          mountPath: /configs
         livenessProbe:
           tcpSocket:
             port: 8080
