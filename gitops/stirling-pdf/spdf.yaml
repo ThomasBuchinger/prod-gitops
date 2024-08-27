@@ -94,8 +94,8 @@ spec:
           capabilities:
             add:
             - CHOWN
-            drop:
-            - ALL
+            # drop:
+            # - ALL
           seccompProfile:
             type: RuntimeDefault
       securityContext:
