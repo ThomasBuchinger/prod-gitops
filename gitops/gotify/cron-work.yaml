@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: Workday-reminder
+  name: workhours-reminder
 spec:
   # ┌───────────── minute (0 - 59)
   # │ ┌───────────── hour (0 - 23)
@@ -16,9 +16,9 @@ spec:
       template:
         spec:
           containers:
-          - name: Workday-reminder
+          - name: Workhours-reminder
             image: alpine:latest
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             command:
             - /bin/sh
             - -c
