@@ -23,10 +23,10 @@ tempoQuery:
     hosts:
     - tracing.buc.sh
     - tracing.10.0.0.21.nip.io
-  resources:
-    requests:
-      cpu: 1000m
-      memory: 4Gi
+  # resources:
+  #   requests:
+  #     cpu: 1000m
+  #     memory: 4Gi
 minio:
   enabled: false
 traces:

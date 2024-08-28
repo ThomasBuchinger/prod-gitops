@@ -76,10 +76,10 @@ singleBinary:
     storageClass: local-path
     enableStatefulSetAutoDeletePVC: true
 
-  resources:
-    requests:
-      cpu: 2
-      memory: 2Gi
+  # resources:
+  #   requests:
+  #     cpu: 2
+  #     memory: 2Gi
   extraEnv:
     # Keep a little bit lower than memory limits
     - name: GOMEMLIMIT
