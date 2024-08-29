@@ -5,3 +5,4 @@ resources:
 # - https://github.com/thomasbuchinger/syncthing-operator/config/default?timeout=120&ref=main
 - syncthing-app.yaml
 - syncthing-pv.yaml
+- syncthing-metrics.yaml
