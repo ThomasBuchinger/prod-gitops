@@ -19,6 +19,7 @@ loki:
     compaction_interval: 10m
     retention_delete_delay: 2h
     retention_delete_worker_count: 150
+    delete_request_store: filesystem
   commonConfig:
     replication_factor: 1 # needed since we only run one Loki instance
   # rulerConfig:
@@ -31,7 +32,7 @@ loki:
       kvstore:
         store: inmemory
   storage:
-    type: filesystem # trying to disable boltdb-shipper s3 object_store configuration
+    type: filesystem
   schemaConfig:
     configs:
       - from: 2024-08-01
