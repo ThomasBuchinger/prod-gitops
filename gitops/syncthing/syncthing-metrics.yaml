@@ -65,7 +65,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: SYNCTHING_INTERNAL_METRICSURL
-          value: http://syncthing.syncthing.svc:8384/metrics
+          value: http://syncthing:8384/metrics
         - name: SYNCTHING_USER
           valueFrom:
             secretKeyRef:
