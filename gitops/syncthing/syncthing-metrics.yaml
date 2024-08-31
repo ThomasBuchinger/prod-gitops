@@ -127,7 +127,9 @@ metadata:
   annotations:
     kubernetes.io/enforce-mountable-secrets: "true"
 secrets:
-- eso-syncthing-credentials
+- kind: Secret
+  namespace: syncthing
+  name: eso-syncthing-credentials
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
