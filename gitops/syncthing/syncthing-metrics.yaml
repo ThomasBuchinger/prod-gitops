@@ -17,3 +17,97 @@ spec:
             name: syncthing
             port:
               name: http
+      - path: "/api/syncthinghelper/metricsproxy"
+        pathType: Prefix
+        backend:
+          service:
+            name: syncthing-helper
+            port:
+              name: http
+      - path: "/api/syncthinghelper/restart"
+        pathType: Prefix
+        backend:
+          service:
+            name: syncthing-helper
+            port:
+              name: http
+
+
+
+# =========================================================================
+# = Syncthing Helper is a Deployment-Mode of "https://github.com/thomasbuchinger/homelab-api"
+# = It exists to
+# = * Provide unauthenticated access to Syncthing Metrics (Syncthing itself enforces authentication)
+# = * Provide a API to restart the Synching Container, in case the NFS-Share is causing problems
+# =========================================================================
+#
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing-helper
+  namespace: syncthing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: syncthing-helper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: syncthing-helper
+    spec:
+      containers:
+      - name: syncthing-helper
+        command:
+        - syncthing-helper
+        image: ghcr.io/thomasbuchinger/homelab-api:main
+        imagePullPolicy: Always
+        env:
+        - name: SYNCTHING_INTERNAL_METRICSURL
+          value: http://syncthing.syncthing.svc:8384/metrics
+        - name: SYNCTHING_USER
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-credentials
+              key: ADMIN_USER
+        - name: SYNCTHING_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eso-syncthing-credentials
+              key: ADMIN_PASSWORD
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests: {}
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/readyz
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      securityContext:
+        runAsNonRoot: true
+        capabilities:
+          drop:
+          - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing-helper
+  namespace: syncthing
+spec:
+  selector:
+    app.kubernetes.io/app: syncthing-helper
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+
