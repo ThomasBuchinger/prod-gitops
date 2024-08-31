@@ -138,7 +138,7 @@ rules:
   verbs: ["get", "list", "update", "patch", "delete"]
 - apiGroups: [""]
   resources: ["secrets"]
-  verbs: ["get", "list"]
+  verbs: ["*"]
 - apiGroups: ["apps"]
   resources: ["deployments"]
   verbs: ["get", "list", "update", "patch", "delete"]
