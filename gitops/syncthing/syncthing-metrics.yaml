@@ -122,10 +122,12 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  annotations:
-    kubernetes.io/enforce-mountable-secrets: "true"
   name: syncthing-helper
   namespace: syncthing
+  annotations:
+    kubernetes.io/enforce-mountable-secrets: "true"
+secrets:
+- eso-syncthing-credentials
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -136,9 +138,6 @@ rules:
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "list", "update", "patch", "delete"]
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["*"]
 - apiGroups: ["apps"]
   resources: ["deployments"]
   verbs: ["get", "list", "update", "patch", "delete"]
