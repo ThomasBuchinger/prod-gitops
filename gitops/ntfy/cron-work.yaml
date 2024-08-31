@@ -20,6 +20,7 @@ spec:
           - name: workhours-reminder
             image: alpine/curl:latest
             imagePullPolicy: IfNotPresent
+            resources: {}
             command:
             - /bin/sh
             - -c

@@ -44,9 +44,9 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "1"
-      - name: gotify
-        rev: gotify
-        path: gitops/gotify
+      - name: ntfy
+        rev: main
+        path: gitops/ntfy
         wave: "1"
       # === Internet Facing
       - name: external-http
