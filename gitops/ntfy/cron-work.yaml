@@ -1,0 +1,29 @@
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: workhours-reminder
+spec:
+  # ┌───────────── minute (0 - 59)
+  # │ ┌───────────── hour (0 - 23)
+  # │ │ ┌───────────── day of the month (1 - 31)
+  # │ │ │ ┌───────────── month (1 - 12)
+  # │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday)
+  # │ │ │ │ │                                   OR sun, mon, tue, wed, thu, fri, sat
+  schedule: "0 18 * * 1-5"
+  timeZone: Europe/Vienna
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: workhours-reminder
+            image: alpine/curl:latest
+            imagePullPolicy: IfNotPresent
+            resources: {}
+            command:
+            - /bin/sh
+            - -c
+            - >-
+              curl -H "Title: Workday $(date '+%d.%m')" -d "How long did you work today?" -H "Tags: clock8" -H "Click: http://push.10.0.0.21.nip.io/work_reminders" http://push.10.0.0.21.nip.io/work_reminders
+          restartPolicy: OnFailure

@@ -1,0 +1,3 @@
+resources:
+- ntfy-app.yaml
+- cron-work.yaml
