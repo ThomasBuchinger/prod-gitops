@@ -98,7 +98,7 @@ spec:
             - ALL
           seccompProfile:
             type: RuntimeDefault
-      serviceAccountName: syncthing-helper
+      # serviceAccountName: syncthing-helper
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -142,6 +142,7 @@ rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
   verbs: ["*"]
+  #verbs: ["get", "list", "update", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -155,4 +156,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: syncthing-helper
+  namespace: syncthing
+- kind: ServiceAccount
+  name: default
   namespace: syncthing
