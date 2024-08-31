@@ -49,12 +49,14 @@ spec:
       property: cred_admin_user
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
   - secretKey: ADMIN_PASSWORD
     remoteRef:
       key: access/static-cred
       property: cred_admin_password
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -74,6 +76,7 @@ spec:
       conversionStrategy: Default
       decodingStrategy: None
       key: access/syncthing
+      metadataPolicy: None
 
 ---
 apiVersion: apps/v1
@@ -226,6 +229,7 @@ spec:
       conversionStrategy: Default
       decodingStrategy: None
       key: cert/cert-syncthing-buc-sh
+      metadataPolicy: None
 
 ---
 apiVersion: networking.k8s.io/v1

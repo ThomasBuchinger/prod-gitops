@@ -91,11 +91,17 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       securityContext:
         runAsNonRoot: true
-        capabilities:
-          drop:
-          - ALL
+        runAsUser: 1000
+        runAsGroup: 1000
 ---
 apiVersion: v1
 kind: Service
