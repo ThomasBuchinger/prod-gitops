@@ -60,7 +60,7 @@ spec:
       containers:
       - name: syncthing-helper
         command:
-        - syncthing-helper
+        - ./syncthing-helper
         image: ghcr.io/thomasbuchinger/homelab-api:main
         imagePullPolicy: Always
         env:
