@@ -98,6 +98,7 @@ spec:
             - ALL
           seccompProfile:
             type: RuntimeDefault
+      serviceAccountName: syncthing-helper
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -117,3 +118,38 @@ spec:
     port: 8080
     targetPort: http
 
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    kubernetes.io/enforce-mountable-secrets: "true"
+  name: syncthing-helper
+  namespace: syncthing
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: syncthing
+  name: deployment-restarter
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "update", "patch", "delete"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: allow-syncthing-helper-to-restart-pod
+  namespace: syncthing
+roleRef:
+  kind: Role
+  name: deployment-restarter
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: syncthing-helper
+  namespace: syncthing
