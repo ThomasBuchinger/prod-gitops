@@ -25,7 +25,7 @@ data:
     # attachment-expiry-duration: 3h
     # attachment-total-size-limit: 5G
     # message-size-limit: # 4k
-    # message-delay-limit: 
+    # message-delay-limit:
     # global-topic-limit: 15000
     # visitor-subscription-limit: 30
     # visitor-request-limit-burst: 60
@@ -84,14 +84,71 @@ kind: Secret
 metadata:
   name: ntfy-creds
 stringData:
-  BUC_PASSWORD: crablike-autopilot-deluxe-bank-run
   API_PASSWORD: crablike-autopilot-deluxe-bank-run
   MANUAL_PASSWORD: crablike-autopilot-deluxe-bank-run
-  PROD_CLUSTER_PASSWORD: crablike-autopilot-deluxe-bank-run
-  SCRIPTS_PASSWORD: crablike-autopilot-deluxe-bank-run
 
 ---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ntfy-creds-vault-eso
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: ntfy-creds-vault
+    creationPolicy: Owner
+  data:
+  - secretKey: BUC_PASSWORD
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  # - secretKey: API_PASSWORD
+  #   remoteRef:
+  #     key: access/random
+  #     property: random1
+  #     conversionStrategy: Default
+  #     decodingStrategy: None
+  #     metadataPolicy: None
+  # - secretKey: MANUAL_PASSWORD
+  #   remoteRef:
+  #     key: access/random
+  #     property: random2
+  #     conversionStrategy: Default
+  #     decodingStrategy: None
+  #     metadataPolicy: None
 
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ntfy-creds-k8s
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: cluster-local
+    kind: ClusterSecretStore
+  target:
+    name: ntfy-creds-k8s
+    creationPolicy: Owner
+  data:
+  - secretKey: PROD_CLUSTER_PASSWORD
+    remoteRef:
+      key: cluster-secrets
+      property: prod
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ntfy-creds-static
+stringData:
+  SCRIPTS_PASSWORD: crablike-autopilot-deluxe-bank-run
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -124,6 +181,12 @@ spec:
         envFrom:
         - secretRef:
             name: ntfy-creds
+        - secretRef:
+            name: ntfy-creds-vault
+        - secretRef:
+            name: ntfy-creds-k8s
+        - secretRef:
+            name: ntfy-creds-static
         startupProbe:
           exec:
             command:
