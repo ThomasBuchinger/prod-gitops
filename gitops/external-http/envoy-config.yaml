@@ -304,8 +304,7 @@ static_resources:
               cors: *cors_default
               routes:
               - match:
-                  safe_regex:
-                    regex: "/"
+                  prefix: "/"
                 route:
                   cluster: ntfy
                   auto_host_rewrite: true
