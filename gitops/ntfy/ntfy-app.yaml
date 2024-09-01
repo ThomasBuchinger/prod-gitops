@@ -8,6 +8,53 @@ data:
     # Template: https://github.com/binwiederhier/ntfy/blob/main/server/server.yml
     base-url: http://push.10.0.0.21.nip.io
     listen-http: ":8080"
+    behind-proxy: true
+    # Set the Cache-Duration to 60 Days
+    cache-duration: 1400h
+    cache-file: /var/cache/ntfy/cache.db
+    attachment-cache-dir: /var/cache/ntfy/attachments
+    metrics-listen-http: ":8081"
+    auth-file: /var/lib/ntfy
+    auth-default-access: deny-all
+    enable-signup: false
+    
+    # Default that might be needed in the future
+    # base-url: https://push.cloud.buc.sh
+    # attachment-expiry-duration: 3h
+    # attachment-total-size-limit: 5G
+    # message-size-limit: # 4k
+    # message-delay-limit: 
+    # global-topic-limit: 15000
+    # visitor-subscription-limit: 30
+    # visitor-request-limit-burst: 60
+    # visitor-request-limit-replenish: 5s
+    # visitor-request-limit-exempt-hosts: "ip1,ip2,ip3"
+    # visitor-message-daily-limit: 30
+    # log-level: info
+    # log-format: json
+  initScript.sh: |
+    SERVER="http://localhost:8080"
+    curl $SERVER/v1/health || exit 1
+    NTFY_PASSWORD=changeme ntfy user add --ignore-exists --role=admin buc
+    NTFY_PASSWORD=changeme ntfy user add --ignore-exists api
+    NTFY_PASSWORD=changeme ntfy user add --ignore-exists homelab
+    NTFY_PASSWORD=changeme ntfy user add --ignore-exists webhook
+    NTFY_PASSWORD=changeme ntfy user add --ignore-exists curl
+    ntfy access buc      $SERVER/* rw
+
+    ntfy access api      $SERVER/work-* rw
+    ntfy access homelab  $SERVER/work-* write
+    ntfy access everyone $SERVER/work-* read
+    
+    ntfy access api      $SERVER/homelab-* rw
+    ntfy access homelab  $SERVER/homelab-* rw
+
+    ntfy access api      $SERVER/buc-* rw
+    
+    ntfy access everyone $SERVER/open-readwrite-A4bPDqUr25mQzins rw
+    ntfy access everyone $SERVER/open-write-cqgwAWUSsxMqo3pl write
+    ntfy access everyone $SERVER/open-read-22LPVPsTxS6lUJOK read
+    echo "Done configuring ntfy server"
 
 # NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
 # NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
@@ -44,16 +91,19 @@ spec:
         ports:
         - containerPort: 8080
           name: http
-        volumeMounts:
-        - name: config
-          mountPath: "/etc/ntfy"
-          readOnly: true
+        - containerPort: 8081
+          name: metrics
+        startupProbe:
+          exec:
+            command: "sh /etc/ntfy/initScript.sh"
         livenessProbe:
-          tcpSocket:
+          httpGet:
             port: 8080
+            path: /v1/health
         readinessProbe:
-          tcpSocket:
+          httpGet:
             port: 8080
+            path: /v1/health
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -61,10 +111,22 @@ spec:
             - ALL
           seccompProfile:
             type: RuntimeDefault
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/ntfy"
+          readOnly: true
+        - name: cache
+          mountPath: "/var/cache/ntfy"
+        - name: data
+          mountPath: "/var/lib/ntfy"
       volumes:
         - name: config
           configMap:
             name: ntfy
+        - name: cache
+          emptyDir: {}
+        - name: data
+          emptyDir: {}
 ---
 # Basic service for port 80
 apiVersion: v1
@@ -139,3 +201,17 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+
+
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: ntfy-database
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: local-path
+#   resources:
+#     requests:
+#       storage: 10M
