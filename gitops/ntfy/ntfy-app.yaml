@@ -18,7 +18,7 @@ data:
     auth-default-access: deny-all
     enable-signup: false
     enable-login: true
-    log-level: debug
+    log-level: info
 
     # Default that might be needed in the future
     # base-url: https://push.cloud.buc.sh
@@ -48,16 +48,11 @@ data:
     # User buc is admin and has access to everything
 
     ntfy access prodcluster 'work_reminders' rw
-    ntfy access prodcluster '*' rw
 
     # ntfy access api         'work-*' rw
     # ntfy access manual      'work-*' write
-    ntfy access everyone    'work-*' read
+    # ntfy access everyone    'work-*' read
 
-    # ntfy access api         'work-*' rw
-    # ntfy access manual      'work-*' write
-    ntfy access everyone    'work-*' read
-    
     # ntfy access api         'homelab-*' rw
     # ntfy access manual      'homelab-*' rw
 
@@ -65,7 +60,7 @@ data:
 
     # ntfy access api         'public-random' read
     
-    ntfy access everyone 'random' rw
+    ntfy access everyone 'random' read
     ntfy access everyone 'livez' read
     ntfy access everyone 'open-readwrite-A4bPDqUr25mQzins' rw
     ntfy access everyone 'open-write-cqgwAWUSsxMqo3pl' write
