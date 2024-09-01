@@ -8,6 +8,58 @@ data:
     # Template: https://github.com/binwiederhier/ntfy/blob/main/server/server.yml
     base-url: http://push.10.0.0.21.nip.io
     listen-http: ":8080"
+    behind-proxy: true
+    # Set the Cache-Duration to 60 Days
+    cache-duration: 1400h
+    cache-file: /var/cache/ntfy/cache.db
+    attachment-cache-dir: /var/cache/ntfy/attachments
+    metrics-listen-http: ":8081"
+    auth-file: /var/lib/ntfy/auth.db
+    auth-default-access: deny-all
+    enable-signup: false
+    enable-login: true
+    log-level: info
+
+    # Default that might be needed in the future
+    # base-url: https://push.cloud.buc.sh
+    # attachment-expiry-duration: 3h
+    # attachment-total-size-limit: 5G
+    # message-size-limit: # 4k
+    # message-delay-limit:
+    # global-topic-limit: 15000
+    # visitor-subscription-limit: 30
+    # visitor-request-limit-burst: 60
+    # visitor-request-limit-replenish: 5s
+    # visitor-request-limit-exempt-hosts: "ip1,ip2,ip3"
+    # visitor-message-daily-limit: 30
+    # log-level: info
+    # log-format: json
+  initScript.sh: |
+    SERVER="http://localhost:8080"
+    ntfy sub --poll $SERVER/livez
+    NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin buc       # My admin user
+    NTFY_PASSWORD=$API_PASSWORD ntfy user add --ignore-exists api                    # HomeLAB API application user
+    NTFY_PASSWORD=$MANUAL_PASSWORD ntfy user add --ignore-exists manual              # 3rd Party tools without access to vault
+    NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists prodcluster   # Password only known on the local prod cluster
+    NTFY_PASSWORD=$SCRIPTS_PASSWORD ntfy user add --ignore-exists scripts            # Kown Password for low-stakes scripts
+    
+    # User buc is admin and has access to everything
+
+    ntfy access prodcluster 'work_reminders' rw
+
+    # ntfy access api         'work-*' rw
+    # ntfy access manual      'work-*' write
+
+    # ntfy access api         'homelab-*' rw
+    # ntfy access manual      'homelab-*' rw
+
+    # ntfy access api         'buc-*' rw
+
+    # ntfy access api         'public-random' read
+    
+    ntfy access everyone 'random' read
+    ntfy access everyone 'livez' read
+    echo "Done configuring ntfy server"
 
 # NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
 # NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
@@ -16,7 +68,80 @@ data:
 # NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
 # NTFY_ENABLE_LOGIN: true
 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ntfy-creds
+stringData:
+  API_PASSWORD: crablike-autopilot-deluxe-bank-run
+  MANUAL_PASSWORD: crablike-autopilot-deluxe-bank-run
 
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ntfy-creds-vault-eso
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-secret
+    kind: ClusterSecretStore
+  target:
+    name: ntfy-creds-vault
+    creationPolicy: Owner
+  data:
+  - secretKey: BUC_PASSWORD
+    remoteRef:
+      key: access/static-cred
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  # - secretKey: API_PASSWORD
+  #   remoteRef:
+  #     key: access/random
+  #     property: random1
+  #     conversionStrategy: Default
+  #     decodingStrategy: None
+  #     metadataPolicy: None
+  # - secretKey: MANUAL_PASSWORD
+  #   remoteRef:
+  #     key: access/random
+  #     property: random2
+  #     conversionStrategy: Default
+  #     decodingStrategy: None
+  #     metadataPolicy: None
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ntfy-creds-k8s
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: cluster-local
+    kind: ClusterSecretStore
+  target:
+    name: ntfy-creds-k8s
+    creationPolicy: Owner
+  data:
+  - secretKey: PROD_CLUSTER_PASSWORD
+    remoteRef:
+      key: cluster-secrets
+      property: prod
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ntfy-creds-static
+stringData:
+  SCRIPTS_PASSWORD: crablike-autopilot-deluxe-bank-run
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -44,16 +169,30 @@ spec:
         ports:
         - containerPort: 8080
           name: http
-        volumeMounts:
-        - name: config
-          mountPath: "/etc/ntfy"
-          readOnly: true
+        - containerPort: 8081
+          name: metrics
+        envFrom:
+        - secretRef:
+            name: ntfy-creds
+        - secretRef:
+            name: ntfy-creds-vault
+        - secretRef:
+            name: ntfy-creds-k8s
+        - secretRef:
+            name: ntfy-creds-static
+        startupProbe:
+          exec:
+            command:
+            - sh
+            - /etc/ntfy/initScript.sh
         livenessProbe:
-          tcpSocket:
+          httpGet:
             port: 8080
+            path: /v1/health
         readinessProbe:
-          tcpSocket:
+          httpGet:
             port: 8080
+            path: /v1/health
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -61,12 +200,38 @@ spec:
             - ALL
           seccompProfile:
             type: RuntimeDefault
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/ntfy"
+          readOnly: true
+        - name: cache
+          mountPath: "/var/cache/ntfy"
+        - name: data
+          mountPath: "/var/lib/ntfy"
       volumes:
         - name: config
           configMap:
             name: ntfy
+        - name: cache
+          persistentVolumeClaim:
+            claimName: ntfy-cache
+        - name: data
+          emptyDir: {}
+
 ---
-# Basic service for port 80
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ntfy-cache
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -77,7 +242,52 @@ spec:
   ports:
   - name: http
     port: 8080
-    targetPort: 8080
+    targetPort: http
+  - name: metrics
+    port: 8081
+    targetPort: metrics
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: push-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-push-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-push-buc-sh
+      metadataPolicy: None
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ntfy-tls
+spec:
+  tls:
+  - hosts:
+      - push.buc.sh
+    secretName: cert-push-buc-sh
+  rules:
+  - host: "push.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: ntfy
+            port:
+              name: http
 
 
 ---
@@ -87,16 +297,6 @@ metadata:
   name: ntfy
 spec:
   rules:
-  - host: push.buc.sh
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: ntfy
-            port:
-              name: http
   - host: push.10.0.0.21.nip.io
     http:
       paths:
@@ -108,16 +308,6 @@ spec:
             port:
               name: http
 
-  - host: push.cloud.buc.sh
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: ntfy
-            port:
-              name: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -136,6 +326,18 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-http
     ports:
     - protocol: TCP
       port: 8080
+  # Allow monitoring
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8081
+

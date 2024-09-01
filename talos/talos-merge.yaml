@@ -59,3 +59,5 @@ cluster:
     contents: ""
   - name: infra-auto-untaint
     contents: ""
+  - name: cluster-secrets
+    contents:  ""

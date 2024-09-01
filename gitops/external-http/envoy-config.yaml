@@ -195,7 +195,7 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
-          - *auth_api
+          # - *auth_api
           - *geoip
           - *get_requests_only_lua
           - *ratelimit
@@ -256,13 +256,15 @@ static_resources:
           generate_request_id: true
           preserve_external_request_id: true
           always_set_request_id_in_response: true
+          upgrade_configs:
+          - upgrade_type: websocket
           tracing: *tracing
           access_log:
           - *jsonlog
           http_filters:
           - *geoip
-          - *auth_api
-          - *get_requests_only_lua
+          # - *auth_api
+          # - *get_requests_only_lua
           - *ratelimit
           - *enable_cors
           - *csrf
@@ -297,6 +299,16 @@ static_resources:
                   prefix: "/api/public"
                 route:
                   cluster: homelabapi
+                  auto_host_rewrite: true
+            - name: push-cloud-buc-sh
+              domains:
+              - push.cloud.buc.sh
+              cors: *cors_default
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: ntfy
                   auto_host_rewrite: true
   # App Router for "hidden" (high-port) Services
   #
@@ -341,6 +353,8 @@ static_resources:
           generate_request_id: true
           preserve_external_request_id: true
           always_set_request_id_in_response: true
+          upgrade_configs:
+          - upgrade_type: websocket
           tracing: *tracing
           access_log:
           - *jsonlog
@@ -424,6 +438,24 @@ static_resources:
       healthy_threshold: 1
       http_health_check:
         path: "/api/livez"
+  - name: ntfy
+    type: LOGICAL_DNS
+    load_assignment:
+      cluster_name: ntfy
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: ntfy.ntfy.svc
+                port_value: 8080
+    health_checks:
+    - timeout: 3s
+      interval: 30s
+      unhealthy_threshold: 3
+      healthy_threshold: 1
+      http_health_check:
+        path: "/v1/health"
     # transport_socket:
     #   name: envoy.transport_sockets.tls
     #   typed_config:
