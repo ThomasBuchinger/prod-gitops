@@ -21,10 +21,17 @@ spec:
             image: alpine/curl:latest
             imagePullPolicy: IfNotPresent
             resources: {}
+            env:
+            - name: USER
+              value: prodcluster
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: PROD_CLUSTER_PASSWORD
             command:
             - /bin/sh
             - -c
             - >-
-              curl -H "Title: Workday $(date '+%d.%m')" -d "How long did you work today?" -H "Tags: clock8" -H "Click: http://push.10.0.0.21.nip.io/work_reminders" http://push.10.0.0.21.nip.io/work_reminders
+              curl http://push.10.0.0.21.nip.io/random -H "Title: Workday $(date '+%d.%m')" -d "How long did you work today?" -H "Tags: clock8" -H "Click: http://push.10.0.0.21.nip.io/work_reminders"  -u $USER:$PASS
           restartPolicy: OnFailure
 

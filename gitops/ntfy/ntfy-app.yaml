@@ -17,7 +17,8 @@ data:
     auth-file: /var/lib/ntfy/auth.db
     auth-default-access: deny-all
     enable-signup: false
-    
+    enable-login: true
+
     # Default that might be needed in the future
     # base-url: https://push.cloud.buc.sh
     # attachment-expiry-duration: 3h
@@ -35,25 +36,32 @@ data:
   initScript.sh: |
     SERVER="http://localhost:8080"
     ntfy sub --poll $SERVER/livez
-    NTFY_PASSWORD=changeme ntfy user add --ignore-exists --role=admin buc
-    NTFY_PASSWORD=changeme ntfy user add --ignore-exists api
-    NTFY_PASSWORD=changeme ntfy user add --ignore-exists homelab
-    NTFY_PASSWORD=changeme ntfy user add --ignore-exists webhook
-    NTFY_PASSWORD=changeme ntfy user add --ignore-exists scripts
+    NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin buc       # My admin user
+    NTFY_PASSWORD=$API_PASSWORD ntfy user add --ignore-exists api                    # HomeLAB API application user
+    NTFY_PASSWORD=$MANUAL_PASSWORD ntfy user add --ignore-exists manual              # 3rd Party tools without access to vault
+    NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists prodcluster   # Password only known on the local prod cluster
+    NTFY_PASSWORD=$SCRIPTS_PASSWORD ntfy user add --ignore-exists scripts            # Kown Password for low-stakes scripts
     
     # buc can access everything
-    ntfy access buc      $SERVER/* rw
+    ntfy access buc         $SERVER/* rw
 
-    ntfy access api      $SERVER/work-* rw
-    ntfy access homelab  $SERVER/work-* write
-    ntfy access everyone $SERVER/work-* read
+    ntfy access prodcluster $SERVER/work_reminders rw
+    ntfy access prodcluster $SERVER/random rw
+
+    ntfy access api         $SERVER/work-* rw
+    ntfy access manual      $SERVER/work-* write
+    ntfy access everyone    $SERVER/work-* read
+
+    ntfy access api         $SERVER/work-* rw
+    ntfy access manual      $SERVER/work-* write
+    ntfy access everyone    $SERVER/work-* read
     
-    ntfy access api      $SERVER/homelab-* rw
-    ntfy access homelab  $SERVER/homelab-* rw
+    ntfy access api         $SERVER/homelab-* rw
+    ntfy access manual      $SERVER/homelab-* rw
 
-    ntfy access api      $SERVER/buc-* rw
+    ntfy access api         $SERVER/buc-* rw
 
-    ntfy access api      $server/public-random
+    ntfy access api         $server/public-random
     
     ntfy access everyone $SERVER/random rw
     ntfy access everyone $SERVER/livez read
@@ -69,6 +77,19 @@ data:
 # NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
 # NTFY_ENABLE_LOGIN: true
 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ntfy-creds
+stringData:
+  BUC_PASSWORD: crablike-autopilot-deluxe-bank-run
+  API_PASSWORD: crablike-autopilot-deluxe-bank-run
+  MANUAL_PASSWORD: crablike-autopilot-deluxe-bank-run
+  PROD_CLUSTER_PASSWORD: crablike-autopilot-deluxe-bank-run
+  SCRIPTS_PASSWORD: crablike-autopilot-deluxe-bank-run
+
+---
 
 ---
 apiVersion: apps/v1
@@ -99,6 +120,9 @@ spec:
           name: http
         - containerPort: 8081
           name: metrics
+        envFrom:
+        - secretRef:
+            name: ntfy-creds
         startupProbe:
           exec:
             command:
@@ -136,6 +160,20 @@ spec:
             claimName: ntfy-cache
         - name: data
           emptyDir: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ntfy-cache
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+
 ---
 # Basic service for port 80
 apiVersion: v1
@@ -148,7 +186,10 @@ spec:
   ports:
   - name: http
     port: 8080
-    targetPort: 8080
+    targetPort: http
+  - name: metrics
+    port: 8081
+    targetPort: metrics
 
 
 ---
@@ -182,7 +223,7 @@ spec:
   - host: push.cloud.buc.sh
     http:
       paths:
-      - path: /
+      - path: /public
         pathType: Prefix
         backend:
           service:
@@ -210,17 +251,13 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+  
+  # Allow monitoring
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8081
 
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ntfy-cache
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: local-path
-  resources:
-    requests:
-      storage: 1Gi
