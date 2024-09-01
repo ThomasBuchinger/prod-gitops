@@ -141,6 +141,9 @@ spec:
     remoteRef:
       key: cluster-secrets
       property: prod
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: v1
