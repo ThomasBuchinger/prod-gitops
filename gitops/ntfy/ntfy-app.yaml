@@ -96,7 +96,8 @@ spec:
         startupProbe:
           exec:
             command:
-            - "sh /etc/ntfy/initScript.sh"
+            - "sh
+            - /etc/ntfy/initScript.sh"
         livenessProbe:
           httpGet:
             port: 8080
