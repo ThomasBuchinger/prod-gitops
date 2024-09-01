@@ -257,6 +257,49 @@ spec:
     port: 8081
     targetPort: metrics
 
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: push-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-approle-cluster
+    kind: ClusterSecretStore
+  target:
+    name: cert-push-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      key: cert/cert-push-buc-sh
+      metadataPolicy: None
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ntfy-tls
+  namespace: syncthing
+spec:
+  tls:
+  - hosts:
+      - push.buc.sh
+    secretName: cert-push-buc-sh
+  rules:
+  - host: "push.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: ntfy
+            port:
+              name: http
+
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -264,17 +307,6 @@ kind: Ingress
 metadata:
   name: ntfy
 spec:
-  rules:
-  - host: push.buc.sh
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: ntfy
-            port:
-              name: http
   - host: push.10.0.0.21.nip.io
     http:
       paths:
