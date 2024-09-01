@@ -34,12 +34,14 @@ data:
     # log-format: json
   initScript.sh: |
     SERVER="http://localhost:8080"
-    curl $SERVER/v1/health || exit 1
+    ntfy sub --poll $SERVER/livez
     NTFY_PASSWORD=changeme ntfy user add --ignore-exists --role=admin buc
     NTFY_PASSWORD=changeme ntfy user add --ignore-exists api
     NTFY_PASSWORD=changeme ntfy user add --ignore-exists homelab
     NTFY_PASSWORD=changeme ntfy user add --ignore-exists webhook
-    NTFY_PASSWORD=changeme ntfy user add --ignore-exists curl
+    NTFY_PASSWORD=changeme ntfy user add --ignore-exists scripts
+    
+    # buc can access everything
     ntfy access buc      $SERVER/* rw
 
     ntfy access api      $SERVER/work-* rw
@@ -50,7 +52,11 @@ data:
     ntfy access homelab  $SERVER/homelab-* rw
 
     ntfy access api      $SERVER/buc-* rw
+
+    ntfy access api      $server/public-random
     
+    ntfy access everyone $SERVER/random rw
+    ntfy access everyone $SERVER/livez read
     ntfy access everyone $SERVER/open-readwrite-A4bPDqUr25mQzins rw
     ntfy access everyone $SERVER/open-write-cqgwAWUSsxMqo3pl write
     ntfy access everyone $SERVER/open-read-22LPVPsTxS6lUJOK read
