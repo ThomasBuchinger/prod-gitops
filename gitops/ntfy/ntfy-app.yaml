@@ -18,6 +18,7 @@ data:
     auth-default-access: deny-all
     enable-signup: false
     enable-login: true
+    log-level: debug
 
     # Default that might be needed in the future
     # base-url: https://push.cloud.buc.sh
