@@ -44,31 +44,31 @@ data:
     NTFY_PASSWORD=$SCRIPTS_PASSWORD ntfy user add --ignore-exists scripts            # Kown Password for low-stakes scripts
     
     # buc can access everything
-    ntfy access buc         '$SERVER/*' rw
+    ntfy access buc         '*' rw
 
-    ntfy access prodcluster '$SERVER/work_reminders*' rw
-    ntfy access prodcluster '$SERVER/*' rw
+    ntfy access prodcluster 'work_reminders*' rw
+    ntfy access prodcluster '*' rw
 
-    ntfy access api         '$SERVER/work-*' rw
-    ntfy access manual      '$SERVER/work-*' write
-    ntfy access everyone    '$SERVER/work-*' read
+    ntfy access api         'work-*' rw
+    ntfy access manual      'work-*' write
+    ntfy access everyone    'work-*' read
 
-    ntfy access api         '$SERVER/work-*' rw
-    ntfy access manual      '$SERVER/work-*' write
-    ntfy access everyone    '$SERVER/work-*' read
+    ntfy access api         'work-*' rw
+    ntfy access manual      'work-*' write
+    ntfy access everyone    'work-*' read
     
-    ntfy access api         '$SERVER/homelab-*' rw
-    ntfy access manual      '$SERVER/homelab-*' rw
+    ntfy access api         'homelab-*' rw
+    ntfy access manual      'homelab-*' rw
 
-    ntfy access api         '$SERVER/buc-*' rw
+    ntfy access api         'buc-*' rw
 
-    ntfy access api         '$SERVER/public-random' read
+    ntfy access api         'public-random' read
     
-    ntfy access everyone '$SERVER/random' rw
-    ntfy access everyone '$SERVER/livez' read
-    ntfy access everyone '$SERVER/open-readwrite-A4bPDqUr25mQzins' rw
-    ntfy access everyone '$SERVER/open-write-cqgwAWUSsxMqo3pl' write
-    ntfy access everyone '$SERVER/open-read-22LPVPsTxS6lUJOK' read
+    ntfy access everyone 'random' rw
+    ntfy access everyone 'livez' read
+    ntfy access everyone 'open-readwrite-A4bPDqUr25mQzins' rw
+    ntfy access everyone 'open-write-cqgwAWUSsxMqo3pl' write
+    ntfy access everyone 'open-read-22LPVPsTxS6lUJOK' read
     echo "Done configuring ntfy server"
 
 # NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
