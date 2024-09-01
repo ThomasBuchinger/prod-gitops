@@ -40,7 +40,7 @@ data:
     NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin buc       # My admin user
     NTFY_PASSWORD=$API_PASSWORD ntfy user add --ignore-exists api                    # HomeLAB API application user
     NTFY_PASSWORD=$MANUAL_PASSWORD ntfy user add --ignore-exists manual              # 3rd Party tools without access to vault
-    NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists prodcluster   # Password only known on the local prod cluster
+    NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists --role=admin prodcluster   # Password only known on the local prod cluster
     NTFY_PASSWORD=$SCRIPTS_PASSWORD ntfy user add --ignore-exists scripts            # Kown Password for low-stakes scripts
     
     # buc can access everything
