@@ -306,7 +306,7 @@ static_resources:
               cors: *cors_default
               routes:
               - match:
-                  prefix: "/"
+                  prefix: "/public"
                 route:
                   cluster: ntfy
                   auto_host_rewrite: true
