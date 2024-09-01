@@ -14,7 +14,7 @@ data:
     cache-file: /var/cache/ntfy/cache.db
     attachment-cache-dir: /var/cache/ntfy/attachments
     metrics-listen-http: ":8081"
-    auth-file: /var/lib/ntfy
+    auth-file: /var/lib/ntfy/auth.db
     auth-default-access: deny-all
     enable-signup: false
     
