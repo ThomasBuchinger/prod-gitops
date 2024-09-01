@@ -124,7 +124,8 @@ spec:
           configMap:
             name: ntfy
         - name: cache
-          emptyDir: {}
+          persistenVolumeClaim:
+            claimName: ntfy-cache
         - name: data
           emptyDir: {}
 ---
@@ -203,15 +204,15 @@ spec:
       port: 8080
 
 
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: ntfy-database
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: local-path
-#   resources:
-#     requests:
-#       storage: 10M
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ntfy-cache
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
