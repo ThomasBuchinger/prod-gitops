@@ -8,7 +8,7 @@ spec:
       elements:
       # == Cluster Infra ===
       - name: external-secrets
-        rev: main
+        rev: ntfy-prod
         path: gitops/external-secrets/base
         wave: "1"
       - name: argocd
@@ -44,13 +44,13 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "1"
+      # === Internet Facing
       - name: ntfy
         rev: ntfy-prod
         path: gitops/ntfy
-        wave: "1"
-      # === Internet Facing
+        wave: "2"
       - name: external-http
-        rev: main
+        rev: ntfy-prod
         path: gitops/external-http
         wave: "2"
       # - name: external-homelabapi
