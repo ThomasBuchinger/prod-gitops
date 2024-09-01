@@ -33,6 +33,6 @@ spec:
             - /bin/sh
             - -c
             - >-
-              curl http://ntfy.ntfy.svc:8080/random -H "Title: Workday $(date '+%d.%m')" -d "How long did you work today?" -H "Tags: clock8" -H "Click: https://push.cloud.buc.sh/work_reminders"  -u $USER:$PASS
+              curl http://ntfy.ntfy.svc:8080/work_reminders -H "Title: Workday $(date '+%d.%m')" -d "How long did you work today?" -H "Tags: clock8" -H "Click: https://push.cloud.buc.sh/work_reminders"  -u $USER:$PASS
           restartPolicy: OnFailure
 
