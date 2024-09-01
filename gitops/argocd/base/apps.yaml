@@ -53,10 +53,10 @@ spec:
         rev: main
         path: gitops/external-http
         wave: "2"
-      - name: external-homelabapi
-        rev: main
-        path: gitops/external-homelabapi
-        wave: "2"
+      # - name: external-homelabapi
+      #   rev: main
+      #   path: gitops/external-homelabapi
+      #   wave: "2"
       - name: external-r2
         rev: main
         path: gitops/external-r2
