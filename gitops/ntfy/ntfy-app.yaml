@@ -125,7 +125,7 @@ spec:
           configMap:
             name: ntfy
         - name: cache
-          persistenVolumeClaim:
+          persistentVolumeClaim:
             claimName: ntfy-cache
         - name: data
           emptyDir: {}
