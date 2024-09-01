@@ -282,7 +282,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ntfy-tls
-  namespace: syncthing
 spec:
   tls:
   - hosts:
