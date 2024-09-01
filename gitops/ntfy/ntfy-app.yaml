@@ -38,6 +38,8 @@ data:
     SERVER="http://localhost:8080"
     ntfy sub --poll $SERVER/livez
     NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin buc       # My admin user
+    NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin bucphone  # Phone cannot access the internal url, but ntfy tries to share the subscriptions
+    NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin bucpublic  # Phone cannot access the internal url, but ntfy tries to share the subscriptions
     NTFY_PASSWORD=$API_PASSWORD ntfy user add --ignore-exists api                    # HomeLAB API application user
     NTFY_PASSWORD=$MANUAL_PASSWORD ntfy user add --ignore-exists manual              # 3rd Party tools without access to vault
     NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists prodcluster   # Password only known on the local prod cluster
