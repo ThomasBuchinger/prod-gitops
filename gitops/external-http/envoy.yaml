@@ -40,6 +40,8 @@ spec:
       initContainers:
       - name: download-geoip
         image: ghcr.io/thomasbuchinger/homelab-api:main
+        command:
+        - ./copy-geoip-for-envoy
         imagePullPolicy: Always
         env:
         - name: GEOIP_DATABASE
