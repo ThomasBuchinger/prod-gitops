@@ -45,7 +45,7 @@ spec:
         path: gitops/stirling-pdf
         wave: "1"
       - name: ntfy
-        rev: main
+        rev: ntfy-prod
         path: gitops/ntfy
         wave: "1"
       # === Internet Facing
