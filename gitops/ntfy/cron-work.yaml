@@ -27,7 +27,8 @@ spec:
             - name: PASS
               valueFrom:
                 secretKeyRef:
-                  name: PROD_CLUSTER_PASSWORD
+                  name: ntfy-creds
+                  key: PROD_CLUSTER_PASSWORD
             command:
             - /bin/sh
             - -c
