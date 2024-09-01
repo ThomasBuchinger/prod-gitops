@@ -43,26 +43,25 @@ data:
     NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists prodcluster   # Password only known on the local prod cluster
     NTFY_PASSWORD=$SCRIPTS_PASSWORD ntfy user add --ignore-exists scripts            # Kown Password for low-stakes scripts
     
-    # buc can access everything
-    ntfy access buc         '*' rw
+    # User buc is admin and has access to everything
 
-    ntfy access prodcluster 'work_reminders*' rw
+    ntfy access prodcluster 'work_reminders' rw
     ntfy access prodcluster '*' rw
 
-    ntfy access api         'work-*' rw
-    ntfy access manual      'work-*' write
+    # ntfy access api         'work-*' rw
+    # ntfy access manual      'work-*' write
     ntfy access everyone    'work-*' read
 
-    ntfy access api         'work-*' rw
-    ntfy access manual      'work-*' write
+    # ntfy access api         'work-*' rw
+    # ntfy access manual      'work-*' write
     ntfy access everyone    'work-*' read
     
-    ntfy access api         'homelab-*' rw
-    ntfy access manual      'homelab-*' rw
+    # ntfy access api         'homelab-*' rw
+    # ntfy access manual      'homelab-*' rw
 
-    ntfy access api         'buc-*' rw
+    # ntfy access api         'buc-*' rw
 
-    ntfy access api         'public-random' read
+    # ntfy access api         'public-random' read
     
     ntfy access everyone 'random' rw
     ntfy access everyone 'livez' read
@@ -315,10 +314,12 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-http
     ports:
     - protocol: TCP
       port: 8080
-  
   # Allow monitoring
   - from:
     - namespaceSelector:
