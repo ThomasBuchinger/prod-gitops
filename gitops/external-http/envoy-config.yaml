@@ -256,6 +256,8 @@ static_resources:
           generate_request_id: true
           preserve_external_request_id: true
           always_set_request_id_in_response: true
+          upgrade_configs:
+          - upgrade_type: websocket
           tracing: *tracing
           access_log:
           - *jsonlog
@@ -351,6 +353,8 @@ static_resources:
           generate_request_id: true
           preserve_external_request_id: true
           always_set_request_id_in_response: true
+          upgrade_configs:
+          - upgrade_type: websocket
           tracing: *tracing
           access_log:
           - *jsonlog
