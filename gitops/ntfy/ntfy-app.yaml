@@ -47,7 +47,7 @@ data:
     ntfy access buc         $SERVER/* rw
 
     ntfy access prodcluster $SERVER/work_reminders* rw
-    ntfy access prodcluster $SERVER/random* rw
+    ntfy access prodcluster $SERVER/* rw
 
     ntfy access api         $SERVER/work-* rw
     ntfy access manual      $SERVER/work-* write

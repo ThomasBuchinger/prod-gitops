@@ -23,7 +23,7 @@ spec:
             resources: {}
             env:
             - name: USER
-              value: buc
+              value: prodcluster
             - name: PASS
               valueFrom:
                 secretKeyRef:
