@@ -303,6 +303,7 @@ static_resources:
             - name: push-cloud-buc-sh
               domains:
               - push.cloud.buc.sh
+              cors: *cors_default
               routes:
               - match:
                   prefix: "/"
