@@ -40,35 +40,35 @@ data:
     NTFY_PASSWORD=$BUC_PASSWORD ntfy user add --ignore-exists --role=admin buc       # My admin user
     NTFY_PASSWORD=$API_PASSWORD ntfy user add --ignore-exists api                    # HomeLAB API application user
     NTFY_PASSWORD=$MANUAL_PASSWORD ntfy user add --ignore-exists manual              # 3rd Party tools without access to vault
-    NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists --role=admin prodcluster   # Password only known on the local prod cluster
+    NTFY_PASSWORD=$PROD_CLUSTER_PASSWORD ntfy user add --ignore-exists prodcluster   # Password only known on the local prod cluster
     NTFY_PASSWORD=$SCRIPTS_PASSWORD ntfy user add --ignore-exists scripts            # Kown Password for low-stakes scripts
     
     # buc can access everything
-    ntfy access buc         $SERVER/* rw
+    ntfy access buc         '$SERVER/*' rw
 
-    ntfy access prodcluster $SERVER/work_reminders* rw
-    ntfy access prodcluster $SERVER/* rw
+    ntfy access prodcluster '$SERVER/work_reminders*' rw
+    ntfy access prodcluster '$SERVER/*' rw
 
-    ntfy access api         $SERVER/work-* rw
-    ntfy access manual      $SERVER/work-* write
-    ntfy access everyone    $SERVER/work-* read
+    ntfy access api         '$SERVER/work-*' rw
+    ntfy access manual      '$SERVER/work-*' write
+    ntfy access everyone    '$SERVER/work-*' read
 
-    ntfy access api         $SERVER/work-* rw
-    ntfy access manual      $SERVER/work-* write
-    ntfy access everyone    $SERVER/work-* read
+    ntfy access api         '$SERVER/work-*' rw
+    ntfy access manual      '$SERVER/work-*' write
+    ntfy access everyone    '$SERVER/work-*' read
     
-    ntfy access api         $SERVER/homelab-* rw
-    ntfy access manual      $SERVER/homelab-* rw
+    ntfy access api         '$SERVER/homelab-*' rw
+    ntfy access manual      '$SERVER/homelab-*' rw
 
-    ntfy access api         $SERVER/buc-* rw
+    ntfy access api         '$SERVER/buc-*' rw
 
-    ntfy access api         $server/public-random
+    ntfy access api         '$SERVER/public-random' read
     
-    ntfy access everyone $SERVER/random rw
-    ntfy access everyone $SERVER/livez read
-    ntfy access everyone $SERVER/open-readwrite-A4bPDqUr25mQzins rw
-    ntfy access everyone $SERVER/open-write-cqgwAWUSsxMqo3pl write
-    ntfy access everyone $SERVER/open-read-22LPVPsTxS6lUJOK read
+    ntfy access everyone '$SERVER/random' rw
+    ntfy access everyone '$SERVER/livez' read
+    ntfy access everyone '$SERVER/open-readwrite-A4bPDqUr25mQzins' rw
+    ntfy access everyone '$SERVER/open-write-cqgwAWUSsxMqo3pl' write
+    ntfy access everyone '$SERVER/open-read-22LPVPsTxS6lUJOK' read
     echo "Done configuring ntfy server"
 
 # NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
