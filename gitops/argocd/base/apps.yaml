@@ -50,7 +50,7 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-http
-        rev: main
+        rev: external-http-move-ntfy
         path: gitops/external-http
         wave: "2"
       # - name: external-homelabapi
