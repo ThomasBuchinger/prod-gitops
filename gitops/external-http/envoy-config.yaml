@@ -264,7 +264,7 @@ static_resources:
           http_filters:
           - *geoip
           # - *auth_api
-          # - *get_requests_only_lua
+          - *get_requests_only_lua
           - *ratelimit
           - *enable_cors
           - *csrf
@@ -299,16 +299,6 @@ static_resources:
                   prefix: "/api/public"
                 route:
                   cluster: homelabapi
-                  auto_host_rewrite: true
-            - name: push-cloud-buc-sh
-              domains:
-              - push.cloud.buc.sh
-              cors: *cors_default
-              routes:
-              - match:
-                  prefix: "/"
-                route:
-                  cluster: ntfy
                   auto_host_rewrite: true
   # App Router for "hidden" (high-port) Services
   #
@@ -360,8 +350,8 @@ static_resources:
           - *jsonlog
           http_filters:
           - *geoip
-          - *auth_api
-          - *get_requests_only_lua
+          # - *auth_api
+          # - *get_requests_only_lua
           - *ratelimit
           - *enable_cors
           - *csrf
@@ -371,17 +361,27 @@ static_resources:
           route_config:
             name: main_router
             virtual_hosts:
-            - name: app-router
+            - name: push-cloud-buc-sh
               domains:
-              - "*"
+              - push.cloud.buc.sh
               cors: *cors_default
               routes:
               - match:
                   prefix: "/"
-                direct_response:
-                  status: 201
-                  body:
-                    inline_string: "Hello"
+                route:
+                  cluster: ntfy
+                  auto_host_rewrite: true
+            # - name: app-router
+            #   domains:
+            #   - "*"
+            #   cors: *cors_default
+            #   routes:
+            #   - match:
+            #       prefix: "/"
+            #     direct_response:
+            #       status: 201
+            #       body:
+            #         inline_string: "Hello"
 
 
   clusters:
