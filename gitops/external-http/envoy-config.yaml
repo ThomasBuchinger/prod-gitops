@@ -363,7 +363,7 @@ static_resources:
             virtual_hosts:
             - name: push-cloud-buc-sh
               domains:
-              - push.cloud.buc.sh
+              - 'push.cloud.buc.sh*'
               cors: *cors_default
               routes:
               - match:
