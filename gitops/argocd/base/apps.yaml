@@ -49,7 +49,7 @@ spec:
         rev: main
         path: gitops/ntfy
         wave: "2"
-      - name: main
+      - name: external-http
         rev: main
         path: gitops/external-http
         wave: "2"
