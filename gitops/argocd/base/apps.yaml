@@ -50,11 +50,11 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-http
-        rev: feat-enable-envoy-auth-proxy
+        rev: main
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
-        rev: feat-enable-envoy-auth-proxy
+        rev: main
         path: gitops/external-homelabapi
         wave: "2"
       - name: external-r2
