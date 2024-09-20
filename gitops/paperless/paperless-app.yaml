@@ -127,7 +127,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: PAPERLESS_URL
-          value: http://lovlahost:8000
+          value: http://localhost:8000
         - name: PAPERLESS_SERVER_TIMEZONE
           value: Europe/Vienna
         # The exporter directly uses ENV vars from the Paperless Client library: https://github.com/hansmi/paperhooks/blob/main/pkg/kpflag/client.go
