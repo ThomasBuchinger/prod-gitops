@@ -3,3 +3,4 @@ out
 bin
 infra/*/charts
 kubeconfig
+devbox.lock
