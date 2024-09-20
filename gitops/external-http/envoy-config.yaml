@@ -131,7 +131,7 @@ static_resources:
                   uri: external-homelab-api.external-homelabapi.svc:8080
                   cluster: public-homelabapi
                   timeout: 0.25s
-                path_prefix: /auth/
+                path_prefix: /auth
                 authorization_request:
                   headers_to_add:
                   - key: X-Envoy-Authority
