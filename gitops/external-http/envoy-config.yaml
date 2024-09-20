@@ -79,7 +79,6 @@ static_resources:
                 default_value:
                   numerator: 100
                   denominator: HUNDRED
-          # TODO: neet to find a way to get the geoIP database in the container (60MB)
           - &geoip
             name: envoy.filters.http.geoip
             typed_config:
@@ -195,7 +194,7 @@ static_resources:
           access_log:
           - *jsonlog
           http_filters:                                             # Pass Request directly to the router, without any other filters
-          # - *auth_api
+          - *auth_api
           - *geoip
           - *get_requests_only_lua
           - *ratelimit
@@ -274,7 +273,7 @@ static_resources:
           route_config:
             name: main_router
             virtual_hosts:
-            - name: apps-cloud-buc-sh
+            - name: api-cloud-buc-sh
               domains:
               - api.cloud.buc.sh
               cors: *cors_default
@@ -283,22 +282,22 @@ static_resources:
                   safe_regex:
                     regex: "/(index.html|404.html|favicon.ico)?$"
                 route:
-                  cluster: homelabapi
+                  cluster: public-homelabapi
                   auto_host_rewrite: true
               - match:
                   prefix: "/_next"
                 route:
-                  cluster: homelabapi
+                  cluster: public-homelabapi
                   auto_host_rewrite: true
               - match:
                   prefix: "/icons"
                 route:
-                  cluster: homelabapi
+                  cluster: public-homelabapi
                   auto_host_rewrite: true
               - match:
                   prefix: "/api/public"
                 route:
-                  cluster: homelabapi
+                  cluster: public-homelabapi
                   auto_host_rewrite: true
   # App Router for "hidden" (high-port) Services
   #
@@ -420,10 +419,10 @@ static_resources:
       healthy_threshold: 1
       http_health_check:
         path: "/api/livez"
-  - name: homelabapi
+  - name: public-homelabapi
     type: LOGICAL_DNS
     load_assignment:
-      cluster_name: homelabapi
+      cluster_name: public-homelabapi
       endpoints:
       - lb_endpoints:
         - endpoint:
