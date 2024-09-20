@@ -122,6 +122,56 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: paperless-nfs
+      - name: paperless-exporter
+        image: ghcr.io/hansmi/prometheus-paperless-exporter:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PAPERLESS_URL
+          value: http://lovlahost:8000
+        - name: PAPERLESS_SERVER_TIMEZONE
+          value: Europe/Vienna
+        # The exporter directly uses ENV vars from the Paperless Client library: https://github.com/hansmi/paperhooks/blob/main/pkg/kpflag/client.go
+        - name: PAPERLESS_AUTH_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: eso-paperless-credentials
+              key: PAPERLESS_ADMIN_USER
+        - name: PAPERLESS_AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eso-paperless-credentials
+              key: PAPERLESS_ADMIN_PASSWORD
+        ports:
+        - name: metrics
+          containerPort: 8081
+        livenessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          httpGet:
+            path: /
+            port: 8081
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          httpGet:
+            path: /
+            port: 8081
+        resources:
+          requests:
+            cpu: 1m
+            memory: 1Mi
+          limits: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       volumes:
       - name: paperless-nfs
         persistentVolumeClaim:
@@ -163,6 +213,16 @@ spec:
             name: paperless
             port:
               number: 8000
+  - host: paperless.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: paperless
+            port:
+              number: 8081
 
 ---
 apiVersion: external-secrets.io/v1beta1
