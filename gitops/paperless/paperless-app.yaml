@@ -151,7 +151,7 @@ spec:
           timeoutSeconds: 1
           httpGet:
             path: /
-            port: 8081
+            port: metrics
         readinessProbe:
           failureThreshold: 3
           periodSeconds: 10
@@ -159,7 +159,7 @@ spec:
           timeoutSeconds: 1
           httpGet:
             path: /
-            port: 8081
+            port: metrics
         resources:
           requests:
             cpu: 1m
@@ -192,6 +192,10 @@ spec:
     protocol: TCP
     port: 8000
     targetPort: http
+  - name: metrics
+    protocol: TCP
+    port: 8081
+    targetPort: metrics
 
 ---
 apiVersion: networking.k8s.io/v1
