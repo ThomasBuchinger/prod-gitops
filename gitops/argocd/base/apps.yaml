@@ -33,7 +33,7 @@ spec:
         wave: "1"
       # === Apps ===
       - name: paperless
-        rev: feat-paperless-exporter
+        rev: main
         path: gitops/paperless
         wave: "2"
       - name: syncthing
