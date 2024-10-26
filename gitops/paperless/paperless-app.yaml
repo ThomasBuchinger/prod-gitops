@@ -35,7 +35,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-secret
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: eso-paperless-credentials
@@ -43,16 +43,18 @@ spec:
   data:
   - secretKey: PAPERLESS_ADMIN_USER
     remoteRef:
-      key: access/static-cred
+      key: static-secrets
       property: cred_admin_user
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
   - secretKey: PAPERLESS_ADMIN_PASSWORD
     remoteRef:
-      key: access/static-cred
+      key: static-secrets
       property: cred_admin_password
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: apps/v1
@@ -237,7 +239,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-cluster
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: cert-paperless-buc-sh
@@ -246,7 +248,8 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
-      key: cert/cert-paperless-buc-sh
+      metadataPolicy: None
+      key: cert-paperless-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1

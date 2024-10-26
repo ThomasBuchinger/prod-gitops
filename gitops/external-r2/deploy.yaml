@@ -15,7 +15,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-secret
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: eso-r2-creds
@@ -23,16 +23,18 @@ spec:
   data:
   - secretKey: ACCESS_KEY_ID
     remoteRef:
-      key: access/nas
+      key: static-secrets
       property: s3_ro_accesskey
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
   - secretKey: SECRET_ACCESS_KEY
     remoteRef:
-      key: access/nas
+      key: static-secrets
       property: s3_ro_secretkey
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: apps/v1
@@ -128,7 +130,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-cluster
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: cert-r2-buc-sh
@@ -137,7 +139,8 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
-      key: cert/cert-r2-buc-sh
+      metadataPolicy: None
+      key: cert-r2-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1

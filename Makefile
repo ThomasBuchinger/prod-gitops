@@ -34,7 +34,7 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 		--output-dir "$(OUTPUT_DIR)" \
 		--with-secrets "$(OUTPUT_DIR)/talos-secrets.yaml"
 	yq eval $(YQ_ARGS) '.machine.network.interfaces[0].addresses[0] = "$(NODE_IP)/24"'                       $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[0].contents = load_str("secrets/vault-secretid.yaml")' $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) '.cluster.inlineManifests[0].contents = load_str("secrets/eso-k8s-token.yaml")' $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/infra-argocd.yaml")'  $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)//infra-cillium.yaml")'  $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.cluster.inlineManifests[3].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)

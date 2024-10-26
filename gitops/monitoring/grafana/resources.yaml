@@ -6,7 +6,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-cluster
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: cert-grafana-buc-sh
@@ -15,7 +15,8 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
-      key: cert/cert-grafana-buc-sh
+      metadataPolicy: None
+      key: cert-grafana-buc-sh
 
 ---
 apiVersion: external-secrets.io/v1beta1
@@ -26,7 +27,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-secret
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: grafana-admin-cred
@@ -36,13 +37,15 @@ spec:
     remoteRef:
       conversionStrategy: Default
       decodingStrategy: None
-      key: access/static-cred
+      metadataPolicy: None
+      key: static-secrets
       property: cred_admin_user
   - secretKey: password
     remoteRef:
       conversionStrategy: Default
       decodingStrategy: None
-      key: access/static-cred
+      metadataPolicy: None
+      key: static-secrets
       property: cred_admin_password
 
 ---
