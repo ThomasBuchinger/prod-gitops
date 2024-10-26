@@ -47,12 +47,14 @@ spec:
       property: cred_admin_user
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
   - secretKey: PAPERLESS_ADMIN_PASSWORD
     remoteRef:
       key: static-secrets
       property: cred_admin_password
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: apps/v1
@@ -246,6 +248,7 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
       key: cert-paperless-buc-sh
 
 ---

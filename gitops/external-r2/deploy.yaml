@@ -27,12 +27,14 @@ spec:
       property: s3_ro_accesskey
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
   - secretKey: SECRET_ACCESS_KEY
     remoteRef:
       key: static-secrets
       property: s3_ro_secretkey
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: apps/v1
@@ -137,6 +139,7 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
       key: cert-r2-buc-sh
 
 ---

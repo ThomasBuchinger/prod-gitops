@@ -15,6 +15,7 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
       key: cert-grafana-buc-sh
 
 ---
@@ -36,12 +37,14 @@ spec:
     remoteRef:
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
       key: static-secrets
       property: cred_admin_user
   - secretKey: password
     remoteRef:
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
       key: static-secrets
       property: cred_admin_password
 
