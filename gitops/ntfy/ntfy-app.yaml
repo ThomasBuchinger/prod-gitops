@@ -85,7 +85,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-secret
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: ntfy-creds-vault
@@ -93,7 +93,7 @@ spec:
   data:
   - secretKey: BUC_PASSWORD
     remoteRef:
-      key: access/static-cred
+      key: static-secrets
       property: cred_admin_password
       conversionStrategy: Default
       decodingStrategy: None
@@ -121,7 +121,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: cluster-local
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: ntfy-creds-k8s
@@ -129,7 +129,7 @@ spec:
   data:
   - secretKey: PROD_CLUSTER_PASSWORD
     remoteRef:
-      key: cluster-secrets
+      key: prod-secretids
       property: prod
       conversionStrategy: Default
       decodingStrategy: None
@@ -255,7 +255,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-cluster
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: cert-push-buc-sh
@@ -264,8 +264,8 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
-      key: cert/cert-push-buc-sh
       metadataPolicy: None
+      key: cert-push-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1

@@ -6,7 +6,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: vault-approle-cluster
+    name: k8s-evergreen
     kind: ClusterSecretStore
   target:
     name: cert-cloud-buc-sh
@@ -15,7 +15,7 @@ spec:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
-      key: cert/cert-secure-http-buc-sh
+      key: cert-secure-http-buc-sh
 
 ---
 apiVersion: apps/v1
