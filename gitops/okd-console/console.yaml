@@ -122,6 +122,25 @@ spec:
       targetPort: 9000
       protocol: TCP
 
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: okd-console-tls
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-prod-console-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-prod-console-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -133,8 +152,8 @@ metadata:
 spec:
   tls:
   - hosts:
-    - prod-console.buc.sh
-    secretName: cert-evergreen-console-buc-sh
+      - prod-console.buc.sh
+    secretName: cert-prod-console-buc-sh
   rules:
   - host: prod-console.buc.sh
     http:
