@@ -8,7 +8,7 @@ spec:
       elements:
       # == Cluster Infra ===
       - name: external-secrets
-        rev: main
+        rev: feat-remove-vault
         path: gitops/external-secrets/base
         wave: "1"
       - name: argocd
@@ -33,11 +33,11 @@ spec:
         wave: "1"
       # === Apps ===
       - name: paperless
-        rev: main
+        rev: feat-remove-vault
         path: gitops/paperless
         wave: "2"
       - name: syncthing
-        rev: main
+        rev: feat-remove-vault
         path: gitops/syncthing
         wave: "2"
       - name: spdf
@@ -46,11 +46,11 @@ spec:
         wave: "1"
       # === Internet Facing
       - name: ntfy
-        rev: main
+        rev: feat-remove-vault
         path: gitops/ntfy
         wave: "2"
       - name: external-http
-        rev: main
+        rev: feat-remove-vault
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
@@ -58,7 +58,7 @@ spec:
         path: gitops/external-homelabapi
         wave: "2"
       - name: external-r2
-        rev: main
+        rev: feat-remove-vault
         path: gitops/external-r2
         wave: "2"
   template:
