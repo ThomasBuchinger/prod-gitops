@@ -35,9 +35,9 @@ spec:
         volumeMounts:
         - name: dot-dir
           mountPath: /.hfs
-        - name: nfs-data
+        - name: data
           mountPath: /app/myDisk/nas
-        - name: scratch
+        - name: uploads
           mountPath: /app/myDisk/uploads
         env:
         - name: HFS_CREATE_ADMIN
@@ -73,7 +73,7 @@ spec:
         emptyDir: {}
       - name: config
         emptyDir: {}
-      - name: scratch
+      - name: uploads
         emptyDir: {}
       - name: data
         emptyDir: {}
