@@ -195,7 +195,7 @@ spec:
       port: 53
   - to:
     - ipBlock:
-        cidr: "10.0.0.20/32"
+        cidr: "10.0.0.19/32"
     ports:
     - port: 9000
   ingress:
