@@ -16,15 +16,13 @@ metadata:
 data:
   config-template.yaml: |
     port: 8080
-    log: /dev/stdout
-    log_rotation: ""
-    error_log: /dev/stderr
-    admin_net:
-    - 10.0.0.0/8
+    #log: /dev/stdout
+    #log_rotation: ""
+    #error_log: /dev/stderr
+    #admin_net:
+    #- 10.0.0.0/8
     title: "BUC Public Files"
     # base_url: public
-
-
     vfs:
       children:
         - name: protected
