@@ -57,6 +57,13 @@ spec:
           mountPath: /template
         - name: config
           mountPath: /.hfs
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       containers:
       - name: hfs
         image: docker.io/rejetto/hfs:v0.54.0
