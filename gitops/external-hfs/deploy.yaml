@@ -32,6 +32,10 @@ spec:
         - containerPort: 8080
           name: http
           protocol: TCP
+        volumeMounts:
+        - name: dor-dir
+          mountPath: /.hfs
+        
         resources:
           requests:
             cpu: 10m
@@ -55,6 +59,15 @@ spec:
         runAsNonRoot: true
         runAsUser: 100
         runAsGroup: 101
+      volumes:
+      - name: dot-dir
+        emptyDir: {}
+      - name: config
+        emptyDir: {}
+      - name: scratch
+        emptyDir: {}
+      - name: data
+        emptyDir: {}
 
 ---
 apiVersion: v1
