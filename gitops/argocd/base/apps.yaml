@@ -61,6 +61,10 @@ spec:
         rev: main
         path: gitops/external-r2
         wave: "2"
+      - name: external-hfs
+        rev: feat-hfs
+        path: gitops/external-hfs
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
