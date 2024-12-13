@@ -102,7 +102,7 @@ metadata:
   namespace: external-hfs
 spec:
   rules:
-  - host: "files.10.0.0.24.nip.io"
+  - host: "files.10.0.0.21.nip.io"
     http:
       paths:
       - path: "/"
