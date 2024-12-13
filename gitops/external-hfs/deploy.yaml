@@ -8,6 +8,26 @@ metadata:
 
 
 ---
+apiVersio: v1
+kind: ConfigMap
+metadata:
+  nme: hfs-config
+  namespace: external-hfs
+data:
+  config-template.yaml: |
+    port: 8080
+    version: 0.54.0
+    vfs:
+      children:
+        - name: protected
+        - name: public
+        - source: /app/myDisk/uploads
+          children: []
+    open_browser_at_start: false
+    localhost_admin: false
+    proxies: 1
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,6 +45,18 @@ spec:
       labels:
         app.kubernetes.io/app: hfs
     spec:
+      initContainers:
+      - name: copy-config
+        image: docker.io/rejetto/hfs:v0.54.0
+        command:
+        - cp
+        - /template/config-template.yaml
+        - /.hfs/config.yaml
+        volumeMounts:
+        - name: config-template
+          mountPath: /template
+        - name: config
+          mountPath: /.hfs
       containers:
       - name: hfs
         image: docker.io/rejetto/hfs:v0.54.0
@@ -33,7 +65,7 @@ spec:
           name: http
           protocol: TCP
         volumeMounts:
-        - name: dot-dir
+        - name: config
           mountPath: /.hfs
         - name: data
           mountPath: /app/myDisk/nas
@@ -69,10 +101,11 @@ spec:
         runAsUser: 100
         runAsGroup: 101
       volumes:
-      - name: dot-dir
-        emptyDir: {}
       - name: config
         emptyDir: {}
+      - name: config-template
+        configMap:
+          name: hfs-config
       - name: uploads
         emptyDir: {}
       - name: data
@@ -112,6 +145,8 @@ spec:
             name: hfs
             port:
               name: http
+
+
 
 # ---
 # apiVersion: networking.k8s.io/v1
