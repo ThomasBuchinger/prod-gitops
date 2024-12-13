@@ -33,7 +33,7 @@ spec:
           name: http
           protocol: TCP
         volumeMounts:
-        - name: dor-dir
+        - name: dot-dir
           mountPath: /.hfs
         
         resources:
