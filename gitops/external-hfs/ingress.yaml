@@ -57,13 +57,6 @@ spec:
             name: hfs
             port:
               name: http
-      - path: "/public"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
       - path: "/uploads"
         pathType: Prefix
         backend:
@@ -71,7 +64,28 @@ spec:
             name: hfs
             port:
               name: http
+      - path: "/public"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
       - path: "/protected"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/private"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/nas"
         pathType: Prefix
         backend:
           service:

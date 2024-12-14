@@ -7,6 +7,35 @@ metadata:
     pod-security.kubernetes.io/enforce: restricted
 
 ---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: hfs-creds
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: hfs-creds
+    creationPolicy: Owner
+  data:
+  - secretKey: BUC_PASS
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: ADMIN_PASS
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,14 +60,17 @@ spec:
         - sh
         - -c
         - sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/" -e "s/__admin_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
-
         env:
         - name: GUEST_PASS
-          value: guest
+          value: this-is-the-guest-account-password
         - name: BUC_PASS
-          value: buc
+          secretKeyRef:
+            secretName: hfs-creds
+            key: BUS_PASS
         - name: ADMIN_PASS
-          value: changeme
+          secretKeyRef:
+            secretName: hfs-creds
+            key: ADMIN_PASS
         volumeMounts:
         - name: config-template
           mountPath: /template
@@ -123,49 +155,46 @@ spec:
     port: 8080
     targetPort: http
 
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: block-r2-egress
-#   namespace: external-r2
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app.kubernetes.io/app: s3manager
-#       app.kubernetes.io/instance: r2
-#   policyTypes:
-#     - Egress
-#     - Ingress
-#   egress:
-#   # Allow DNS Resolution
-#   - to:
-#     - namespaceSelector:
-#         matchLabels:
-#           kubernetes.io/metadata.name: kube-system
-#     - podSelector:
-#         matchLabels:
-#           k8s-app: kube-dns
-#     ports:
-#     - protocol: UDP
-#       port: 53
-#     - protocol: TCP
-#       port: 53
-#   - to:
-#     - ipBlock:
-#         cidr: "10.0.0.19/32"
-#     ports:
-#     - port: 9000
-#   ingress:
-#   # Allow Ingress
-#   - from:
-#     - namespaceSelector:
-#         matchLabels:
-#           kubernetes.io/metadata.name: traefik
-#     - namespaceSelector:
-#         matchLabels:
-#           kubernetes.io/metadata.name: external-http
-#     ports:
-#     - protocol: TCP
-#       port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-hfs-egress
+  namespace: external-hfs
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/app: hfs
+  policyTypes:
+    - Egress
+    - Ingress
+  egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.19/32"
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-http
+    ports:
+    - protocol: TCP
+      port: 8080
 
