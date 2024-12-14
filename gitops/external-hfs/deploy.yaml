@@ -29,7 +29,7 @@ spec:
         image: docker.io/rejetto/hfs:v0.54.0
         command:
         - cp
-        - /template/config-template.yaml
+        - /template/hfs-config.yaml
         - /.hfs/config.yaml
         volumeMounts:
         - name: config-template
