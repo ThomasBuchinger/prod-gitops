@@ -129,9 +129,8 @@ spec:
         runAsGroup: 101
       volumes:
       - name: config
-        emptyDir: {}
-        # persistentVolumeClaim:
-        #   claimName: hfs-config
+        persistentVolumeClaim:
+          claimName: hfs-config
       - name: config-template
         configMap:
           name: hfs-config
