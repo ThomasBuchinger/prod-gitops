@@ -1,9 +1,28 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: cert-files-buc-sh
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-files-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-files-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hfs-adminui
+  name: hfs-plain
   namespace: external-hfs
 spec:
   rules:
@@ -20,6 +39,7 @@ spec:
   - host: "files.10.0.0.21.nip.io"
     http:
       paths:
+      # === API Calls ========================================
       - path: "/~/frontend"
         pathType: Prefix
         backend:
@@ -34,7 +54,6 @@ spec:
             name: hfs
             port:
               name: http
-
       - path: "/~/api/login"
         pathType: Prefix
         backend:
@@ -42,7 +61,6 @@ spec:
             name: hfs
             port:
               name: http
-
       - path: "/~/api/logout"
         pathType: Prefix
         backend:
@@ -50,6 +68,106 @@ spec:
             name: hfs
             port:
               name: http
+      # === Folder Paths =====================================
+      - path: "/"
+        pathType: Exact
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/uploads"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/public"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/protected"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/private"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/nas"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hfs-tls
+  namespace: external-hfs
+spec:
+  tls:
+  - secretName: cert-files-buc-sh
+    hosts:
+    - files-admin.buc.sh
+    - files.buc.sh
+  rules:
+  - host: "files-admin.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+  - host: "files.buc.sh"
+    http:
+      paths:
+      # === API Calls ========================================
+      - path: "/~/frontend"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/~/api/get_"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/~/api/login"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/~/api/logout"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      # === Folder Paths =====================================
       - path: "/"
         pathType: Exact
         backend:
