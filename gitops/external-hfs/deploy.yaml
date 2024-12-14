@@ -120,9 +120,26 @@ metadata:
   namespace: external-hfs
 spec:
   rules:
+  - host: "files-admin.10.0.0.21.nip.io"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
   - host: "files.10.0.0.21.nip.io"
     http:
       paths:
+      - path: "/~"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              number: 9999
       - path: "/"
         pathType: Prefix
         backend:
