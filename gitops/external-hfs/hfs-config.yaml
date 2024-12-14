@@ -3,16 +3,19 @@ log: /dev/stdout
 log_rotation: ""
 error_log: /dev/stderr
 title: "BUC Public Files"
-# base_url: public
 vfs:
   children:
+    - name: private
+      can_see: true
     - name: protected
       can_read: "*"
     - name: public
+      children:
+        - source: /template/README.html
     - source: /app/myDisk/uploads
       children: []
-      can_upload: "*"
-      can_delete: "*"
+    - name: README
+      url: /public/README.html
 open_browser_at_start: false
 localhost_admin: false
 proxies: 1
