@@ -1,7 +1,9 @@
+kind: Kustomization
+
 configMapGenerator:
 - name: hfs-config
-  literal:
-    guest_password: why-guest-no-password
+  literals:
+  - guest_password=why-guest-no-password
   files:
   - hfs-config.yaml
 

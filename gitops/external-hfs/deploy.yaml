@@ -6,38 +6,38 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: restricted
 
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: hfs-config
-  namespace: external-hfs
-data:
-  config-template.yaml: |
-    port: 8080
-    log: /dev/stdout
-    log_rotation: ""
-    error_log: /dev/stderr
-    title: "BUC Public Files"
-    base_url: public
-    vfs:
-      children:
-        - name: protected
-          can_read: "*"
-        - name: public
-        - source: /app/myDisk/uploads
-          children: []
-          can_upload: "*"
-          can_delete: "*"
-    open_browser_at_start: false
-    localhost_admin: false
-    proxies: 1
-    accounts:
-      guest:
-        disable_password_change: true
-        password: why-guest-no-password
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: hfs-config
+#   namespace: external-hfs
+# data:
+#   config-template.yaml: |
+#     port: 8080
+#     log: /dev/stdout
+#     log_rotation: ""
+#     error_log: /dev/stderr
+#     title: "BUC Public Files"
+#     base_url: public
+#     vfs:
+#       children:
+#         - name: protected
+#           can_read: "*"
+#         - name: public
+#         - source: /app/myDisk/uploads
+#           children: []
+#           can_upload: "*"
+#           can_delete: "*"
+#     open_browser_at_start: false
+#     localhost_admin: false
+#     proxies: 1
+#     accounts:
+#       guest:
+#         disable_password_change: true
+#         password: why-guest-no-password
 
-  guest_password: why-guest-no-password
+#   guest_password: why-guest-no-password
 
 ---
 apiVersion: apps/v1
