@@ -30,13 +30,13 @@ spec:
         command:
         - sh
         - -c
-        - sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
+        - sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/" -e "s/__admin_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
 
         env:
         - name: GUEST_PASS
-          value: changeme
+          value: guest
         - name: BUC_PASS
-          value: pass
+          value: buc
         - name: ADMIN_PASS
           value: changeme
         volumeMounts:
@@ -67,11 +67,6 @@ spec:
           mountPath: /app/myDisk/nas
         - name: uploads
           mountPath: /app/myDisk/uploads
-        env:
-        - name: HFS_CREATE_ADMIN
-          value: changeme
-        - name: HFS_PORT
-          value: "8080"
         resources:
           requests:
             cpu: 10m

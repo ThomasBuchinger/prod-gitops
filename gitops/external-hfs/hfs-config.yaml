@@ -34,4 +34,4 @@ accounts:
     password: __buc_password__
   admin:
     admin: true
-    # password: __admin_password__
+    password: __admin_password__
