@@ -133,13 +133,13 @@ spec:
   - host: "files.10.0.0.21.nip.io"
     http:
       paths:
-      - path: "/~"
+      - path: "/~/frontend"
         pathType: Prefix
         backend:
           service:
             name: hfs
             port:
-              number: 9999
+              name: http
       - path: "/"
         pathType: Exact
         backend:
