@@ -263,7 +263,7 @@ static_resources:
           http_filters:
           - *geoip
           - *auth_api
-          - *get_requests_only_lua
+          # - *get_requests_only_lua
           - *ratelimit
           - *enable_cors
           - *csrf
