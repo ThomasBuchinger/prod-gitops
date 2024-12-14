@@ -66,7 +66,11 @@ spec:
         - name: HFS_PORT
           value: "8080"
         - name: HFS_ACCOUNTS_BUC_PASSWORD
-          value: env
+          value: pass1
+        - name: HFS_accounts_buc_password
+          value: pass2
+        - name: HFS_ACCOUNTS_buc_PASSWORD
+          value: pass3
         resources:
           requests:
             cpu: 10m
