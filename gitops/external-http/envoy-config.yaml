@@ -326,6 +326,11 @@ static_resources:
                   cluster: hfs
                   auto_host_rewrite: true
               - match:
+                  prefix: "/~/api/frontend"
+                route:
+                  cluster: hfs
+                  auto_host_rewrite: true
+              - match:
                   prefix: "/~/api/"
                 direct_response:
                   status: 403
