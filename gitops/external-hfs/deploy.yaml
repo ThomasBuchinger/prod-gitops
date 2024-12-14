@@ -59,7 +59,7 @@ spec:
         command:
         - sh
         - -c
-        - test f /.hfs/config.yaml && sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/" -e "s/__admin_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
+        - test -f /.hfs/config.yaml && sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/" -e "s/__admin_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
         env:
         - name: GUEST_PASS
           value: this-is-the-guest-account-password
