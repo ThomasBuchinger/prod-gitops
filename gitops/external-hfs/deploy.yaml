@@ -59,18 +59,20 @@ spec:
         command:
         - sh
         - -c
-        - sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/" -e "s/__admin_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
+        - test f /.hfs/config.yaml && sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/" -e "s/__admin_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
         env:
         - name: GUEST_PASS
           value: this-is-the-guest-account-password
         - name: BUC_PASS
-          secretKeyRef:
-            secretName: hfs-creds
-            key: BUS_PASS
+          valueFrom:
+            secretKeyRef:
+              name: hfs-creds
+              key: BUC_PASS
         - name: ADMIN_PASS
-          secretKeyRef:
-            secretName: hfs-creds
-            key: ADMIN_PASS
+          valueFrom:
+            secretKeyRef:
+              name: hfs-creds
+              key: ADMIN_PASS
         volumeMounts:
         - name: config-template
           mountPath: /template
