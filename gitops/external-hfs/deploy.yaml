@@ -6,7 +6,6 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: restricted
 
-
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -19,9 +18,8 @@ data:
     log: /dev/stdout
     log_rotation: ""
     error_log: /dev/stderr
-    admin_net: 10.0.0.0/8
     title: "BUC Public Files"
-    # base_url: public
+    base_url: public
     vfs:
       children:
         - name: protected
