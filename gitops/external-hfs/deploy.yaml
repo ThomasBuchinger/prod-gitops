@@ -29,6 +29,7 @@ spec:
         image: docker.io/rejetto/hfs:v0.54.0
         command:
         - cp
+        - -n
         - /template/hfs-config.yaml
         - /.hfs/config.yaml
         volumeMounts:
@@ -90,13 +91,17 @@ spec:
       volumes:
       - name: config
         emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: hfs-config
       - name: config-template
         configMap:
           name: hfs-config
       - name: uploads
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: hfs-config
       - name: data
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: hfs-config
 
 ---
 apiVersion: v1
@@ -112,73 +117,6 @@ spec:
   - name: http
     port: 8080
     targetPort: http
-
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: hfs-adminui
-  namespace: external-hfs
-spec:
-  rules:
-  - host: "files-admin.10.0.0.21.nip.io"
-    http:
-      paths:
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-  - host: "files.10.0.0.21.nip.io"
-    http:
-      paths:
-      - path: "/~/frontend"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-      - path: "/~/api/get_"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-      - path: "/"
-        pathType: Exact
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-      - path: "/public"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-      - path: "/uploads"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-      - path: "/protected"
-        pathType: Prefix
-        backend:
-          service:
-            name: hfs
-            port:
-              name: http
-
-
 
 # ---
 # apiVersion: networking.k8s.io/v1

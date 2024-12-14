@@ -9,6 +9,7 @@ vfs:
       can_see: true
     - name: protected
       can_read: "*"
+      can_see: true
     - name: public
       children:
         - source: /template/README.html

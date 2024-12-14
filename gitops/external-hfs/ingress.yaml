@@ -1,0 +1,64 @@
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hfs-adminui
+  namespace: external-hfs
+spec:
+  rules:
+  - host: "files-admin.10.0.0.21.nip.io"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+  - host: "files.10.0.0.21.nip.io"
+    http:
+      paths:
+      - path: "/~/frontend"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/~/api/get_"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/"
+        pathType: Exact
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/public"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/uploads"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/protected"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
