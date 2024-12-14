@@ -331,6 +331,12 @@ static_resources:
                   status: 403
                   body:
                     inline_string: "Not Allowed in Public Interface"
+              - match:
+                  prefix: "/nas"
+                direct_response:
+                  status: 403
+                  body:
+                    inline_string: "Not Allowed in Public Interface"
   # App Router for "hidden" (high-port) Services
   #
   - name: hidden_apps
