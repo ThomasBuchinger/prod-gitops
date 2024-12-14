@@ -98,7 +98,7 @@ spec:
           name: hfs-config
       - name: uploads
         persistentVolumeClaim:
-          claimName: hfs-config
+          claimName: hfs-uploads
       - name: data
         persistentVolumeClaim:
           claimName: hfs-config
