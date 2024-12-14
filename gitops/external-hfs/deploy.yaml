@@ -101,7 +101,7 @@ spec:
           claimName: hfs-uploads
       - name: data
         persistentVolumeClaim:
-          claimName: hfs-config
+          claimName: nas-data
 
 ---
 apiVersion: v1
