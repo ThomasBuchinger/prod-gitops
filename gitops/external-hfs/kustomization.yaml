@@ -2,6 +2,7 @@ kind: Kustomization
 
 configMapGenerator:
 - name: hfs-config
+  namespace: external-hfs
   literals:
   - guest_password=why-guest-no-password
   files:
