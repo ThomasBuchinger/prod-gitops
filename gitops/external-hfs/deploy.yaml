@@ -28,10 +28,17 @@ spec:
       - name: copy-config
         image: docker.io/rejetto/hfs:v0.54.0
         command:
-        - cp
-        - -n
-        - /template/hfs-config.yaml
-        - /.hfs/config.yaml
+        - sh
+        - -c
+        - sed -e "s/__guest_password__/changeme/" -e "s/__buc_password__/pass/"  /template/hfs-config.yaml > /.hfs/config.yaml
+
+        env:
+        - name: GUEST_PASS
+          value: changeme
+        - name: BUC_PASS
+          value: pass
+        - name: ADMIN_PASS
+          value: changeme
         volumeMounts:
         - name: config-template
           mountPath: /template
@@ -65,12 +72,6 @@ spec:
           value: changeme
         - name: HFS_PORT
           value: "8080"
-        - name: HFS_ACCOUNTS_BUC_PASSWORD
-          value: pass1
-        - name: HFS_accounts_buc_password
-          value: pass2
-        - name: HFS_ACCOUNTS_buc_PASSWORD
-          value: pass3
         resources:
           requests:
             cpu: 10m

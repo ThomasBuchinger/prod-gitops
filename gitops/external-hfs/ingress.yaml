@@ -34,6 +34,22 @@ spec:
             name: hfs
             port:
               name: http
+
+      - path: "/~/api/login"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+
+      - path: "/~/api/logout"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
       - path: "/"
         pathType: Exact
         backend:

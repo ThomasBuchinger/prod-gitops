@@ -28,6 +28,10 @@ proxies: 1
 accounts:
   guest:
     disable_password_change: true
-    password: why-guest-no-password
+    password: __guest_password__
   buc:
     disable_password_change: true
+    password: __buc_password__
+  admin:
+    admin: true
+    # password: __admin_password__
