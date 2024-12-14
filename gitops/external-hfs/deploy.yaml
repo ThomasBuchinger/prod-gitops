@@ -53,6 +53,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /.hfs
+        - name: config-template
+          mountPath: /template
         - name: data
           mountPath: /app/myDisk/nas
         - name: uploads
