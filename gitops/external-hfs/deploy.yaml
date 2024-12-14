@@ -140,13 +140,20 @@ spec:
             name: hfs
             port:
               number: 9999
+      - path: "/"
+        pathType: Exact
+        backend:
+          service:
+            name: hfs
+            port:
+              number: http
       - path: "/public"
         pathType: Prefix
         backend:
           service:
             name: hfs
             port:
-              number: 9999
+              number: http
       - path: "/uploads"
         pathType: Prefix
         backend:
