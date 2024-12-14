@@ -299,6 +299,38 @@ static_resources:
                 route:
                   cluster: public-homelabapi
                   auto_host_rewrite: true
+            - name: files-cloud-buc-sh
+              domains:
+              - files.cloud.buc.sh
+              cors: *cors_default
+              routes:
+              - match:
+                  safe_regex:
+                    regex: "/(public|protected|private)?$"
+                route:
+                  cluster: hfs
+                  auto_host_rewrite: true
+              - match:
+                  prefix: "/~/api/get_"
+                route:
+                  cluster: hfs
+                  auto_host_rewrite: true
+              - match:
+                  prefix: "/~/api/login"
+                route:
+                  cluster: hfs
+                  auto_host_rewrite: true
+              - match:
+                  prefix: "/~/api/logout"
+                route:
+                  cluster: hfs
+                  auto_host_rewrite: true
+              - match:
+                  prefix: "/~/api/"
+                direct_response:
+                  status: 403
+                  body:
+                    inline_string: "Not Allowed in Public Interface"
   # App Router for "hidden" (high-port) Services
   #
   - name: hidden_apps
@@ -419,6 +451,24 @@ static_resources:
       healthy_threshold: 1
       http_health_check:
         path: "/api/livez"
+  - name: hfs
+    type: LOGICAL_DNS
+    load_assignment:
+      cluster_name: hfs
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: external-hfs.external-hfs.svc
+                port_value: 8080
+    health_checks:
+    - timeout: 3s
+      interval: 30s
+      unhealthy_threshold: 3
+      healthy_threshold: 1
+      http_health_check:
+        path: "/~/frontend/fontello.css"
   - name: ntfy
     type: LOGICAL_DNS
     load_assignment:

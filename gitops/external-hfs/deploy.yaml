@@ -110,7 +110,7 @@ spec:
             memory: 60M
         livenessProbe:
           httpGet:
-            path: /
+            path: /~/frontend/fontello.css
             port: http
           failureThreshold: 3
           periodSeconds: 10
