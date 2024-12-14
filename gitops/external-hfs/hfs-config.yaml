@@ -1,0 +1,22 @@
+port: 8080
+log: /dev/stdout
+log_rotation: ""
+error_log: /dev/stderr
+title: "BUC Public Files"
+base_url: public
+vfs:
+  children:
+    - name: protected
+      can_read: "*"
+    - name: public
+    - source: /app/myDisk/uploads
+      children: []
+      can_upload: "*"
+      can_delete: "*"
+open_browser_at_start: false
+localhost_admin: false
+proxies: 1
+accounts:
+  guest:
+    disable_password_change: true
+    password: why-guest-no-password

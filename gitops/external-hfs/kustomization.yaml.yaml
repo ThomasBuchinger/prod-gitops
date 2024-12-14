@@ -1,0 +1,9 @@
+configMapGenerator:
+- name: hfs-config
+  literal:
+    guest_password: why-guest-no-password
+  files:
+  - hfs-config.yaml
+
+resources:
+- deploy.yaml
