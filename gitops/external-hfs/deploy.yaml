@@ -140,6 +140,13 @@ spec:
             name: hfs
             port:
               name: http
+      - path: "/~/api/get_"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
       - path: "/"
         pathType: Exact
         backend:
