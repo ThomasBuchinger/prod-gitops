@@ -466,7 +466,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: external-hfs.external-hfs.svc
+                address: hfs.external-hfs.svc
                 port_value: 8080
     health_checks:
     - timeout: 3s
