@@ -326,7 +326,7 @@ static_resources:
                   cluster: hfs
                   auto_host_rewrite: true
               - match:
-                  prefix: "/~/api/frontend"
+                  prefix: "/~/frontend"
                 route:
                   cluster: hfs
                   auto_host_rewrite: true
