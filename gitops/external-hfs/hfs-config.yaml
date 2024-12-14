@@ -2,7 +2,7 @@ port: 8080
 log: /dev/stdout
 log_rotation: ""
 error_log: /dev/stderr
-title: "BUC Public Files"
+title: BUC Public Files
 vfs:
   children:
     - name: private
@@ -17,6 +17,11 @@ vfs:
       children: []
     - name: README
       url: /public/README.html
+    - source: /app/myDisk/nas
+      can_read:
+        - buc
+      can_upload: can_read
+      can_delete: can_read
 open_browser_at_start: false
 localhost_admin: false
 proxies: 1
@@ -24,3 +29,5 @@ accounts:
   guest:
     disable_password_change: true
     password: why-guest-no-password
+  buc:
+    disable_password_change: true
