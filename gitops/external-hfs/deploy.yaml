@@ -133,21 +133,28 @@ spec:
   - host: "files.10.0.0.21.nip.io"
     http:
       paths:
-      - path: "/~/admin"
+      - path: "/~"
         pathType: Prefix
         backend:
           service:
             name: hfs
             port:
               number: 9999
-      - path: "/~/api"
+      - path: "/public"
         pathType: Prefix
         backend:
           service:
             name: hfs
             port:
               number: 9999
-      - path: "/"
+      - path: "/uploads"
+        pathType: Prefix
+        backend:
+          service:
+            name: hfs
+            port:
+              name: http
+      - path: "/protected"
         pathType: Prefix
         backend:
           service:
