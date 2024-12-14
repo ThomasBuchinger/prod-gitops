@@ -146,14 +146,14 @@ spec:
           service:
             name: hfs
             port:
-              number: http
+              name: http
       - path: "/public"
         pathType: Prefix
         backend:
           service:
             name: hfs
             port:
-              number: http
+              name: http
       - path: "/uploads"
         pathType: Prefix
         backend:
