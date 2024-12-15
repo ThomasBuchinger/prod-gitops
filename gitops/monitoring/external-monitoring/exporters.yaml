@@ -31,6 +31,18 @@ spec:
       job: kube-state-metrics
     targets:
       - kube-state-metrics.10.0.0.16.nip.io
-
-
-
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: external-smartctl-exporter
+  namespace: monitoring
+  labels:
+    prometheus: system-monitoring-prometheus
+    release: monitoring
+spec:
+  staticConfigs:
+  - labels:
+      job: smrtctl-exporter
+    targets:
+      - 10.0.0.19:9633

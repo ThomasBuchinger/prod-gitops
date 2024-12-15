@@ -23,13 +23,21 @@ spec:
         rev: main
         path: gitops/okd-console
         wave: "1"
-      - name: monitoring
+      - name: monitoring-shared
         rev: main
         path: gitops/monitoring/all
         wave: "1"
+      - name: monitoring-prometheus
+        rev: main
+        path: gitops/monitoring/prometheus
+        wave: "1"
       - name: monitoring-loki
-        rev: prometheus
-        path: gitops/monitoring-loki
+        rev: main
+        path: gitops/monitoring/loki
+        wave: "1"
+      - name: monitoring-tempo
+        rev: main
+        path: gitops/monitoring/tempo
         wave: "1"
       # === Apps ===
       - name: paperless
@@ -50,7 +58,7 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-http
-        rev: feat-hfs
+        rev: main
         path: gitops/external-http
         wave: "2"
       - name: external-homelabapi
@@ -62,7 +70,7 @@ spec:
       #   path: gitops/external-r2
       #   wave: "2"
       - name: external-hfs
-        rev: feat-hfs
+        rev: main
         path: gitops/external-hfs
         wave: "2"
   template:
