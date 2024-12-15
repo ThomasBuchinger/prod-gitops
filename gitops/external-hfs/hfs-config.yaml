@@ -20,8 +20,6 @@ vfs:
     - source: /app/myDisk/nas
       can_read:
         - buc
-      can_upload: can_read
-      can_delete: can_read
 open_browser_at_start: false
 localhost_admin: false
 proxies: 1
