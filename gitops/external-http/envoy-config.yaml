@@ -148,20 +148,20 @@ static_resources:
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-            route_config:
-              name: dummy
-              virtual_hosts:
-              - name: dummy
-                domains: ["non-existent.example.lan"]
-                routes: []
-                cors: &cors_default
-                    # allow_origin_string_match:
-                    # - safe_regex:
-                    #     regex: \*
-                    allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
-                    allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
-                    allow_credentials: true
-                    max_age: "86400"
+          route_config:
+            name: dummy
+            virtual_hosts:
+            - name: dummy
+              domains: ["non-existent.example.lan"]
+              routes: []
+              cors: &cors_default
+                  # allow_origin_string_match:
+                  # - safe_regex:
+                  #     regex: \*
+                  allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+                  allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Access-Control-Allow-Origin"
+                  allow_credentials: true
+                  max_age: "86400"
               # typed_per_filter_config:
  
   # Handle HTTP Traffic: Redirect everything to https
