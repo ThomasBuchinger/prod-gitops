@@ -317,7 +317,7 @@ static_resources:
                   auto_host_rewrite: true
               - match:
                   safe_regex:
-                    regex: "/~/(api/get_|login|logout|frontent).*"
+                    regex: "/~/(api/get_|login|logout|frontend).*"
                 route:
                   cluster: hfs
                   auto_host_rewrite: true
