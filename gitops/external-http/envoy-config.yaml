@@ -328,6 +328,12 @@ static_resources:
                   body:
                     inline_string: "Not Allowed on Public Interface"
               - match:
+                  prefix: "/~/admin"
+                direct_response:
+                  status: 403
+                  body:
+                    inline_string: "Not Allowed on Public Interface"
+              - match:
                   prefix: "/nas"
                 direct_response:
                   status: 403
