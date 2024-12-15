@@ -311,7 +311,7 @@ static_resources:
                   auto_host_rewrite: true
               - match:
                   safe_regex:
-                    regex: "/(public|protected|private).*"
+                    regex: "/(public|guests|private).*"
                 route:
                   cluster: hfs
                   auto_host_rewrite: true

@@ -7,7 +7,10 @@ vfs:
   children:
     - name: private
       can_see: true
-    - name: protected
+      can_read:
+        - admin
+        - buc
+    - name: guests
       can_read: "*"
       can_see: true
     - name: public

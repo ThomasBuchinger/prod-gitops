@@ -90,7 +90,7 @@ spec:
             name: hfs
             port:
               name: http
-      - path: "/protected"
+      - path: "/guests"
         pathType: Prefix
         backend:
           service:
@@ -189,7 +189,7 @@ spec:
             name: hfs
             port:
               name: http
-      - path: "/protected"
+      - path: "/guests"
         pathType: Prefix
         backend:
           service:
