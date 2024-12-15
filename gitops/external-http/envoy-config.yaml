@@ -311,13 +311,13 @@ static_resources:
                   auto_host_rewrite: true
               - match:
                   safe_regex:
-                    regex: "/(public|protected|private)"
+                    regex: "/(public|protected|private).*"
                 route:
                   cluster: hfs
                   auto_host_rewrite: true
               - match:
                   safe_regex:
-                    regex: "/~/(api/get_|login|logout|frontent)"
+                    regex: "/~/(api/get_|login|logout|frontent).*"
                 route:
                   cluster: hfs
                   auto_host_rewrite: true
