@@ -1,0 +1,201 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-hfs
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: hfs-creds
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: hfs-creds
+    creationPolicy: Owner
+  data:
+  - secretKey: BUC_PASS
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: ADMIN_PASS
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hfs
+  namespace: external-hfs
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: hfs
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: hfs
+    spec:
+      initContainers:
+      - name: copy-config
+        image: docker.io/rejetto/hfs:v0.54.0
+        command:
+        - sh
+        - -c
+        - test -f /.hfs/config.yaml || sed -e "s/__guest_password__/$GUEST_PASS/" -e "s/__buc_password__/$BUC_PASS/" -e "s/__admin_password__/$ADMIN_PASS/"  /template/hfs-config.yaml > /.hfs/config.yaml
+        env:
+        - name: GUEST_PASS
+          value: this-is-the-guest-account-password
+        - name: BUC_PASS
+          valueFrom:
+            secretKeyRef:
+              name: hfs-creds
+              key: BUC_PASS
+        - name: ADMIN_PASS
+          valueFrom:
+            secretKeyRef:
+              name: hfs-creds
+              key: ADMIN_PASS
+        volumeMounts:
+        - name: config-template
+          mountPath: /template
+        - name: config
+          mountPath: /.hfs
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      containers:
+      - name: hfs
+        image: docker.io/rejetto/hfs:v0.54.0
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /.hfs
+        - name: config-template
+          mountPath: /template
+        - name: data
+          mountPath: /app/myDisk/nas
+        - name: uploads
+          mountPath: /app/myDisk/uploads
+        env:
+        - name: HFS_PORT    # Need to overwrite Service-Link-ENV-Var
+          value: "8080"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 60M
+        livenessProbe:
+          httpGet:
+            path: /~/frontend/fontello.css
+            port: http
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: hfs-config
+      - name: config-template
+        configMap:
+          name: hfs-config
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: hfs-uploads
+      - name: data
+        persistentVolumeClaim:
+          claimName: nas-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hfs
+  namespace: external-hfs
+spec:
+  selector:
+    app.kubernetes.io/app: hfs
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-hfs-egress
+  namespace: external-hfs
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/app: hfs
+  policyTypes:
+    - Egress
+    - Ingress
+  egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.19/32"
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-http
+    ports:
+    - protocol: TCP
+      port: 8080
+
