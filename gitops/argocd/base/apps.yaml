@@ -37,7 +37,7 @@ spec:
         wave: "2"
       - name: monitoring-shared
         rev: main
-        path: gitops/monitoring/all
+        path: gitops/monitoring/shared
         wave: "2"
       # === Apps ===
       - name: paperless
