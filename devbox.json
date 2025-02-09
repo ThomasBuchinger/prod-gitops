@@ -1,6 +1,6 @@
 {
   "packages": [
-    "renovate@latest"
+    "renovate@37.440.7"
   ],
   "shell": {
     "init_hook": [
