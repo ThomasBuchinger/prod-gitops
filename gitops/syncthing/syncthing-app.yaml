@@ -101,7 +101,7 @@ spec:
         command:
         - /bin/sh
         - /scripts/init.sh
-        image: docker.io/syncthing/syncthing:1.28
+        image: docker.io/syncthing/syncthing:1.29
         env:
         - name: ADMIN_USER
           valueFrom:
@@ -128,7 +128,7 @@ spec:
         - syncthing
         - serve
         - --no-default-folder
-        image: docker.io/syncthing/syncthing:1.28
+        image: docker.io/syncthing/syncthing:1.29
         imagePullPolicy: IfNotPresent
         env:
         - name: STGUIAPIKEY
