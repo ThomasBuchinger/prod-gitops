@@ -1,25 +1,19 @@
 NODE_IP=10.0.0.21
 DHCP_IP=10.0.0.179
 
-TALOS_VERSION=v1.7.6
+# TALOS_VERSION=v1.7.6
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
-TALOSCTL="./bin/talosctl"
+# TALOSCTL="./bin/talosctl"
 TALOS_NODECONF=$(OUTPUT_DIR)/controlplane.yaml
 TALOS_CONFIG=$(OUTPUT_DIR)/talosconfig
 
 .PHONY: build kustomize talos-config
 build: talos-config kubeseal
 
-bin/talosctl:
-	@echo "Installing talosctl to $(TALOSCTL)"
-	mkdir -p bin
-	curl -Lo $(TALOSCTL) --silent https://github.com/siderolabs/talos/releases/download/$(TALOS_VERSION)/talosctl-linux-amd64
-	chmod +x $(TALOSCTL)
-
 $(OUTPUT_DIR)/talos-secrets.yaml:
 	mkdir -p out
-	$(TALOSCTL) gen secrets --output-file "$@"
+	talosctl gen secrets --output-file "$@"
 kustomize:
 	mkdir -p out
 	kubectl kustomize ./infra/argocd > $(OUTPUT_DIR)/infra-argocd.yaml
@@ -28,7 +22,7 @@ kustomize:
 
 talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	mkdir -p $(OUTPUT_DIR)/talos
-	$(TALOSCTL) gen config prod https://$(NODE_IP):6443 \
+	talosctl gen config prod https://$(NODE_IP):6443 \
 		--force \
 		--config-patch=@talos/talos-merge.yaml \
 		--output-dir "$(OUTPUT_DIR)" \
@@ -43,19 +37,19 @@ talos-config: bin/talosctl $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 	yq eval $(YQ_ARGS) '.contexts.prod.endpoints[0] = "$(NODE_IP)"'                                          $(TALOS_CONFIG)
 
 talos-init: talos-config
-	$(TALOSCTL) apply-config --insecure --nodes $(DHCP_IP) --file $(TALOS_NODECONF)
+	talosctl apply-config --insecure --nodes $(DHCP_IP) --file $(TALOS_NODECONF)
 talos-bootstrap:
 	echo Bootstrap etcd...
-	$(TALOSCTL) bootstrap --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
+	talosctl bootstrap --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 
 kubeconfig:
-	$(TALOSCTL) kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
+	talosctl kubeconfig ./kubeconfig --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 
 # === Debugging targets ===
 talos-reset:
-	$(TALOSCTL) reset --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
+	talosctl reset --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 talos-apply: talos-config
-	$(TALOSCTL) apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF)
+	talosctl apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF)
 
 # Temporary Workaround. Kubernetes 1.27 is not yet supported by the k8s operator controller-runtime
 # https://github.com/alex1989hu/kubelet-serving-cert-approver/issues/139
