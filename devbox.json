@@ -1,7 +1,7 @@
 {
   "packages": [
     "renovate@40.33.1",
-    "talosctl@1.10"
+    "talosctl@1.10.3"
   ],
   "shell": {
     "init_hook": [
