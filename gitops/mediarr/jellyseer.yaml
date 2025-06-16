@@ -21,7 +21,7 @@ spec:
         resources:
           requests:
             cpu: 100m
-            memory: 128Mi
+            memory: 512Mi
           # limits:
           #   memory: "128Mi"
         ports:
@@ -54,7 +54,8 @@ spec:
           subPath: jellyseer
       volumes:
         - name: config
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: mediarr-config
 
 ---
 apiVersion: v1
@@ -69,48 +70,27 @@ spec:
     port: 5055
     targetPort: http
 
-# ---
-# apiVersion: external-secrets.io/v1beta1
-# kind: ExternalSecret
-# metadata:
-#   name: push-cert
-# spec:
-#   refreshInterval: 1h
-#   secretStoreRef:
-#     name: k8s-evergreen
-#     kind: ClusterSecretStore
-#   target:
-#     name: cert-push-buc-sh
-#     creationPolicy: Owner
-#   dataFrom:
-#   - extract:
-#       conversionStrategy: Default
-#       decodingStrategy: None
-#       metadataPolicy: None
-#       key: cert-push-buc-sh
-
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: jellyseer-tls
-# spec:
-#   tls:
-#   - hosts:
-#       - push.buc.sh
-#     secretName: cert-push-buc-sh
-#   rules:
-#   - host: "push.buc.sh"
-#     http:
-#       paths:
-#       - path: "/"
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: jellyseer
-#             port:
-#               name: http
-
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyseer-tls
+spec:
+  tls:
+  - hosts:
+      - requests.mediarr.buc.sh
+    secretName: cert-tv-buc-sh
+  rules:
+  - host: "requests.mediarr.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyseer
+            port:
+              name: http
 
 ---
 apiVersion: networking.k8s.io/v1
