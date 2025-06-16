@@ -70,36 +70,6 @@ spec:
     port: 5055
     targetPort: http
 
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: jellyseer-tls
-spec:
-  tls:
-  - hosts:
-      - requests.mediarr.buc.sh
-    secretName: cert-tv-buc-sh
-  rules:
-  - host: "requests.mediarr.buc.sh"
-    http:
-      paths:
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: jellyseer
-            port:
-              name: http
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: jellyseer
-spec:
-  rules:
-
 # ---
 # apiVersion: networking.k8s.io/v1
 # kind: NetworkPolicy
