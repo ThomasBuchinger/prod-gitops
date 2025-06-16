@@ -21,7 +21,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-viewer
+  name: cluster-admin
 subjects:
 - kind: ServiceAccount
   name: okd-console
@@ -29,46 +29,46 @@ subjects:
 
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: cluster-viewer
-rules:
-- apiGroups:
-  - '*'
-  resources:
-  - '*'
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ''
-  resources:
-  - 'pods'
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-  - delete
-- apiGroups:
-  - ''
-  resources:
-  - 'deployments'
-  - 'statefulsets'
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-  - scale
-- nonResourceURLs:
-  - '*'
-  verbs:
-  - get
-  - list
-  - watch
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRole
+# metadata:
+#   name: cluster-viewer
+# rules:
+# - apiGroups:
+#   - '*'
+#   resources:
+#   - '*'
+#   verbs:
+#   - get
+#   - list
+#   - watch
+# - apiGroups:
+#   - ''
+#   resources:
+#   - 'pods'
+#   verbs:
+#   - get
+#   - list
+#   - watch
+#   - update
+#   - delete
+# - apiGroups:
+#   - ''
+#   resources:
+#   - 'deployments'
+#   - 'statefulsets'
+#   verbs:
+#   - get
+#   - list
+#   - watch
+#   - update
+#   - scale
+# - nonResourceURLs:
+#   - '*'
+#   verbs:
+#   - get
+#   - list
+#   - watch
 
 ---
 apiVersion: apps/v1
@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
         - name: console-app
-          image: "quay.io/openshift/origin-console:4.20"
+          image: "quay.io/openshift/origin-console:4.17"
           env:
             - name: BRIDGE_USER_AUTH
               value: disabled # no authentication required
