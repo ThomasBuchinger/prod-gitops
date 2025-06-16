@@ -78,7 +78,7 @@ stringData:
   MANUAL_PASSWORD: crablike-autopilot-deluxe-bank-run
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: ntfy-creds-vault-eso
@@ -114,7 +114,7 @@ spec:
   #     metadataPolicy: None
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: ntfy-creds-k8s
@@ -248,7 +248,7 @@ spec:
     targetPort: metrics
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: push-cert

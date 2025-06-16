@@ -27,7 +27,7 @@ data:
   
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: paperless-credentials
@@ -231,7 +231,7 @@ spec:
               number: 8081
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: paperless-cert

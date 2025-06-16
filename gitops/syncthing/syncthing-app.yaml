@@ -29,7 +29,7 @@ data:
     find $DIR/config
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: syncthing-credentials
@@ -58,7 +58,7 @@ spec:
       decodingStrategy: None
       metadataPolicy: None
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: syncthing-application
@@ -211,7 +211,7 @@ spec:
     targetPort: http
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: syncthing-cert
