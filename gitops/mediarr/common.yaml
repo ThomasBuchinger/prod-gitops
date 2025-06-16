@@ -4,9 +4,9 @@ kind: Namespace
 metadata:
   name: mediarr
   labels:
-    # Allow pods to run as root and change users at runtime
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/version: latest
+    # # Allow pods to run as root and change users at runtime
+    # pod-security.kubernetes.io/enforce: privileged
+    # pod-security.kubernetes.io/version: latest
 
 
 
