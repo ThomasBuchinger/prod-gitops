@@ -52,6 +52,10 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "1"
+      - name: mediarr
+        rev: feat-mediarr
+        path: gitops/mediarr
+        wave: "1"
       # === Internet Facing
       - name: ntfy
         rev: main
