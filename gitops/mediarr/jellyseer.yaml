@@ -1,0 +1,159 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyseer
+spec:
+  selector:
+    matchLabels:
+      app: jellyseer
+  template:
+    metadata:
+      labels:
+        app: jellyseer
+    spec:
+      containers:
+      - name: jellyseer
+        image: ghcr.io/fallenbagel/jellyseerr:develop
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          # limits:
+          #   memory: "128Mi"
+        ports:
+        - containerPort: 5055
+          name: http
+        env:
+        - name: TZ
+          value: Europe/Vienna
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - name: config
+          mountPath: "app/config"
+          subPath: jellyseer
+      volumes:
+        - name: config
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyseer
+spec:
+  selector:
+    app: jellyseer
+  ports:
+  - name: http
+    port: 5055
+    targetPort: http
+
+# ---
+# apiVersion: external-secrets.io/v1beta1
+# kind: ExternalSecret
+# metadata:
+#   name: push-cert
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: cert-push-buc-sh
+#     creationPolicy: Owner
+#   dataFrom:
+#   - extract:
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+#       key: cert-push-buc-sh
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: jellyseer-tls
+# spec:
+#   tls:
+#   - hosts:
+#       - push.buc.sh
+#     secretName: cert-push-buc-sh
+#   rules:
+#   - host: "push.buc.sh"
+#     http:
+#       paths:
+#       - path: "/"
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: jellyseer
+#             port:
+#               name: http
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyseer
+spec:
+  rules:
+  - host: requests.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyseer
+            port:
+              name: http
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: NetworkPolicy
+# metadata:
+#   name: jellyseer
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app.kubernetes.io/name: jellyseer
+#   policyTypes:
+#     - Ingress
+#     - Egress
+#   ingress:
+#   # Allow Ingress
+#   - from:
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: traefik
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: external-http
+#     ports:
+#     - protocol: TCP
+#       port: 8080
+#   # Allow monitoring
+#   - from:
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: monitoring
+#     ports:
+#     - protocol: TCP
+#       port: 8081
+
