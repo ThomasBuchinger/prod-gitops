@@ -3,3 +3,4 @@ namespace: mediarr
 resources:
 - common.yaml
 - jellyseer.yaml
+- radarr.yaml
