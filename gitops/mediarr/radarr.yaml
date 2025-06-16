@@ -62,8 +62,8 @@ spec:
           subPath: radarr
         - name: dummy
           mountPath: "/media"
-        - name: dummy2
-          mountPath: "/run"
+        # - name: dummy2
+        #   mountPath: "/run"
       volumes:
         - name: config
           persistentVolumeClaim:
