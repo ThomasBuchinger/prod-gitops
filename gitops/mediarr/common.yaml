@@ -5,25 +5,86 @@ metadata:
   name: mediarr
 
 
+# ---
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: cert-tv-buc-sh
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: cert-tv-buc-sh
+#     creationPolicy: Owner
+#   dataFrom:
+#   - extract:
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+#       key: cert-tv-buc-sh
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: mediarr-tls
+# spec:
+#   tls:
+#   - hosts:
+#       - requests.mediarr.buc.sh
+#       - movies.mediarr.buc.sh
+#     secretName: cert-tv-buc-sh
+#   rules:
+#   - host: "requests.mediarr.buc.sh"
+#     http:
+#       paths:
+#       - path: "/"
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: jellyseer
+#             port:
+#               name: http
+#   - host: "requests.mediarr.buc.sh"
+#     http:
+#       paths:
+#       - path: "/"
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: radarr
+#             port:
+#               name: http
+
 ---
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: cert-tv-buc-sh
+  name: mediarr
 spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: k8s-evergreen
-    kind: ClusterSecretStore
-  target:
-    name: cert-tv-buc-sh
-    creationPolicy: Owner
-  dataFrom:
-  - extract:
-      conversionStrategy: Default
-      decodingStrategy: None
-      metadataPolicy: None
-      key: cert-tv-buc-sh
+  rules:
+  - host: requests.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyseer
+            port:
+              name: http
+  - host: movies.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: radarr
+            port:
+              name: http
+
 
 
 ---

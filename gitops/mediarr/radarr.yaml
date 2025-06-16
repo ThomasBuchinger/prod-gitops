@@ -30,6 +30,11 @@ spec:
         env:
         - name: TZ
           value: Europe/Vienna
+        - name: PUID
+          value: "99"
+        - name: PGID
+          value: "100"
+
         livenessProbe:
           httpGet:
             path: /
@@ -76,46 +81,6 @@ spec:
   - name: http
     port: 7878
     targetPort: http
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: radarr-tls
-spec:
-  tls:
-  - hosts:
-      - movies.mediarr.buc.sh
-    secretName: cert-tv-buc-sh
-  rules:
-  - host: "requests.mediarr.buc.sh"
-    http:
-      paths:
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: radarr
-            port:
-              name: http
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: radarr
-spec:
-  rules:
-  - host: movies.tv.10.0.0.21.nip.io
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: radarr
-            port:
-              name: http
 
 # ---
 # apiVersion: networking.k8s.io/v1
