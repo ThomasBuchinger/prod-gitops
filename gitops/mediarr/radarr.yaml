@@ -50,6 +50,8 @@ spec:
           runAsGroup: 100
           allowPrivilegeEscalation: false
           capabilities:
+            add:
+            - CHMOD
             drop:
             - ALL
           seccompProfile:
