@@ -50,12 +50,12 @@ spec:
           # runAsGroup: 100
           allowPrivilegeEscalation: false
           capabilities:
-          #   add:
-          #   - CHOWN
-          #   - DAC_OVERRIDE
-          #   - FOWNER
-          #   - SETGID
-          #   - SETUID
+            add:
+            - CHOWN
+            - DAC_OVERRIDE
+            - FOWNER
+            - SETGID
+            - SETUID
             # - AUDIT_WRITE
             # - FSETID
             # - KILL
