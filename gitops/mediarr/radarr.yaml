@@ -44,7 +44,7 @@ spec:
             path: /
             port: http
         securityContext:
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: false
           runAsNonRoot: false
           # runAsUser: 99
           # runAsGroup: 100
