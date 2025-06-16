@@ -60,6 +60,8 @@ spec:
           subPath: radarr
         - name: dummy
           mountPath: "/media"
+        - name: dummy2
+          mountPath: "/run"
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -68,6 +70,8 @@ spec:
           persistentVolumeClaim:
             claimName: mediarr-media
         - name: dummy
+          emptyDir: {}
+        - name: dummy2
           emptyDir: {}
 
 ---
