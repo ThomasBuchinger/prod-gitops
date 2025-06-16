@@ -52,8 +52,8 @@ spec:
   - ReadWriteMany
   - ReadOnlyMany
   nfs:
-    server: 10.0.0.20
-    path: /mnt/raidpool/kubernetes/mediarr
+    server: 10.0.0.19
+    path: /mnt/user/data/kubernetes/mediarr
   mountOptions:
   - nfsvers=4.2
   - retrans=3
