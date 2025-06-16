@@ -51,7 +51,8 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             add:
-            - CHMOD
+            - CHOWN
+            - FOWNER
             drop:
             - ALL
           seccompProfile:
