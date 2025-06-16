@@ -5,7 +5,7 @@ helmCharts:
   releaseName: traefik
   includeCRDs: true
   repo: https://traefik.github.io/charts
-  version: 36.0.0
+  version: 35.4.0
   valuesFile: values.yaml
 
 resources:
