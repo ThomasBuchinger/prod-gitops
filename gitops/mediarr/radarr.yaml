@@ -75,12 +75,12 @@ spec:
         - name: media
           mountPath: "/media"
       volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: mediarr-config
-        - name: media
-          persistentVolumeClaim:
-            claimName: mediarr-media
+      - name: config
+        persistentVolumeClaim:
+          claimName: mediarr-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: mediarr-media
 
 ---
 apiVersion: v1
