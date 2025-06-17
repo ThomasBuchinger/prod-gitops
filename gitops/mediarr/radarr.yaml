@@ -34,7 +34,9 @@ spec:
           value: "99"
         - name: PGID
           value: "100"
-
+        envFrom:
+        - configMapRef:
+            name: arr-config
         livenessProbe:
           httpGet:
             path: /
@@ -67,7 +69,7 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: config
+        - name: dummy2
           mountPath: "app/config"
           subPath: radarr
         - name: dummy

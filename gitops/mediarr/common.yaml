@@ -8,6 +8,19 @@ metadata:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/version: latest
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: arr-config
+data:
+  RADARR__LOG__LEVEL: "info"
+  RADARR__AUTH__APIKEY: 64f0f77b17cc488daedcbc1f92e8d583
+  RADARR__AUTH__METHOD: form
+  RADARR__AUTH__REQUIRED: "false"
+  RADARR__LOG__ANALYTICSENABLED: "false"
+  RADARR__UPDATE__AUTOMATICALLY: "false"
+
 
 
 # ---
