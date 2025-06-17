@@ -51,33 +51,20 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             add:
-            # - CHOWN
             - SETGID
             - SETUID
-            # - FOWNER
-            # - DAC_OVERRIDE
-            # - AUDIT_WRITE
-            # - FSETID
-            # - KILL
-            # - MKNOD
-            # - NET_BIND_SERVICE
-            # - SETFCAP
-            # - SETPCAP
-            # - SYS_CHROOT
             drop:
             - ALL
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: dummy
+        - name: config
           mountPath: "/config"
           subPath: prowlarr
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: mediarr-config
-      - name: dummy
-        emptyDir: {}
 
 ---
 apiVersion: v1
