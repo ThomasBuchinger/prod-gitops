@@ -69,13 +69,15 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: config
+        - name: dummy
           mountPath: "/config"
           subPath: prowlarr
       volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: mediarr-config
+      - name: config
+        persistentVolumeClaim:
+          claimName: mediarr-config
+      - name: dummy
+        emptyDir: {}
 
 ---
 apiVersion: v1
