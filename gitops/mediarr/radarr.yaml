@@ -69,13 +69,11 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: dummy2
-          mountPath: "config"
+        - name: config
+          mountPath: "/config"
           subPath: radarr
-        - name: dummy
+        - name: media
           mountPath: "/media"
-        # - name: dummy2
-        #   mountPath: "/run"
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -83,10 +81,6 @@ spec:
         - name: media
           persistentVolumeClaim:
             claimName: mediarr-media
-        - name: dummy
-          emptyDir: {}
-        - name: dummy2
-          emptyDir: {}
 
 ---
 apiVersion: v1
@@ -100,37 +94,3 @@ spec:
   - name: http
     port: 7878
     targetPort: http
-
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: radarr
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app.kubernetes.io/name: radarr
-#   policyTypes:
-#     - Ingress
-#     - Egress
-#   ingress:
-#   # Allow Ingress
-#   - from:
-#     - namespaceSelector:
-#         matchLabels:
-#           kubernetes.io/metadata.name: traefik
-#     - namespaceSelector:
-#         matchLabels:
-#           kubernetes.io/metadata.name: external-http
-#     ports:
-#     - protocol: TCP
-#       port: 8080
-#   # Allow monitoring
-#   - from:
-#     - namespaceSelector:
-#         matchLabels:
-#           kubernetes.io/metadata.name: monitoring
-#     ports:
-#     - protocol: TCP
-#       port: 8081
-
