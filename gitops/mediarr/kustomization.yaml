@@ -4,3 +4,8 @@ resources:
 - common.yaml
 - jellyseer.yaml
 - radarr.yaml
+
+configMapGenerator:
+- name: arr-config
+  envs:
+  - arr-config.env
