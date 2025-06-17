@@ -51,10 +51,10 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             add:
-            - CHOWN
+            # - CHOWN
             - SETGID
             - SETUID
-            - FOWNER
+            # - FOWNER
             # - DAC_OVERRIDE
             # - AUDIT_WRITE
             # - FSETID
