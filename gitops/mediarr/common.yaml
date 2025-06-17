@@ -98,6 +98,16 @@ spec:
             name: prowlarr
             port:
               name: http
+  - host: downloads.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sabnzbd
+            port:
+              name: http
 
 
 

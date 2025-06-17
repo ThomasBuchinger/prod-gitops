@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sabnzbd
+  template:
+    metadata:
+      labels:
+        app: sabnzbd
+    spec:
+      containers:
+      - name: sabnzbd
+        image: lscr.io/linuxserver/sabnzbd:latest
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          # limits:
+          #   memory: "128Mi"
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: TZ
+          value: Europe/Vienna
+        - name: PUID
+          value: "99"
+        - name: PGID
+          value: "100"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+            # - FOWNER
+            # - DAC_OVERRIDE
+            # - AUDIT_WRITE
+            # - FSETID
+            # - KILL
+            # - MKNOD
+            # - NET_BIND_SERVICE
+            # - SETFCAP
+            # - SETPCAP
+            # - SYS_CHROOT
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - name: dummy
+          mountPath: "/config"
+          subPath: sabnzbd
+        - name: dummy
+          mountPath: "/media"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: mediarr-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: mediarr-media
+      - name: dummy
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd
+spec:
+  selector:
+    app: sabnzbd
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http

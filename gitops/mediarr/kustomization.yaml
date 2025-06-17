@@ -5,6 +5,7 @@ resources:
 - jellyseer.yaml
 - radarr.yaml
 - prowlarr.yaml
+- sabnzbd.yaml
 
 configMapGenerator:
 - name: arr-config
