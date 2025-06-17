@@ -46,16 +46,14 @@ spec:
         securityContext:
           readOnlyRootFilesystem: false
           runAsNonRoot: false
-          # runAsUser: 99
-          # runAsGroup: 100
           allowPrivilegeEscalation: false
           capabilities:
             add:
             - CHOWN
-            - DAC_OVERRIDE
-            - FOWNER
             - SETGID
             - SETUID
+            # - FOWNER
+            # - DAC_OVERRIDE
             # - AUDIT_WRITE
             # - FSETID
             # - KILL
