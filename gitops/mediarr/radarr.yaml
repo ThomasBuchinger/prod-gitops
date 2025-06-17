@@ -46,8 +46,8 @@ spec:
         securityContext:
           readOnlyRootFilesystem: false
           runAsNonRoot: false
-          runAsUser: 99
-          runAsGroup: 100
+          # runAsUser: 99
+          # runAsGroup: 100
           allowPrivilegeEscalation: false
           capabilities:
             add:
