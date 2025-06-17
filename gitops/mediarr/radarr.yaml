@@ -70,7 +70,7 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - name: dummy2
-          mountPath: "app/config"
+          mountPath: "config"
           subPath: radarr
         - name: dummy
           mountPath: "/media"
