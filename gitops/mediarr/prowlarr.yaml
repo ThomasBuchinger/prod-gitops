@@ -30,10 +30,10 @@ spec:
         env:
         - name: TZ
           value: Europe/Vienna
-        # - name: PUID
-        #   value: "99"
-        # - name: PGID
-        #   value: "100"
+        - name: PUID
+          value: "99"
+        - name: PGID
+          value: "100"
         envFrom:
         - configMapRef:
             name: arr-config
@@ -50,11 +50,11 @@ spec:
           runAsNonRoot: false
           allowPrivilegeEscalation: false
           capabilities:
-            # add:
-            # - CHOWN
-            # - SETGID
-            # - SETUID
-            # - FOWNER
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+            - FOWNER
             # - DAC_OVERRIDE
             # - AUDIT_WRITE
             # - FSETID
