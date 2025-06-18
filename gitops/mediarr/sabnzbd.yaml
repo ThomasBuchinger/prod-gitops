@@ -70,9 +70,9 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        # - name: config
-        #   mountPath: "/config/sabnzbd.ini"
-        #   subPath: sabnzbd.ini
+        - name: config
+          mountPath: "/config/sabnzbd.ini"
+          subPath: sabnzbd.ini
           # subPath: sabnzbd
         - name: dummy
           mountPath: "/media"
