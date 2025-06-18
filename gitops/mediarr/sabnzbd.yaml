@@ -76,7 +76,7 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: arr-config-file
+          name: arr-config-files
         # persistentVolumeClaim:
         #   claimName: mediarr-config
       - name: media
