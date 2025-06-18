@@ -11,6 +11,6 @@ configMapGenerator:
 - name: arr-config
   envs:
   - arr-config.env
-- name: arr-config-files
+- name: config-files
   files:
   - sabnzbd.ini

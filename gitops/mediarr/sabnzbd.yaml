@@ -70,13 +70,13 @@ spec:
         volumeMounts:
         - name: dummy
           mountPath: "/config"
-          subPath: sabnzbd
+          # subPath: sabnzbd
         - name: dummy
           mountPath: "/media"
       volumes:
       - name: config
         configMap:
-          name: arr-config-files
+          name: config-files
         # persistentVolumeClaim:
         #   claimName: mediarr-config
       - name: media
