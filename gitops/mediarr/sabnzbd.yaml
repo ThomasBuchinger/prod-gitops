@@ -18,6 +18,8 @@ spec:
       containers:
       - name: sabnzbd
         image: lscr.io/linuxserver/sabnzbd:latest
+        args:
+        - --inet_exposure=1
         resources:
           requests:
             cpu: 10m
