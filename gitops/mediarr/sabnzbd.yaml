@@ -68,7 +68,7 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: dummy
+        - name: config
           mountPath: "/config"
           # subPath: sabnzbd
         - name: dummy
