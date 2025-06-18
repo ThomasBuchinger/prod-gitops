@@ -19,7 +19,7 @@ spec:
       - name: sabnzbd
         image: lscr.io/linuxserver/sabnzbd:latest
         args:
-        - --inet_exposure=1
+        - --inet_exposure=4
         resources:
           requests:
             cpu: 10m
