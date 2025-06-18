@@ -71,7 +71,7 @@ spec:
         volumeMounts:
         - name: config
           mountPath: "/config/sabnzbd.ini"
-          subPath: sabznbd.ini
+          subPath: sabnzbd.ini
           # subPath: sabnzbd
         - name: dummy
           mountPath: "/media"
