@@ -20,6 +20,7 @@ spec:
         image: lscr.io/linuxserver/sabnzbd:latest
         args:
         - --inet_exposure=4
+        - --config-file /customconfig/subnzbd.ini
         resources:
           requests:
             cpu: 10m
@@ -69,7 +70,7 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - name: config
-          mountPath: "/config"
+          mountPath: "/customconfig"
           # subPath: sabnzbd
         - name: dummy
           mountPath: "/media"
