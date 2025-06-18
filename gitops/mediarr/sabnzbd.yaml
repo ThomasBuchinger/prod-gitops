@@ -75,8 +75,10 @@ spec:
           mountPath: "/media"
       volumes:
       - name: config
-        persistentVolumeClaim:
-          claimName: mediarr-config
+        configMap:
+          name: arr-config-file
+        # persistentVolumeClaim:
+        #   claimName: mediarr-config
       - name: media
         persistentVolumeClaim:
           claimName: mediarr-media
