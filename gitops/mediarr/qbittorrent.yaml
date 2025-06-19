@@ -71,17 +71,15 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: incomplete-downloads
-          mountPath: "/config/"
-          subPath: qbittorrent-config
+        - name: incomplete-downloads-bittorrent-config
+          mountPath: "/config"
         - name: config
           mountPath: "/config/qBittorrent.conf"
           subPath: qbittorrent.conf
         - name: media
           mountPath: "/media/nas"
-        - name: incomplete-downloads
+        - name: incomplete-downloads-bittorrent
           mountPath: "/media/incomplete"
-          subPath: qbittorrent
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -89,10 +87,35 @@ spec:
       - name: media
         persistentVolumeClaim:
           claimName: mediarr-media
-      - name: incomplete-downloads
+      - name: incomplete-downloads-bittorrent
         persistentVolumeClaim:
-          claimName: incomplete-downloads
+          claimName: incomplete-downloads-bittorrent
 
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: incomplete-downloads-bittorrent
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: incomplete-downloads-bittorrent-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
 
 ---
 apiVersion: v1

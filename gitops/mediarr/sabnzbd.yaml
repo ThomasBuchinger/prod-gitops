@@ -71,9 +71,8 @@ spec:
           subPath: sabnzbd
         - name: media
           mountPath: "/media/nas"
-        - name: incomplete-downloads
+        - name: incomplete-downloads-sabnzbd
           mountPath: "/media/incomplete"
-          subPath: sabnzbd
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -81,9 +80,23 @@ spec:
       - name: media
         persistentVolumeClaim:
           claimName: mediarr-media
-      - name: incomplete-downloads
+      - name: incomplete-downloads-sabnzbd
         persistentVolumeClaim:
-          claimName: incomplete-downloads
+          claimName: incomplete-downloads-sabnzbd
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: incomplete-downloads-sabnzbd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 100Gi
 
 ---
 apiVersion: v1
