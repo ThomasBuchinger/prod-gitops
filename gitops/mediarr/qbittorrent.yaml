@@ -71,7 +71,7 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: incomplete-downloads-bittorrent-config
+        - name: bittorrent-data
           mountPath: "/config"
         - name: config
           mountPath: "/config/qBittorrent.conf"
@@ -82,8 +82,11 @@ spec:
           mountPath: "/media/incomplete"
       volumes:
       - name: config
+        configMap:
+          name: config-files
+      - name: bittorrent-data
         persistentVolumeClaim:
-          claimName: mediarr-config
+          claimName: bittorrent-data
       - name: media
         persistentVolumeClaim:
           claimName: mediarr-media
@@ -108,7 +111,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: incomplete-downloads-bittorrent-config
+  name: bittorrent-data
 spec:
   accessModes:
     - ReadWriteOnce
