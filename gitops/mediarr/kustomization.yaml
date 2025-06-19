@@ -1,0 +1,17 @@
+namespace: mediarr
+
+resources:
+- common.yaml
+- jellyseer.yaml
+- radarr.yaml
+- prowlarr.yaml
+- sabnzbd.yaml
+- qbittorrent.yaml
+
+configMapGenerator:
+- name: arr-config
+  envs:
+  - arr-config.env
+- name: config-files
+  files:
+  - qbittorrent.conf

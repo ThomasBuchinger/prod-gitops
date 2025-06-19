@@ -1,0 +1,198 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mediarr
+  labels:
+    # Allow pods to run as root and change users at runtime
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/version: latest
+
+
+# ---
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: cert-tv-buc-sh
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: cert-tv-buc-sh
+#     creationPolicy: Owner
+#   dataFrom:
+#   - extract:
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+#       key: cert-tv-buc-sh
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: mediarr-tls
+# spec:
+#   tls:
+#   - hosts:
+#       - requests.mediarr.buc.sh
+#       - movies.mediarr.buc.sh
+#     secretName: cert-tv-buc-sh
+#   rules:
+#   - host: "requests.mediarr.buc.sh"
+#     http:
+#       paths:
+#       - path: "/"
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: jellyseer
+#             port:
+#               name: http
+#   - host: "requests.mediarr.buc.sh"
+#     http:
+#       paths:
+#       - path: "/"
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: radarr
+#             port:
+#               name: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mediarr
+spec:
+  rules:
+  - host: requests.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyseer
+            port:
+              name: http
+  - host: movies.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: radarr
+            port:
+              name: http
+  - host: files.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              name: http
+  - host: downloads.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sabnzbd
+            port:
+              name: http
+  - host: torrent.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: qbittorrent
+            port:
+              name: http
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mediarr-config
+  namespace: mediarr
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ""
+  volumeName: mediarr-config
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mediarr-config
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.19
+    path: /mnt/user/data/kubernetes/mediarr
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mediarr-media
+  namespace: mediarr
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ""
+  volumeName: mediarr-media
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mediarr-media
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.19
+    path: /mnt/user/data/files/_Media
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
