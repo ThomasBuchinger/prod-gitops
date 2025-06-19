@@ -100,5 +100,5 @@ spec:
     app: qbittorrent
   ports:
   - name: http
-    port: 7878
+    port: 8080
     targetPort: http
