@@ -2,7 +2,7 @@ kind: Kustomization
 helmCharts:
 - name: redis
   # repo: https://charts.bitnami.com/bitnami
-  repo: oci://registry-1.docker.io/bitnamicharts/redis
+  repo: oci://registry-1.docker.io/bitnamicharts/
   releaseName: redis-ephemeral
   version: 21.2.5
   namespace: paperless
