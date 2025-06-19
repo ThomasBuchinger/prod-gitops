@@ -18,9 +18,6 @@ spec:
       containers:
       - name: sabnzbd
         image: lscr.io/linuxserver/sabnzbd:latest
-        # args:
-        # - --inet_exposure=4
-        # - --config-file /customconfig/subnzbd.ini
         resources:
           requests:
             cpu: 10m
@@ -66,22 +63,18 @@ spec:
             # - SYS_CHROOT
             drop:
             - ALL
-          # fsGroup: 100
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
         - name: config
-          mountPath: "/config/sabnzbd.ini"
-          subPath: sabnzbd.ini
-          # subPath: sabnzbd
+          mountPath: "/config"
+          subPath: sabnzbd
         - name: dummy
           mountPath: "/media"
       volumes:
       - name: config
-        configMap:
-          name: config-files
-        # persistentVolumeClaim:
-        #   claimName: mediarr-config
+        persistentVolumeClaim:
+          claimName: mediarr-config
       - name: media
         persistentVolumeClaim:
           claimName: mediarr-media
