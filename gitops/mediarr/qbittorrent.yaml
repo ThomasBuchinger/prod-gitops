@@ -71,12 +71,12 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
+        - name: incomplete-downloads
+          mountPath: "/config/"
+          subPath: qbittorrent-config
         - name: config
           mountPath: "/config/qBittorrent.conf"
           subPath: qbittorrent.conf
-        - name: incomplete-downloads
-          mountPath: "/config"
-          subPath: qbittorrent-config
         - name: media
           mountPath: "/media/nas"
         - name: incomplete-downloads
