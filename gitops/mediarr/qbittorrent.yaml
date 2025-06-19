@@ -76,6 +76,8 @@ spec:
           subPath: qbittorrent.conf
         - name: media
           mountPath: "/media/nas"
+        - name: incomplete
+          mountPath: "/media/incomplete"
       volumes:
       # - name: config
       #   persistentVolumeClaim:
@@ -87,6 +89,8 @@ spec:
         configMap:
           name: config-files
       - name: media
+        emptyDir: {}
+      - name: incomplete
         emptyDir: {}
 
 
