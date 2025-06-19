@@ -71,9 +71,9 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        # - name: config
-        #   mountPath: "/config"
-        #   subPath: qbittorrent
+        - name: config
+          mountPath: "/config/qBittorrent.conf"
+          subPath: qbittorrent.conf
         - name: media
           mountPath: "/media/nas"
       volumes:
@@ -84,7 +84,8 @@ spec:
       #   persistentVolumeClaim:
       #     claimName: mediarr-media
       - name: config
-        emptyDir: {}
+        configMap:
+          name: config-files
       - name: media
         emptyDir: {}
 
