@@ -1,6 +1,6 @@
 {
   "packages": [
-    "renovate@40.33.1",
+    "renovate@40.60.0",
     "talosctl@1.10"
   ],
   "shell": {
