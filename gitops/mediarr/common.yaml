@@ -108,6 +108,16 @@ spec:
             name: sabnzbd
             port:
               name: http
+  - host: torrent.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: qbittorrent
+            port:
+              name: http
 
 
 

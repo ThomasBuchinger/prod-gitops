@@ -6,6 +6,7 @@ resources:
 - radarr.yaml
 - prowlarr.yaml
 - sabnzbd.yaml
+- qbittorrent.yaml
 
 configMapGenerator:
 - name: arr-config

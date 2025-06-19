@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sabnzbd
+  name: qbittorrent
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: sabnzbd
+      app: qbittorrent
   template:
     metadata:
       labels:
-        app: sabnzbd
+        app: qbittorrent
     spec:
       containers:
-      - name: sabnzbd
-        image: lscr.io/linuxserver/sabnzbd:latest
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
         resources:
           requests:
-            cpu: 50m
-            memory: 200Mi
+            cpu: 10m
+            memory: 128Mi
           # limits:
           #   memory: "128Mi"
         ports:
@@ -34,6 +34,11 @@ spec:
           value: "99"
         - name: PGID
           value: "100"
+        - name: WEBUI_PORT
+          value: "8080"
+        # envFrom:
+        # - configMapRef:
+        #     name: arr-config
         livenessProbe:
           httpGet:
             path: /
@@ -66,46 +71,33 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - name: config
-          mountPath: "/config"
-          subPath: sabnzbd
+        # - name: config
+        #   mountPath: "/config"
+        #   subPath: qbittorrent
         - name: media
           mountPath: "/media/nas"
-        - name: sabnzbd-incomplete-downloads
-          mountPath: "/media/incomplete"
       volumes:
+      # - name: config
+      #   persistentVolumeClaim:
+      #     claimName: mediarr-config
+      # - name: media
+      #   persistentVolumeClaim:
+      #     claimName: mediarr-media
       - name: config
-        persistentVolumeClaim:
-          claimName: mediarr-config
+        emptyDir: {}
       - name: media
-        persistentVolumeClaim:
-          claimName: mediarr-media
-      - name: sabnzbd-incomplete-downloads
-        persistentVolumeClaim:
-          claimName: sabnzbd-incomplete-downloads
+        emptyDir: {}
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: sabnzbd-incomplete-downloads
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: local-path
-  resources:
-    requests:
-      storage: 100Gi
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sabnzbd
+  name: qbittorrent
 spec:
   selector:
-    app: sabnzbd
+    app: qbittorrent
   ports:
   - name: http
-    port: 8080
+    port: 7878
     targetPort: http
