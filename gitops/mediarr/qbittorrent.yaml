@@ -74,24 +74,24 @@ spec:
         - name: config
           mountPath: "/config/qBittorrent.conf"
           subPath: qbittorrent.conf
+        - name: incomplete-downloads
+          mountPath: "/config"
+          subPath: qbittorrent-config
         - name: media
           mountPath: "/media/nas"
-        - name: incomplete
+        - name: incomplete-downloads
           mountPath: "/media/incomplete"
+          subPath: qbittorrent
       volumes:
-      # - name: config
-      #   persistentVolumeClaim:
-      #     claimName: mediarr-config
-      # - name: media
-      #   persistentVolumeClaim:
-      #     claimName: mediarr-media
       - name: config
-        configMap:
-          name: config-files
+        persistentVolumeClaim:
+          claimName: mediarr-config
       - name: media
-        emptyDir: {}
-      - name: incomplete
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: mediarr-media
+      - name: incomplete-downloads
+        persistentVolumeClaim:
+          claimName: incomplete-downloads
 
 
 ---
