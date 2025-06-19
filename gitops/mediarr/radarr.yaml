@@ -73,7 +73,7 @@ spec:
           mountPath: "/config"
           subPath: radarr
         - name: media
-          mountPath: "/media"
+          mountPath: "/media/nas"
       volumes:
       - name: config
         persistentVolumeClaim:
