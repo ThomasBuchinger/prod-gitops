@@ -88,6 +88,16 @@ spec:
             name: radarr
             port:
               name: http
+  - host: shows.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr
+            port:
+              name: http
   - host: files.tv.10.0.0.21.nip.io
     http:
       paths:
