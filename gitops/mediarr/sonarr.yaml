@@ -74,10 +74,10 @@ spec:
           subPath: sonarr
         - name: media
           mountPath: "/media/nas"
-      # dnsConfig:
-      #   nameservers:
-      #   - 10.0.0.16
-      dnsPolicy: Default
+      dnsConfig:
+        nameservers:
+        - 10.0.0.16
+      # dnsPolicy: Default
       volumes:
       - name: config
         persistentVolumeClaim:
