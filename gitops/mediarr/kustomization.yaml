@@ -4,6 +4,7 @@ resources:
 - common.yaml
 - jellyseer.yaml
 - radarr.yaml
+- sonarr.yaml
 - prowlarr.yaml
 - sabnzbd.yaml
 - qbittorrent.yaml
