@@ -75,8 +75,11 @@ spec:
         - name: media
           mountPath: "/media/nas"
       dnsConfig:
-        nameservers:
-        - 10.0.0.16
+        # nameservers:
+        # - 10.0.0.16
+      options:
+      - name: ndots
+        value: "2"
       # dnsPolicy: Default
       volumes:
       - name: config
