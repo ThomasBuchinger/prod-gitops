@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin-exporter
+  template:
+    metadata:
+      labels:
+        app: jellyfin-exporter
+    spec:
+      containers:
+      - name: jellyfin-exporter
+        image: rebelcore/jellyfin-exporter:v1.3.6
+        args:
+        - --jellyfin.address=http://10.0.0.19:8096 \
+        - --jellyfin.token=02264d8f273645b693e0337e5a7d8340
+        resources:
+          requests:
+            cpu: 1m
+            memory: 1Mi
+          # limits:
+          #   memory: "128Mi"
+        ports:
+        - containerPort: 9594
+          name: metrics
+        # env:
+        # - name: TZ
+        #   value: Europe/Vienna
+        livenessProbe:
+          httpGet:
+            path: /
+            port: metrics
+        readinessProbe:
+          httpGet:
+            path: /
+            port: metrics
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin-exporter
+spec:
+  selector:
+    app: jellyfin-exporter
+  ports:
+  - name: metrics
+    port: 9100
+    targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: jellyfin-exporter
+  labels:
+    app: jellyfin-exporter
+spec:
+  selector:
+    matchLabels:
+      app: jellyfin-exporter
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics

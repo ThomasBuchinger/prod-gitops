@@ -2,6 +2,7 @@ namespace: mediarr
 
 resources:
 - common.yaml
+- jelly-exporter.yaml
 - jellyseer.yaml
 - radarr.yaml
 - sonarr.yaml

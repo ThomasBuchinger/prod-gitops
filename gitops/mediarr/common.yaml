@@ -78,6 +78,16 @@ spec:
             name: jellyfin
             port:
               name: jellyfin
+  - host: jellyfin-metrics.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyfin-exporter
+            port:
+              name: metrics
   - host: requests.tv.10.0.0.21.nip.io
     http:
       paths:
