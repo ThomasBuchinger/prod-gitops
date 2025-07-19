@@ -61,6 +61,40 @@ spec:
         - name: config
           mountPath: "/config"
           subPath: prowlarr
+      - name: prowlarr-exporter
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - prowlarr
+        env:
+          - name: PORT
+            value: "9707"
+          - name: URL
+            value: "http://prowlarr:7878"
+          - name: APIKEY
+            valueFrom:
+              configMapKeyRef:
+                name: arr-config
+                key: PROWLARR__AUTH__APIKEY
+        ports:
+          - name: metrics
+            containerPort: 9710
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 64Mi
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -78,3 +112,24 @@ spec:
   - name: http
     port: 9696
     targetPort: http
+  - name: metrics
+    port: 9710
+    targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prowlarr-exporter
+  labels:
+    app: prowlarr
+spec:
+  selector:
+    matchLabels:
+      app: prowlarr
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics
+

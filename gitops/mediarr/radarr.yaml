@@ -131,3 +131,20 @@ spec:
   - name: metrics
     port: 9707
     targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: radarr-exporter
+  labels:
+    app: radarr
+spec:
+  selector:
+    matchLabels:
+      app: radarr
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics

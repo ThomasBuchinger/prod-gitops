@@ -118,6 +118,16 @@ spec:
             name: prowlarr
             port:
               name: http
+  - host: prowlarr-metrics.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              name: metrics
   - host: downloads.tv.10.0.0.21.nip.io
     http:
       paths:
