@@ -62,7 +62,7 @@ spec:
           mountPath: "/config"
           subPath: prowlarr
       - name: prowlarr-exporter
-        image: ghcr.io/onedr0p/exportarr:v2.0
+        image: ghcr.io/onedr0p/exportarr:v2.2
         imagePullPolicy: IfNotPresent
         args:
           - prowlarr
