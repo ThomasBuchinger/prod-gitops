@@ -74,6 +74,40 @@ spec:
           subPath: radarr
         - name: media
           mountPath: "/media/nas"
+      - name: radarr-exporter
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - radarr
+        env:
+          - name: PORT
+            value: "9707"
+          - name: URL
+            value: "http://radarr:7878"
+          - name: APIKEY
+            valueFrom:
+              configMapRef:
+                name: arr-config
+                key: RADARR__AUTH__APIKEY
+        ports:
+          - name: metrics
+            containerPort: 9707
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 64Mi
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -94,3 +128,6 @@ spec:
   - name: http
     port: 7878
     targetPort: http
+  - name: metrics
+    port: 9707
+    targetPort: metrics
