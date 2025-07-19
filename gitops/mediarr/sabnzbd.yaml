@@ -74,7 +74,7 @@ spec:
         - name: incomplete-downloads-sabnzbd
           mountPath: "/media/incomplete"
       - name: sabnzbd-exporter
-        image: ghcr.io/onedr0p/exportarr:v2.0
+        image: ghcr.io/onedr0p/exportarr:v2.2
         imagePullPolicy: IfNotPresent
         args:
           - sabnzbd
