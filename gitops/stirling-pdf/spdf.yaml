@@ -49,8 +49,10 @@ spec:
           mountPath: /pipeline
         - name: confdir
           mountPath: /configs
+        - name: tmp
+          mountPath: /tmp/stirling-pdf
         livenessProbe:
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 10
           failureThreshold: 10
           tcpSocket:
@@ -87,7 +89,8 @@ spec:
         emptyDir: {}
       - name: pipeline
         emptyDir: {}
-
+      - name: tmp
+        emptyDir: {}
 ---
 kind: Service
 apiVersion: v1
