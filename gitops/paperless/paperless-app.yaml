@@ -91,8 +91,8 @@ spec:
         - name: http
           containerPort: 8000
         livenessProbe:
-          failureThreshold: 3
-          periodSeconds: 10
+          failureThreshold: 6
+          periodSeconds: 15
           successThreshold: 1
           timeoutSeconds: 1
           tcpSocket:
@@ -125,7 +125,7 @@ spec:
         - mountPath: /data
           name: paperless-nfs
       - name: paperless-exporter
-        image: ghcr.io/hansmi/prometheus-paperless-exporter:latest
+        image: ghcr.io/hansmi/prometheus-paperless-exporter:v0.0.8
         imagePullPolicy: IfNotPresent
         env:
         - name: PAPERLESS_URL
