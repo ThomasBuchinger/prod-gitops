@@ -68,7 +68,7 @@ spec:
           - prowlarr
         env:
           - name: PORT
-            value: "9707"
+            value: "9100"
           - name: URL
             value: "http://prowlarr:7878"
           - name: APIKEY
@@ -78,7 +78,7 @@ spec:
                 key: PROWLARR__AUTH__APIKEY
         ports:
           - name: metrics
-            containerPort: 9710
+            containerPort: 9100
         livenessProbe:
           httpGet:
             path: /healthz
@@ -113,7 +113,7 @@ spec:
     port: 9696
     targetPort: http
   - name: metrics
-    port: 9710
+    port: 9100
     targetPort: metrics
 
 ---

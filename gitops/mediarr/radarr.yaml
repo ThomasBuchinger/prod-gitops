@@ -81,7 +81,7 @@ spec:
           - radarr
         env:
           - name: PORT
-            value: "9707"
+            value: "9100"
           - name: URL
             value: "http://radarr:7878"
           - name: APIKEY
@@ -91,7 +91,7 @@ spec:
                 key: RADARR__AUTH__APIKEY
         ports:
           - name: metrics
-            containerPort: 9707
+            containerPort: 9100
         livenessProbe:
           httpGet:
             path: /healthz
@@ -129,7 +129,7 @@ spec:
     port: 7878
     targetPort: http
   - name: metrics
-    port: 9707
+    port: 9100
     targetPort: metrics
 
 ---
