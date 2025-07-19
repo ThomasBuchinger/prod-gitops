@@ -1,0 +1,266 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mediarr
+  labels:
+    # Allow pods to run as root and change users at runtime
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/version: latest
+
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cert-tv-buc-sh
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-tv-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-tv-buc-sh
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mediarr-tls
+spec:
+  tls:
+  - hosts:
+      # - player.tv.buc.sh
+      # - jellyfin-metrics.tv.buc.sh
+      # - requess.tv.buc.sh
+      # - movies.tv.buc.sh
+      # - radarr-metrics.tv.buc.sh
+      # - shows.tv.buc.sh
+      # - sonarr-metrics.tv.buc.sh
+      # - files.tv.buc.sh
+      # - prowlarr-metrics.tv.buc.sh
+      # - downloads.tv.buc.sh
+      # - sabnzbd-metrics.tv.buc.sh
+      # - torrent.tv.buc.sh
+      - "*.tv.buc.sh"
+    secretName: cert-tv-buc-sh
+  rules:
+  - host: player.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyfin
+            port:
+              name: jellyfin
+  - host: jellyfin-metrics.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyfin-exporter
+            port:
+              name: metrics
+  - host: requests.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyseer
+            port:
+              name: http
+  - host: movies.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: radarr
+            port:
+              name: http
+  - host: radarr-metrics.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: radarr
+            port:
+              name: metrics
+  - host: shows.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr
+            port:
+              name: http
+  - host: sonarr-metrics.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr
+            port:
+              name: metrics
+  - host: files.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              name: http
+  - host: prowlarr-metrics.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              name: metrics
+  - host: downloads.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sabnzbd
+            port:
+              name: http
+  - host: sabnzbd-metrics.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sabnzbd
+            port:
+              name: metrics
+  - host: torrent.tv.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: qbittorrent
+            port:
+              name: http
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mediarr-config
+  namespace: mediarr
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ""
+  volumeName: mediarr-config
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mediarr-config
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.19
+    path: /mnt/user/data/kubernetes/mediarr
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mediarr-media
+  namespace: mediarr
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ""
+  volumeName: mediarr-media
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mediarr-media
+spec:
+  capacity:
+    storage: 8Ti
+  accessModes:
+  - ReadWriteMany
+  - ReadOnlyMany
+  nfs:
+    server: 10.0.0.19
+    path: /mnt/user/data/files/_Media
+  mountOptions:
+  - nfsvers=4.2
+  - retrans=3
+  - ac         # Fileattribute cache
+  - fsc        # File cache
+  # # if NFS server is unreachable, block all IO
+  - hard
+  - timeo=600
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+spec:
+  type: ExternalName
+  externalName: player.10.0.0.19.nip.io
+  ports:
+  - name: unraid
+    port: 80
+    targetPort: 80
+  - name: jellyfin
+    port: 8096
+    targetPort: 8096

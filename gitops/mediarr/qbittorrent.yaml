@@ -1,0 +1,134 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          # limits:
+          #   memory: "128Mi"
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: TZ
+          value: Europe/Vienna
+        - name: PUID
+          value: "99"
+        - name: PGID
+          value: "100"
+        - name: WEBUI_PORT
+          value: "8080"
+        # envFrom:
+        # - configMapRef:
+        #     name: arr-config
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+            # - FOWNER
+            # - DAC_OVERRIDE
+            # - AUDIT_WRITE
+            # - FSETID
+            # - KILL
+            # - MKNOD
+            # - NET_BIND_SERVICE
+            # - SETFCAP
+            # - SETPCAP
+            # - SYS_CHROOT
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - name: bittorrent-data
+          mountPath: "/config"
+        - name: config
+          mountPath: "/config/qBittorrent.conf"
+          subPath: qbittorrent.conf
+        - name: media
+          mountPath: "/media/nas"
+        - name: incomplete-downloads-bittorrent
+          mountPath: "/media/incomplete"
+      volumes:
+      - name: config
+        configMap:
+          name: config-files
+      - name: bittorrent-data
+        persistentVolumeClaim:
+          claimName: bittorrent-data
+      - name: media
+        persistentVolumeClaim:
+          claimName: mediarr-media
+      - name: incomplete-downloads-bittorrent
+        persistentVolumeClaim:
+          claimName: incomplete-downloads-bittorrent
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: incomplete-downloads-bittorrent
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bittorrent-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qbittorrent
+spec:
+  selector:
+    app: qbittorrent
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http

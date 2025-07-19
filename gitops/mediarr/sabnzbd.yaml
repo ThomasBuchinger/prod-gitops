@@ -1,0 +1,166 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sabnzbd
+  template:
+    metadata:
+      labels:
+        app: sabnzbd
+    spec:
+      containers:
+      - name: sabnzbd
+        image: lscr.io/linuxserver/sabnzbd:latest
+        resources:
+          requests:
+            cpu: 50m
+            memory: 200Mi
+          # limits:
+          #   memory: "128Mi"
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: TZ
+          value: Europe/Vienna
+        - name: PUID
+          value: "99"
+        - name: PGID
+          value: "100"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+            # - FOWNER
+            # - DAC_OVERRIDE
+            # - AUDIT_WRITE
+            # - FSETID
+            # - KILL
+            # - MKNOD
+            # - NET_BIND_SERVICE
+            # - SETFCAP
+            # - SETPCAP
+            # - SYS_CHROOT
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          subPath: sabnzbd
+        - name: media
+          mountPath: "/media/nas"
+        - name: incomplete-downloads-sabnzbd
+          mountPath: "/media/incomplete"
+      - name: sabnzbd-exporter
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - sabnzbd
+        env:
+          - name: PORT
+            value: "9100"
+          - name: URL
+            value: "http://sabnzbd:8080"
+          - name: APIKEY
+            valueFrom:
+              configMapKeyRef:
+                name: arr-config
+                key: RADARR__AUTH__APIKEY
+        ports:
+          - name: metrics
+            containerPort: 9100
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 64Mi
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: mediarr-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: mediarr-media
+      - name: incomplete-downloads-sabnzbd
+        persistentVolumeClaim:
+          claimName: incomplete-downloads-sabnzbd
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: incomplete-downloads-sabnzbd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 100Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd
+spec:
+  selector:
+    app: sabnzbd
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+  - name: metrics
+    port: 9100
+    targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sabnzbd-exporter
+  labels:
+    app: sabnzbd
+spec:
+  selector:
+    matchLabels:
+      app: sabnzbd
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics

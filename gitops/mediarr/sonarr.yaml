@@ -1,0 +1,154 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:latest
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          # limits:
+          #   memory: "128Mi"
+        ports:
+        - containerPort: 8989
+          name: http
+        env:
+        - name: TZ
+          value: Europe/Vienna
+        - name: PUID
+          value: "99"
+        - name: PGID
+          value: "100"
+        envFrom:
+        - configMapRef:
+            name: arr-config
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+            # - FOWNER
+            # - DAC_OVERRIDE
+            # - AUDIT_WRITE
+            # - FSETID
+            # - KILL
+            # - MKNOD
+            # - NET_BIND_SERVICE
+            # - SETFCAP
+            # - SETPCAP
+            # - SYS_CHROOT
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          subPath: sonarr
+        - name: media
+          mountPath: "/media/nas"
+      - name: sonarr-exporter
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - sonarr
+        env:
+          - name: PORT
+            value: "9100"
+          - name: URL
+            value: "http://sonarr:8989"
+          - name: APIKEY
+            valueFrom:
+              configMapKeyRef:
+                name: arr-config
+                key: SONARR__AUTH__APIKEY
+        ports:
+          - name: metrics
+            containerPort: 9100
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 64Mi
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: mediarr-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: mediarr-media
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+spec:
+  selector:
+    app: sonarr
+  ports:
+  - name: http
+    port: 8989
+    targetPort: http
+  - name: metrics
+    port: 9100
+    targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sonarr-exporter
+  labels:
+    app: sonarr
+spec:
+  selector:
+    matchLabels:
+      app: sonarr
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics
