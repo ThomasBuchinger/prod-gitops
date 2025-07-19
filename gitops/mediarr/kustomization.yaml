@@ -1,5 +1,13 @@
 namespace: mediarr
 
+patches:
+- target:
+    kind: Deployment
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+
 resources:
 - common.yaml
 - jelly-exporter.yaml

@@ -9,66 +9,48 @@ metadata:
     pod-security.kubernetes.io/version: latest
 
 
-# ---
-# apiVersion: external-secrets.io/v1
-# kind: ExternalSecret
-# metadata:
-#   name: cert-tv-buc-sh
-# spec:
-#   refreshInterval: 1h
-#   secretStoreRef:
-#     name: k8s-evergreen
-#     kind: ClusterSecretStore
-#   target:
-#     name: cert-tv-buc-sh
-#     creationPolicy: Owner
-#   dataFrom:
-#   - extract:
-#       conversionStrategy: Default
-#       decodingStrategy: None
-#       metadataPolicy: None
-#       key: cert-tv-buc-sh
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: mediarr-tls
-# spec:
-#   tls:
-#   - hosts:
-#       - requests.mediarr.buc.sh
-#       - movies.mediarr.buc.sh
-#     secretName: cert-tv-buc-sh
-#   rules:
-#   - host: "requests.mediarr.buc.sh"
-#     http:
-#       paths:
-#       - path: "/"
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: jellyseer
-#             port:
-#               name: http
-#   - host: "requests.mediarr.buc.sh"
-#     http:
-#       paths:
-#       - path: "/"
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: radarr
-#             port:
-#               name: http
-
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cert-tv-buc-sh
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-tv-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-tv-buc-sh
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mediarr
+  name: mediarr-tls
 spec:
+  tls:
+  - hosts:
+      - player.tv.buc.sh
+      - jellyfin-metrics.tv.buc.sh
+      - requess.tv.buc.sh
+      - movies.tv.buc.sh
+      - radarr-metrics.tv.buc.sh
+      - shows.tv.buc.sh
+      - sonarr-metrics.tv.buc.sh
+      - files.tv.buc.sh
+      - prowlarr-metrics.tv.buc.sh
+      - downloads.tv.buc.sh
+      - sabnzbd-metrics.tv.buc.sh
+      - torrent.tv.buc.sh
+    secretName: cert-tv-buc-sh
   rules:
-  - host: player.tv.10.0.0.21.nip.io
+  - host: player.tv.buc.sh
     http:
       paths:
       - path: /
@@ -78,7 +60,7 @@ spec:
             name: jellyfin
             port:
               name: jellyfin
-  - host: jellyfin-metrics.tv.10.0.0.21.nip.io
+  - host: jellyfin-metrics.tv.buc.sh
     http:
       paths:
       - path: /
@@ -88,7 +70,7 @@ spec:
             name: jellyfin-exporter
             port:
               name: metrics
-  - host: requests.tv.10.0.0.21.nip.io
+  - host: requests.tv.buc.sh
     http:
       paths:
       - path: /
@@ -98,7 +80,7 @@ spec:
             name: jellyseer
             port:
               name: http
-  - host: movies.tv.10.0.0.21.nip.io
+  - host: movies.tv.buc.sh
     http:
       paths:
       - path: /
@@ -108,7 +90,7 @@ spec:
             name: radarr
             port:
               name: http
-  - host: radarr-metrics.tv.10.0.0.21.nip.io
+  - host: radarr-metrics.tv.buc.sh
     http:
       paths:
       - path: /
@@ -118,7 +100,7 @@ spec:
             name: radarr
             port:
               name: metrics
-  - host: shows.tv.10.0.0.21.nip.io
+  - host: shows.tv.buc.sh
     http:
       paths:
       - path: /
@@ -128,7 +110,7 @@ spec:
             name: sonarr
             port:
               name: http
-  - host: sonarr-metrics.tv.10.0.0.21.nip.io
+  - host: sonarr-metrics.tv.buc.sh
     http:
       paths:
       - path: /
@@ -138,7 +120,7 @@ spec:
             name: sonarr
             port:
               name: metrics
-  - host: files.tv.10.0.0.21.nip.io
+  - host: files.tv.buc.sh
     http:
       paths:
       - path: /
@@ -148,7 +130,7 @@ spec:
             name: prowlarr
             port:
               name: http
-  - host: prowlarr-metrics.tv.10.0.0.21.nip.io
+  - host: prowlarr-metrics.tv.buc.sh
     http:
       paths:
       - path: /
@@ -158,7 +140,7 @@ spec:
             name: prowlarr
             port:
               name: metrics
-  - host: downloads.tv.10.0.0.21.nip.io
+  - host: downloads.tv.buc.sh
     http:
       paths:
       - path: /
@@ -168,7 +150,7 @@ spec:
             name: sabnzbd
             port:
               name: http
-  - host: sabnzbd-metrics.tv.10.0.0.21.nip.io
+  - host: sabnzbd-metrics.tv.buc.sh
     http:
       paths:
       - path: /
@@ -178,7 +160,7 @@ spec:
             name: sabnzbd
             port:
               name: metrics
-  - host: torrent.tv.10.0.0.21.nip.io
+  - host: torrent.tv.buc.sh
     http:
       paths:
       - path: /
