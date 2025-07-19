@@ -36,18 +36,19 @@ metadata:
 spec:
   tls:
   - hosts:
-      - player.tv.buc.sh
-      - jellyfin-metrics.tv.buc.sh
-      - requess.tv.buc.sh
-      - movies.tv.buc.sh
-      - radarr-metrics.tv.buc.sh
-      - shows.tv.buc.sh
-      - sonarr-metrics.tv.buc.sh
-      - files.tv.buc.sh
-      - prowlarr-metrics.tv.buc.sh
-      - downloads.tv.buc.sh
-      - sabnzbd-metrics.tv.buc.sh
-      - torrent.tv.buc.sh
+      # - player.tv.buc.sh
+      # - jellyfin-metrics.tv.buc.sh
+      # - requess.tv.buc.sh
+      # - movies.tv.buc.sh
+      # - radarr-metrics.tv.buc.sh
+      # - shows.tv.buc.sh
+      # - sonarr-metrics.tv.buc.sh
+      # - files.tv.buc.sh
+      # - prowlarr-metrics.tv.buc.sh
+      # - downloads.tv.buc.sh
+      # - sabnzbd-metrics.tv.buc.sh
+      # - torrent.tv.buc.sh
+      - "*.tv.buc.sh"
     secretName: cert-tv-buc-sh
   rules:
   - host: player.tv.buc.sh
