@@ -41,7 +41,7 @@ spec:
         wave: "2"
       # === Apps ===
       - name: paperless
-        rev: fix-paperless
+        rev: main
         path: gitops/paperless
         wave: "2"
       - name: syncthing
@@ -49,7 +49,7 @@ spec:
         path: gitops/syncthing
         wave: "2"
       - name: spdf
-        rev: fix-paperless
+        rev: main
         path: gitops/stirling-pdf
         wave: "1"
       - name: mediarr
