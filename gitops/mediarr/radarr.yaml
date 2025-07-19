@@ -86,7 +86,7 @@ spec:
             value: "http://radarr:7878"
           - name: APIKEY
             valueFrom:
-              configMapRef:
+              configMapKeyRef:
                 name: arr-config
                 key: RADARR__AUTH__APIKEY
         ports:
