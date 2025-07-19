@@ -68,6 +68,16 @@ metadata:
   name: mediarr
 spec:
   rules:
+  - host: player.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyfin
+            port:
+              name: jellyfin
   - host: requests.tv.10.0.0.21.nip.io
     http:
       paths:
@@ -236,3 +246,18 @@ spec:
   - hard
   - timeo=600
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+spec:
+  type: ExternalName
+  externalName: player.10.0.0.19.nip.io
+  ports:
+  - name: unraid
+    port: 80
+    targetPort: 80
+  - name: jellyfin
+    port: 8096
+    targetPort: 8096
