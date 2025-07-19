@@ -74,13 +74,44 @@ spec:
           subPath: sonarr
         - name: media
           mountPath: "/media/nas"
+      - name: sonarr-exporter
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - sonarr
+        env:
+          - name: PORT
+            value: "9100"
+          - name: URL
+            value: "http://sonarr:8989"
+          - name: APIKEY
+            valueFrom:
+              configMapKeyRef:
+                name: arr-config
+                key: SONARR__AUTH__APIKEY
+        ports:
+          - name: metrics
+            containerPort: 9100
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 64Mi
       dnsConfig:
-        # nameservers:
-        # - 10.0.0.16
         options:
         - name: ndots
           value: "2"
-      # dnsPolicy: Default
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -101,3 +132,23 @@ spec:
   - name: http
     port: 8989
     targetPort: http
+  - name: metrics
+    port: 9100
+    targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sonarr-exporter
+  labels:
+    app: sonarr
+spec:
+  selector:
+    matchLabels:
+      app: sonarr
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics
