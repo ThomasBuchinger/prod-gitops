@@ -158,6 +158,16 @@ spec:
             name: sabnzbd
             port:
               name: http
+  - host: sabnzbd-metrics.tv.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sabnzbd
+            port:
+              name: metrics
   - host: torrent.tv.10.0.0.21.nip.io
     http:
       paths:

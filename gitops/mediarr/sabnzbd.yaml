@@ -73,6 +73,40 @@ spec:
           mountPath: "/media/nas"
         - name: incomplete-downloads-sabnzbd
           mountPath: "/media/incomplete"
+      - name: sabnzbd-exporter
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - sabnzbd
+        env:
+          - name: PORT
+            value: "9100"
+          - name: URL
+            value: "http://sabnzbd:8080"
+          - name: APIKEY
+            valueFrom:
+              configMapKeyRef:
+                name: arr-config
+                key: RADARR__AUTH__APIKEY
+        ports:
+          - name: metrics
+            containerPort: 9100
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 64Mi
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -110,3 +144,23 @@ spec:
   - name: http
     port: 8080
     targetPort: http
+  - name: metrics
+    port: 9100
+    targetPort: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sabnzbd-exporter
+  labels:
+    app: sabnzbd
+spec:
+  selector:
+    matchLabels:
+      app: sabnzbd
+  endpoints:
+    - port: metrics
+      interval: 5m
+      scrapeTimeout: 90s
+      path: /metrics
