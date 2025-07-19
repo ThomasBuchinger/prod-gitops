@@ -6,7 +6,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/replicas
-      value: 1
+      value: 0
 
 resources:
 - common.yaml
