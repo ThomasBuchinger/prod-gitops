@@ -239,7 +239,7 @@ spec:
   - ReadOnlyMany
   nfs:
     server: 10.0.0.19
-    path: /mnt/user/data/files/_Media
+    path: /mnt/user/lfs/_Media
   mountOptions:
   - nfsvers=4.2
   - retrans=3
