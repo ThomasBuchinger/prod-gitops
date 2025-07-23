@@ -59,12 +59,12 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 2
-        # container:
+        container:
         #   image: envoyproxy/envoy:v1.26-latest
-        #   resources:
-        #     requests:
-        #       cpu: 150m
-        #       memory: 640Mi
+          resources:
+            requests:
+              cpu: 150m
+              memory: 640Mi
         #     limits:
         #       cpu: 500m
         #       memory: 1Gi
