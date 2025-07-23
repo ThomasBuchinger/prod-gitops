@@ -241,7 +241,7 @@ spec:
     name: external-gateway/external-gateway/https
     operation:
       op: add
-      path: "/filter_chains/filters/0/typed_config/http_filters/"
+      path: "/filter_chains/0/filters/0/typed_config/http_filters/"
       value:
         name: envoy.filters.http.geoip
         typed_config:
