@@ -191,7 +191,7 @@ spec:
         command:
         - envoy-ui/envoy-ui
         - "--listen-port=9000"
-        - "--host=external-gateway.svc"
+        - "--host=external-gateway"
         - "--port=19000"
         env: []
         ports:
