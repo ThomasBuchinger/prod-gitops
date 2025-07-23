@@ -24,3 +24,9 @@ helmCharts:
   version: v1.4.2
   includeCRDs: false
   namespace: external-gateway
+  valuesInline:
+    config:
+      envoyGateway:
+        extensionApis:
+          enableEnvoyPatchPolicy: true
+          enableBackend: true
