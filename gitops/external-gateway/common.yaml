@@ -40,6 +40,11 @@ metadata:
   name: external-gateway
 spec:
   gatewayClassName: gwclass-external
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: config
   listeners:
   - name: http
     protocol: HTTP
