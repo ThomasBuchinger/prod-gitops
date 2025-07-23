@@ -4,6 +4,7 @@ namespace: external-gateway
 
 resources:
 - common.yaml
+- test-deployment.yaml
 
 helmCharts:
 - name: gateway-crds-helm
