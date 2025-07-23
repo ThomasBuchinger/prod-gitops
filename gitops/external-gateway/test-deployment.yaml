@@ -55,6 +55,7 @@ spec:
     kind: Gateway
     name: external-gateway
   hostnames:
+  - "echo.cloud.buc.sh"
   - "echo.mtls.buc.sh"
   - "echo.10.0.0.21.nip.io"
   rules:

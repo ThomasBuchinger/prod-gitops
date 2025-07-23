@@ -101,28 +101,31 @@ metadata:
 spec:
   externalTrafficPolicy: Local
   selector:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/managed-by: envoy-gateway
+    app.kubernetes.io/name: envoy
     gateway.envoyproxy.io/owning-gateway-name: external-gateway
     gateway.envoyproxy.io/owning-gateway-namespace: external-gateway
   type: NodePort
   ports:
-  - name: http
+  - name: http-80
     port: 80
     nodePort: 32081
-    targetPort: 80
-  - name: https
+    targetPort: 10080
+  - name: https-443
     port: 443
     nodePort: 32082
-    targetPort: 443
-  - name: mtls
+    targetPort: 10443
+  - name: mtls-444
     port: 444
     nodePort: 32083
-    targetPort: 444
-  - name: matrics
+    targetPort: 10444
+  - name: metrics
     port: 19001
     targetPort: 19001
-  # - name: admin
-  #   port: 9901
-  #   targetPort: 9901
+  - name: admin
+    port: 19000
+    targetPort: 19000
   # - name: ui
   #   port: 9000
   #   targetPort: 9000
