@@ -52,9 +52,21 @@ spec:
   - name: https
     protocol: HTTPS
     port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
   - name: mtls
     protocol: HTTPS
     port: 444
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
