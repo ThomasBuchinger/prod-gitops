@@ -1,0 +1,47 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-gateway
+spec: {}
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: external-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-cloud-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-secure-http-buc-sh
+
+
+
+
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: envoy-metrics
+#   labels:
+#     release: monitoring
+# spec:
+#   endpoints:
+#   - honorLabels: true
+#     port: "admin"
+#     path: /stats/prometheus
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/name: envoy
+#       app.kubernetes.io/instance: external-http
+
