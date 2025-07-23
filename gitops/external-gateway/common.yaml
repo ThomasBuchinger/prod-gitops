@@ -123,6 +123,11 @@ spec:
           socket_address:
             address: 0.0.0.0
     jsonPatches: []
+  logging:
+    level:
+      default: warn
+      client: trace
+      connection: trace
 ---
 kind: Service
 apiVersion: v1
