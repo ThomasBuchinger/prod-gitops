@@ -93,14 +93,14 @@ spec:
       envoyService:
         type: NodePort
         name: external-gateway
-    bootstrap:
-      type: Merge
-      value: |-
-        admin:
-          address:
-            socket_address:
-              address: 0.0.0.0
-      jsonPatches: []
+  bootstrap:
+    type: Merge
+    value: |-
+      admin:
+        address:
+          socket_address:
+            address: 0.0.0.0
+    jsonPatches: []
 ---
 kind: Service
 apiVersion: v1
