@@ -216,7 +216,7 @@ spec:
   jsonPatches:
   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
     name: external-gateway/external-gateway/http
-    operation:
+    operation: &op
       op: add
       path: "/default_filter_chain/filters/0/typed_config/http_filters/0"
       value:
@@ -237,6 +237,12 @@ spec:
                     # asn: "x-geo-asn"
                 city_db_path: "/geoip-envoy/GeoLite2-City.mmdb"
                 # isp_db_path: "geoip/GeoLite2-ASN.mmdb"
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/https
+    operation: *op
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/mtls
+    operation: *op
   # - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
   #   # The listener name is of the form <GatewayNamespace>/<GatewayName>/<GatewayListenerName>
   #   name: default/eg/http
