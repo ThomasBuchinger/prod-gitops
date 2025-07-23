@@ -77,7 +77,7 @@ metadata:
   name: config
 spec:
   extraArgs:
-  - '--config-yaml admin: {address: {socket_address: {address: "0.0.0.0"}}}'
+  - --admin-address-path=0.0.0.0:19000
   provider:
     type: Kubernetes
     kubernetes:
