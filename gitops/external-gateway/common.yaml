@@ -76,11 +76,13 @@ kind: EnvoyProxy
 metadata:
   name: config
 spec:
+  extraArgs:
+  - '--config-yaml admin: {address: {socket_address: {address "0.0.0.0"}}}'
   provider:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
-        replicas: 2
+        replicas: 1
         container:
         #   image: envoyproxy/envoy:v1.26-latest
           resources:
