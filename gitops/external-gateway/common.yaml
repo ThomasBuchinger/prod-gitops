@@ -18,6 +18,8 @@ spec:
   target:
     name: cert-cloud-buc-sh
     creationPolicy: Owner
+    template:
+      type: kubernetes.io/tls
   dataFrom:
   - extract:
       conversionStrategy: Default
