@@ -173,6 +173,7 @@ spec:
     sectionName: mtls
   tls:
     clientValidation:
+      optional: false
       caCertificateRefs:
       - kind: "Secret"
         group: ""
