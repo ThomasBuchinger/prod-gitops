@@ -29,7 +29,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: external-gateway
+  name: gwclass-external
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 
@@ -39,11 +39,69 @@ kind: Gateway
 metadata:
   name: external-gateway
 spec:
-  gatewayClassName: external-gateway
+  gatewayClassName: gwclass-external
   listeners:
   - name: http
     protocol: HTTP
     port: 80
+  - name: https
+    protocol: HTTPS
+    port: 443
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: config
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 2
+        # container:
+        #   image: envoyproxy/envoy:v1.26-latest
+        #   resources:
+        #     requests:
+        #       cpu: 150m
+        #       memory: 640Mi
+        #     limits:
+        #       cpu: 500m
+        #       memory: 1Gi
+      envoyService:
+        type: NodePort
+        name: external-gateway
+    
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: external-gateway
+spec:
+  externalTrafficPolicy: Local
+  selector:
+    gateway.envoyproxy.io/owning-gateway-name: external-gateway
+    gateway.envoyproxy.io/owning-gateway-namespace: external-gateway
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    nodePort: 32081
+    targetPort: 80
+  - name: https
+    port: 443
+    nodePort: 32444
+    targetPort: 443
+  - name: matrics
+    port: 19001
+    targetPort: 19001
+  # - name: admin
+  #   port: 9901
+  #   targetPort: 9901
+  # - name: ui
+  #   port: 9000
+  #   targetPort: 9000
 
 
 # ---
