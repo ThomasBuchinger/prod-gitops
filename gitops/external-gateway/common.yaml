@@ -52,6 +52,9 @@ spec:
   - name: https
     protocol: HTTPS
     port: 443
+  - name: mtls
+    protocol: HTTPS
+    port: 444
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -98,6 +101,10 @@ spec:
     port: 443
     nodePort: 32082
     targetPort: 443
+  - name: mtls
+    port: 444
+    nodePort: 32083
+    targetPort: 444
   - name: matrics
     port: 19001
     targetPort: 19001
