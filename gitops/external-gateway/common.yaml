@@ -32,6 +32,11 @@ metadata:
   name: gwclass-external
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: config
+    namespace: external-gateway
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -40,11 +45,6 @@ metadata:
   name: external-gateway
 spec:
   gatewayClassName: gwclass-external
-  infrastructure:
-    parametersRef:
-      group: gateway.envoyproxy.io
-      kind: EnvoyProxy
-      name: config
   listeners:
   - name: http
     protocol: HTTP
