@@ -138,6 +138,102 @@ spec:
   #   port: 9000
   #   targetPort: 9000
 
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: envoy-admin
+spec:
+  rules:
+  - host: envoy-gateway.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /ui
+        pathType: Prefix
+        backend:
+          service:
+            name: envoy-ui
+            port:
+              name: ui
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: external-gateway
+            port:
+              name: admin
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-ui
+  labels:
+    app.kubernetes.io/name: envoy-ui
+    app.kubernetes.io/instance: external-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy-ui
+      app.kubernetes.io/instance: external-gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: envoy-ui
+        app.kubernetes.io/instance: external-gateway
+    spec:
+      containers:
+      - name: envoy-ui
+        image: gonitro/envoy-ui:42bae1c
+        imagePullPolicy: IfNotPresent
+        command:
+        - envoy-ui/envoy-ui
+        - "--listen-port=9000"
+        - "--host external-gateway.svc"
+        - "--port 19000"
+        env: []
+        ports:
+        - name: ui
+          containerPort: 9000
+        livenessProbe:
+          httpGet:
+            path: /
+            scheme: HTTP
+            port: ui
+        readinessProbe:
+          httpGet:
+            path: /
+            scheme: HTTP
+            port: ui
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits: {}
+      securityContext: {}
+      terminationGracePeriodSeconds: 10
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: envoy-ui
+  labels:
+    app.kubernetes.io/name: envoy-ui
+    app.kubernetes.io/instance: external-gateway
+spec:
+  selector:
+    app.kubernetes.io/name: envoy-ui
+    app.kubernetes.io/instance: external-gateway
+  type: ClusterIP
+  ports:
+  - name: ui
+    port: 9000
+    targetPort: 9000
+
+
 
 # ---
 # apiVersion: monitoring.coreos.com/v1
