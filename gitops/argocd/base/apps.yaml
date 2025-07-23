@@ -62,11 +62,15 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-http
-        rev: main
+        rev: feat-gateway
         path: gitops/external-http
         wave: "2"
+      - name: external-gateway
+        rev: feat-gateway
+        path: gitops/external-gateway
+        wave: "2"
       - name: external-homelabapi
-        rev: main
+        rev: feat-gateway
         path: gitops/external-homelabapi
         wave: "2"
       - name: external-hfs
