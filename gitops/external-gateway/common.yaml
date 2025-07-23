@@ -20,10 +20,11 @@ spec:
     creationPolicy: Owner
   dataFrom:
   - extract:
-      conversionStratexternal-gatewayy: Default
+      conversionStrategy: Default
       decodingStrategy: None
       metadataPolicy: None
       key: cert-secure-http-buc-sh
+
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
