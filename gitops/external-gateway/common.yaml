@@ -103,15 +103,33 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 1
+        pod:
+          volumes:
+          - name: geoip
+            emptyDir: {}
         container:
-        #   image: envoyproxy/envoy:v1.26-latest
-          resources:
-            requests:
-              cpu: 150m
-              memory: 640Mi
-        #     limits:
-        #       cpu: 500m
-        #       memory: 1Gi
+          volumeMounts:
+          - name: geoip
+            mountPath: /geoip-envoy
+        patch:
+          value:
+            spec:
+              template:
+                spec:
+                  initContainers:
+                  - name: download-geoip
+                    image: ghcr.io/thomasbuchinger/homelab-api:main
+                    command:
+                    - ./copy-geoip-for-envoy
+                    imagePullPolicy: Always
+                    env:
+                    - name: GEOIP_DATABASE
+                      value: /geoip/GeoLite2-City.mmdb
+                    - name: COPY_GEOIP_DATABASE
+                      value: /geoip-envoy/GeoLite2-City.mmdb
+                    volumeMounts:
+                    - name: geoip
+                      mountPath: /geoip-envoy
       envoyService:
         type: NodePort
         name: external-gateway
@@ -126,8 +144,8 @@ spec:
   logging:
     level:
       default: warn
-      client: trace
-      connection: trace
+      # client: trace
+      # connection: trace
 ---
 kind: Service
 apiVersion: v1
@@ -183,6 +201,60 @@ spec:
       - kind: "Secret"
         group: ""
         name: "root-ca-mtls"
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: patch-geoip-filter
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+  type: JSONPatch
+  jsonPatches:
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/http
+    operation:
+      op: add
+      path: /default_filter_chain/filters/
+      value:
+        name: envoy.filters.http.geoip
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.http.geoip.v3.Geoip
+          xff_config:
+            xff_num_trusted_hops: 1
+          provider:
+              name: "envoy.geoip_providers.maxmind"
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
+                common_provider_config:
+                  geo_headers_to_add:
+                    country: "x-geo-country"
+                    # region: "x-geo-region"
+                    city: "x-geo-city"
+                    # asn: "x-geo-asn"
+                city_db_path: "/geoip-envoy/GeoLite2-City.mmdb"
+                # isp_db_path: "geoip/GeoLite2-ASN.mmdb"
+  # - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+  #   # The listener name is of the form <GatewayNamespace>/<GatewayName>/<GatewayListenerName>
+  #   name: default/eg/http
+  #   operation:
+  #     op: add
+  #     path: "/default_filter_chain/filters/0/typed_config/local_reply_config"
+  #     value:
+  #       mappers:
+  #       - filter:
+  #           status_code_filter:
+  #             comparison:
+  #               op: EQ
+  #               value:
+  #                 default_value: 404
+  #                 runtime_key: key_b
+  #         status_code: 406
+  #         body:
+  #           inline_string: "could not find what you are looking for"
 
 ---
 apiVersion: networking.k8s.io/v1
