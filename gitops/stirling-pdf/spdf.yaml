@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: s-pdf
-        image: ghcr.io/stirling-tools/s-pdf:1.0.2-fat
+        image: ghcr.io/stirling-tools/s-pdf:1.1.0-fat
         ports:
         - name: http
           containerPort: 8080
