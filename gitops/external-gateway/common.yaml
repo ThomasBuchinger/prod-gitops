@@ -47,7 +47,7 @@ spec:
       conversionStrategy: Default
       decodingStrategy: None
       metadataPolicy: None
-      key: tmp-buc-root-ca-mtls
+      key: mtls-buc-root-ca
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
