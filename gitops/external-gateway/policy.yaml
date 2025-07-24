@@ -60,9 +60,9 @@ spec:
       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
       value: *geoip
 
-  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-    name: external-gateway/external-gateway/mtls
-    operation:
-      op: add
-      path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
-      value: *geoip
+  # - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+  #   name: external-gateway/external-gateway/mtls
+  #   operation:
+  #     op: add
+  #     path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
+  #     value: *geoip
