@@ -144,8 +144,8 @@ spec:
   logging:
     level:
       default: warn
-      # client: trace
-      # connection: trace
+      client: trace
+      connection: trace
 ---
 kind: Service
 apiVersion: v1
