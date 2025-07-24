@@ -3,7 +3,8 @@ kind: Kustomization
 namespace: external-gateway
 
 resources:
-- common.yaml
+- gateway.yaml
+- poilcy.yaml
 - test-deployment.yaml
 
 helmCharts:
