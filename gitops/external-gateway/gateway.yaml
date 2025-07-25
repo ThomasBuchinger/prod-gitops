@@ -218,7 +218,7 @@ spec:
     targetPort: 10444
   - name: https-445     # mtls
     port: 445
-    nodePort: 32083
+    nodePort: 32084
     targetPort: 10444
   - name: metrics
     port: 19001
