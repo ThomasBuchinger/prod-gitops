@@ -6,6 +6,7 @@ resources:
 - gateway.yaml
 - policy.yaml
 - test-deployment.yaml
+- routes.yaml
 
 helmCharts:
 - name: gateway-crds-helm
