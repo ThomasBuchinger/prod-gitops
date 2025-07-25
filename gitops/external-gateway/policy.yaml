@@ -20,6 +20,39 @@ spec:
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: ratelimit-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+  rateLimit:
+    type: Local
+    local:
+      rules:
+      - limit:
+          requests: 2
+          unit: Second
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: cors-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+  cors:
+    allowOrigins: []
+    allowMethods:
+    - GET
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyPatchPolicy
 metadata:
   name: patch-geoip-filter
@@ -53,16 +86,23 @@ spec:
                     # asn: "x-geo-asn"
                 city_db_path: "/geoip-envoy/GeoLite2-City.mmdb"
 
-  # - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-  #   name: external-gateway/external-gateway/https
-  #   operation:
-  #     op: add
-  #     path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
-  #     value: *geoip
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/https
+    operation:
+      op: add
+      path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
+      value: *geoip
 
-  # - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-  #   name: external-gateway/external-gateway/mtls
-  #   operation:
-  #     op: add
-  #     path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
-  #     value: *geoip
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/hidden_apps
+    operation:
+      op: add
+      path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
+      value: *geoip
+
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/mtls
+    operation:
+      op: add
+      path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
+      value: *geoip

@@ -48,7 +48,6 @@ spec:
       decodingStrategy: None
       metadataPolicy: None
       key: mtls-buc-root-ca
-      # key: test-ca
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -83,9 +82,18 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
-  - name: mtls
+  - name: hidden_apps
     protocol: HTTPS
     port: 444
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+  - name: mtls
+    protocol: HTTPS
+    port: 445
     tls:
       mode: Terminate
       certificateRefs:
@@ -134,6 +142,42 @@ spec:
       envoyService:
         type: NodePort
         name: external-gateway
+
+  telemetry:
+    tracing:
+      samplingRate: 100
+      provider:
+        backendRefs:
+        - kind: service
+          name: tempo
+          namespace: monitoring
+          port: 4317
+        type: OpenTelemetry
+      customTags:
+        header1:
+          type: RequestHeader
+          requestHeader:
+            name: X-Geo-Country
+            defaultValue: "-"
+    accessLog:
+      settings:
+      - format:
+          type: JSON
+          json:
+            authority: "%REQ(:AUTHORITY)%"
+            method: "%REQ(:METHOD)%"
+            referer: "%REQ(REFERER)%"
+            request_id: "%REQ(X-REQUEST-ID)%"
+            path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+            protocol: "%PROTOCOL%"
+            response_code: "%RESPONSE_CODE%"
+            response_flags: "%RESPONSE_FLAGS%"
+            route_name: "%ROUTE_NAME%"
+            upstream_host: "%UPSTREAM_HOST%"
+            user_agent: "%REQ(USER-AGENT)%"
+            x_agent_name: "%REQ(X-AGENTNAME)%"
+            x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+            x_geo_country: "%REQ(x-geo-country)%"
   bootstrap:
     type: Merge
     value: |-
@@ -145,8 +189,6 @@ spec:
   logging:
     level:
       default: warn
-      client: trace
-      connection: trace
 ---
 kind: Service
 apiVersion: v1
@@ -166,12 +208,16 @@ spec:
     port: 80
     nodePort: 32081
     targetPort: 10080
-  - name: https-443
+  - name: https-443     # https
     port: 443
     nodePort: 32082
     targetPort: 10443
-  - name: mtls-444
+  - name: https-444     # hidden_apps
     port: 444
+    nodePort: 32083
+    targetPort: 10444
+  - name: https-445     # mtls
+    port: 445
     nodePort: 32083
     targetPort: 10444
   - name: metrics
@@ -279,8 +325,6 @@ spec:
   - name: ui
     port: 9000
     targetPort: 9000
-
-
 
 # ---
 # apiVersion: monitoring.coreos.com/v1
