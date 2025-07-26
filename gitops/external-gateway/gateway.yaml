@@ -188,7 +188,7 @@ spec:
             x_agent_name: "%REQ(X-AGENTNAME)%"
             x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
             x_geo_country: "%REQ(x-geo-country)%"
-      sinkd:
+      sinks:
       - type: File
         path: /dev/stdout
   bootstrap:
