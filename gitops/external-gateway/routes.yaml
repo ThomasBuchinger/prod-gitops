@@ -1,4 +1,3 @@
-
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -21,6 +20,7 @@ spec:
         group: gateway.envoyproxy.io
         kind: HTTPRouteFilter
         name: im-a-teapot
+
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: HTTPRouteFilter
@@ -46,3 +46,60 @@ spec:
     body:
       type: Inline
       inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Nothing here! ¯\_(ツ)_/¯</p></body></html>
+
+
+
+
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+  hostnames:
+  - "echo.cloud.buc.sh"
+  - "echo.mtls.buc.sh"
+  - "echo.10.0.0.21.nip.io"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: backend
+      port: 3000
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend-mtls
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    sectionName: mtls
+  hostnames:
+  - "echo-mtls.10.0.0.21.nip.io"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: backend
+      port: 3000
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
