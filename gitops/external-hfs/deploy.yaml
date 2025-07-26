@@ -194,7 +194,7 @@ spec:
           kubernetes.io/metadata.name: traefik
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: external-http
+          kubernetes.io/metadata.name: external-gateway
     ports:
     - protocol: TCP
       port: 8080
