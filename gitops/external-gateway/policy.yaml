@@ -111,7 +111,7 @@ spec:
                 "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
                 common_provider_config:
                   geo_headers_to_add:
-                    country: "x-geo-country"
+                    country: "xgeocountry"
                     # region: "x-geo-region"
                     city: "x-geo-city"
                     # asn: "x-geo-asn"
