@@ -19,7 +19,7 @@ spec:
     matches:
     - method: GET
       path:
-        type: PathExact
+        type: Exact
         value: /
     - method: GET
       path:
