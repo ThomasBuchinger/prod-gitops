@@ -30,7 +30,7 @@ spec:
       #   value: Mozilla.*
       - type: Exact
         # name: X-Geo-Country
-        name: XGeoCountry
+        name: xgeocountry
         value: AT
     - method: GET
       path:
