@@ -91,6 +91,9 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
   - name: hidden
     protocol: HTTPS
     port: 444
@@ -100,6 +103,9 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
   - name: mtls
     protocol: HTTPS
     port: 445
@@ -109,6 +115,9 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
