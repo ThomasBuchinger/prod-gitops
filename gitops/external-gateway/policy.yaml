@@ -58,11 +58,16 @@ metadata:
   name: http-to-https
 spec:
   parentRefs:
-  - name: external-gateway
-    sectionName: http
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-http
   hostnames: []
   rules:
-  - filters:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    filters:
     - type: RequestRedirect
       requestRedirect:
         scheme: https
