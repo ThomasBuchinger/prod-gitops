@@ -116,6 +116,7 @@ kind: EnvoyProxy
 metadata:
   name: config
 spec:
+  mergeGateways: true
   provider:
     type: Kubernetes
     kubernetes:
