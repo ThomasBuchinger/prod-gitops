@@ -1,0 +1,6 @@
+kind: Kustomization
+
+# namespace: envoy-gateway-system
+
+# resources:
+# - ns.yaml

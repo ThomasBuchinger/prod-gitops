@@ -13,3 +13,4 @@ resources:
 - deploy.yaml
 - pv.yaml
 - ingress.yaml
+- http-route.yaml
