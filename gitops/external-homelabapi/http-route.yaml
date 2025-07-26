@@ -19,7 +19,7 @@ spec:
     matches:
     - method: GET
       path:
-        type: PathExact
+        type: Exact
         value: /
     - method: GET
       path:
@@ -27,15 +27,15 @@ spec:
         value: /_next
     - method: GET
       path:
-        type: PathExact
+        type: Exact
         value: /index.html
     - method: GET
       path:
-        type: PathExact
+        type: Exact
         value: /404.html
     - method: GET
       path:
-        type: PathExact
+        type: Exact
         value: /favicon.ico
     - method: GET
       path:
