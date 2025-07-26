@@ -95,7 +95,7 @@ spec:
   - type: Inline
     inline: |
       function envoy_on_request(request_handle)
-        local allowed_countried = { AT=true, DE=true, CH=true, HR=true }
+        local allowed_countried = { DE=true, CH=true, HR=true }
         if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
           request_handle:respond(
             {[":status"] = "403"}, "Not available in your country")
