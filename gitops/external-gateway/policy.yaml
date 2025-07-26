@@ -136,7 +136,8 @@ metadata:
   name: lua-get-only
 spec:
   targetRefs:
-  - kind: HTTPRoute
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
     name: backend
   lua:
   - type: Inline
