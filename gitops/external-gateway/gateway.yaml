@@ -91,7 +91,7 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
-  - name: hidden_apps
+  - name: hidden
     protocol: HTTPS
     port: 444
     tls:
@@ -222,7 +222,7 @@ spec:
     port: 443
     nodePort: 32082
     targetPort: 10443
-  - name: https-444     # hidden_apps
+  - name: https-444     # hidden
     port: 444
     nodePort: 32083
     targetPort: 10444
