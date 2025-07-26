@@ -16,6 +16,7 @@ spec:
     - group: ""
       kind: Service
       name: external-homelab-api
+      namespace: external-homelab-api
       port: 8080
       weight: 1
     matches:
