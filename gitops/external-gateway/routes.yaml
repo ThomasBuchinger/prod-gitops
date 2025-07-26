@@ -28,7 +28,7 @@ metadata:
   name: im-a-teapot
 spec:
   directResponse:
-    contentType: text/plain
+    contentType: text/html
     statusCode: 418
     body:
       type: Inline
