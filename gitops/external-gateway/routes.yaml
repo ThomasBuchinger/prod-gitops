@@ -33,3 +33,16 @@ spec:
     body:
       type: Inline
       inline: <p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">I'm a teapot! Sorry! ¯\_(ツ)_/¯</p>
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: 404-page
+spec:
+  directResponse:
+    contentType: text/html
+    statusCode: 404
+    body:
+      type: Inline
+      inline: <p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Nothing here! ¯\_(ツ)_/¯</p>
