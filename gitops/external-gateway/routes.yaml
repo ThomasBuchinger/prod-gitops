@@ -16,7 +16,6 @@ spec:
         type: PathPrefix
         value: /
     filters:
-    filters:
     - type: ExtensionRef
       extensionRef:
         group: gateway.envoyproxy.io
