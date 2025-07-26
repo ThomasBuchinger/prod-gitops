@@ -8,6 +8,7 @@ spec:
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: external-gateway
+    namespace: external-gateway
   hostnames:
   - "files.cloud.buc.sh"
   rules:
@@ -46,13 +47,13 @@ spec:
       extensionRef:
         group: gateway.envoyproxy.io
         kind: HTTPRouteFilter
-        name: 403-denied-hfs
+        name: 403-denied
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: HTTPRouteFilter
 metadata:
-  name: 403-denied-hfs
+  name: 403-denied
 spec:
   directResponse:
     contentType: text/html
