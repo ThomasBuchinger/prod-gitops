@@ -32,7 +32,7 @@ spec:
     statusCode: 418
     body:
       type: Inline
-      inline: <p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">I'm a teapot! Sorry! ¯\_(ツ)_/¯</p>
+      inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">I'm a teapot! Sorry! ¯\_(ツ)_/¯</p></body></html>
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -45,4 +45,4 @@ spec:
     statusCode: 404
     body:
       type: Inline
-      inline: <p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Nothing here! ¯\_(ツ)_/¯</p>
+      inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Nothing here! ¯\_(ツ)_/¯</p></body></html>
