@@ -214,8 +214,9 @@ spec:
     app.kubernetes.io/component: proxy
     app.kubernetes.io/managed-by: envoy-gateway
     app.kubernetes.io/name: envoy
-    gateway.envoyproxy.io/owning-gateway-name: external-gateway
-    gateway.envoyproxy.io/owning-gateway-namespace: external-gateway
+    gateway.envoyproxy.io/owning-gatewayclass: gwclass-external
+    # gateway.envoyproxy.io/owning-gateway-name: external-gateway
+    # gateway.envoyproxy.io/owning-gateway-namespace: external-gateway
   type: NodePort
   ports:
   - name: http-80
