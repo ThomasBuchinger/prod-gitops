@@ -33,8 +33,8 @@ spec:
     local:
       rules:
       - limit:
-          requests: 3000
-          unit: Hour
+          requests: 100
+          unit: Minute
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
