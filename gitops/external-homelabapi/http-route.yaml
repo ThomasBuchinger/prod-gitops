@@ -8,6 +8,7 @@ spec:
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: external-gateway
+    namespace: external-gateway
   hostnames:
   - "api.cloud.buc.sh"
   rules:
