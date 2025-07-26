@@ -81,7 +81,7 @@ spec:
       type: Inline
       inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied</p></body></html>
 
-# ---
+---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
 metadata:
