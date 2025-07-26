@@ -181,22 +181,3 @@ spec:
       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
       value: *csrf
 
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: EnvoyExtensionPolicy
-metadata:
-  name: lua-get-only
-spec:
-  targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: backend
-  lua:
-  - type: Inline
-    inline: |
-      function envoy_on_request(request_handle)
-        if request_handle:headers():get(":method") ~= "GET" then
-          request_handle:respond(
-            {[":status"] = "403"}, "Only GET requests allowed")
-        end
-      end
