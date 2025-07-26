@@ -32,4 +32,4 @@ spec:
     statusCode: 418
     body:
       type: Inline
-      inline: <span align="center" valign="middle">Sorry! ¯\_(ツ)_/¯</span>
+      inline: <p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">I'm a teapot! Sorry! ¯\_(ツ)_/¯</p>
