@@ -128,3 +128,22 @@ spec:
       op: add
       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
       value: *geoip
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-get-only
+spec:
+  targetRefs:
+  - kind: HTTPRoute
+    name: backend
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        if request_handle:headers():get(":method") ~= "POST" then
+          request_handle:respond(
+            {[":status"] = "403"}, "Only POST requests allowed")
+        end
+      end
