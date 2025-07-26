@@ -111,9 +111,9 @@ spec:
                 "@type": type.googleapis.com/envoy.extensions.geoip_providers.maxmind.v3.MaxMindConfig
                 common_provider_config:
                   geo_headers_to_add:
-                    country: "Xgeocountry"
+                    country: "X-Geo-Country"
                     # region: "x-geo-region"
-                    city: "x-geo-city"
+                    city: "X-Geo-City"
                     # asn: "x-geo-asn"
                 city_db_path: "/geoip-envoy/GeoLite2-City.mmdb"
 
