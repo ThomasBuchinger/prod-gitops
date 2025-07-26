@@ -30,7 +30,7 @@ spec:
     - method: GET
       path:
         type: RegularExpression
-        value: "/~/(api/get_|api/login|api/logout|frontend).*"
+        value: "/~/(api/get_|api/loginSrp1|api/logout|frontend).*"
 
   - matches:
     - path:
