@@ -25,8 +25,9 @@ spec:
         type: Exact
         value: /
       headers:
-      - name: X-Geo-Country
-        value: asdsad
+      - type: RegularExpression
+        name: X-Geo-Country
+        value: AT
     - method: GET
       path:
         type: PathPrefix
