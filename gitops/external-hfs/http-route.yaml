@@ -46,13 +46,13 @@ spec:
       extensionRef:
         group: gateway.envoyproxy.io
         kind: HTTPRouteFilter
-        name: 403-denied
+        name: 403-denied-hfs
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: HTTPRouteFilter
 metadata:
-  name: 403-denied
+  name: 403-denied-hfs
 spec:
   directResponse:
     contentType: text/html
