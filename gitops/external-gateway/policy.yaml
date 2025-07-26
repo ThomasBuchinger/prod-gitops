@@ -136,7 +136,7 @@ spec:
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyPatchPolicy
 metadata:
-  name: geoip-policy
+  name: csrf-policy
 spec:
   targetRef:
     group: gateway.networking.k8s.io
