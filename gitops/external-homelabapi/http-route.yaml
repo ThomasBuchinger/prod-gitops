@@ -24,14 +24,14 @@ spec:
       path:
         type: Exact
         value: /
-      headers:
+      # headers:
       # - type: RegularExpression
       #   name: User-Agent
       #   value: Mozilla.*
-      - type: Exact
-        # name: X-Geo-Country
-        name: Xgeocountry
-        value: AT
+      # - type: Exact
+      #   # name: X-Geo-Country
+      #   name: Xgeocountry
+      #   value: AT
     - method: GET
       path:
         type: PathPrefix
@@ -82,21 +82,21 @@ spec:
       inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied</p></body></html>
 
 # ---
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: EnvoyExtensionPolicy
-# metadata:
-#   name: lua-get-only
-# spec:
-#   targetRefs:
-#   - group: gateway.networking.k8s.io
-#     kind: HTTPRoute
-#     name: route-api-cloud-buc-sh
-#   lua:
-#   - type: Inline
-#     inline: |
-#       function envoy_on_request(request_handle)
-#         if request_handle:headers():get(":method") ~= "GET" then
-#           request_handle:respond(
-#             {[":status"] = "403"}, "Only GET requests allowed")
-#         end
-#       end
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-geoip-block
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: route-api-cloud-buc-sh
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        if request_handle:headers():get("X-Geo-Country") ~= "AT" then
+          request_handle:respond(
+            {[":status"] = "403"}, "Not available in your country")
+        end
+      end
