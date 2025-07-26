@@ -27,10 +27,9 @@ spec:
       path:
         type: RegularExpression
         value: "/(public|guests|private).*"
-    - method: GET
-      path:
+    - path:
         type: RegularExpression
-        value: "/~/(api/get_|api/loginSrp1|api/logout|frontend).*"
+        value: "/~/(api/get_|api/login|api/logout|frontend).*"
 
   - matches:
     - path:
