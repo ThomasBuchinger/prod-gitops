@@ -25,9 +25,9 @@ spec:
         type: Exact
         value: /
       headers:
-      - type: Exact
+      - type: RegularExpression
         name: User-Agent
-        value: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36
+        value: Mozilla.*
       # - type: Exact
       #   # name: X-Geo-Country
       #   name: x-geo-country
