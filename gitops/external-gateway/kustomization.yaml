@@ -8,3 +8,28 @@ resources:
 - test-deployment.yaml
 - routes.yaml
 
+
+helmCharts:
+- name: gateway-crds-helm
+  releaseName: gateway-crds-helm
+  repo: oci://docker.io/envoyproxy
+  version: v1.4.2
+  valuesInline:
+    crds:
+      gatewayApi:
+        enabled: true
+        channel: stable
+      envoyGateway:
+        enabled: true
+- name: gateway-helm
+  releaseName: gateway
+  repo: oci://docker.io/envoyproxy
+  version: v1.4.2
+  includeCRDs: false
+  namespace: external-gateway
+  valuesInline:
+    config:
+      envoyGateway:
+        extensionApis:
+          enableEnvoyPatchPolicy: true
+          enableBackend: true
