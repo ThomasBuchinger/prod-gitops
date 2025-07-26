@@ -1,4 +1,6 @@
 ---
+# ========== Default-Routes =============================================================================
+
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -46,10 +48,6 @@ spec:
     body:
       type: Inline
       inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Nothing here! ¯\_(ツ)_/¯</p></body></html>
-
-
-
-
 
 ---
 apiVersion: gateway.networking.k8s.io/v1

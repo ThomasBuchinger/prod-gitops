@@ -1,0 +1,91 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: route-api-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+  hostnames:
+  - "api.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: external-homelab-api
+      port: 8080
+    matches:
+    - method: GET
+      path:
+        type: PathExact
+        value: /
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /_next
+    - method: GET
+      path:
+        type: PathExact
+        value: /index.html
+    - method: GET
+      path:
+        type: PathExact
+        value: /404.html
+    - method: GET
+      path:
+        type: PathExact
+        value: /favicon.ico
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /icons
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /api/public
+ 
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.envoyproxy.io
+        kind: HTTPRouteFilter
+        name: 403-denied
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: 403-denied
+spec:
+  directResponse:
+    contentType: text/html
+    statusCode: 404
+    body:
+      type: Inline
+      inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied</p></body></html>
+
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: EnvoyExtensionPolicy
+# metadata:
+#   name: lua-get-only
+# spec:
+#   targetRefs:
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: route-api-cloud-buc-sh
+#   lua:
+#   - type: Inline
+#     inline: |
+#       function envoy_on_request(request_handle)
+#         if request_handle:headers():get(":method") ~= "GET" then
+#           request_handle:respond(
+#             {[":status"] = "403"}, "Only GET requests allowed")
+#         end
+#       end
