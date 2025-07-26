@@ -158,7 +158,7 @@ spec:
       samplingRate: 100
       provider:
         backendRefs:
-        - kind: service
+        - kind: Service
           name: tempo
           namespace: monitoring
           port: 4317
