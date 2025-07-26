@@ -25,13 +25,13 @@ spec:
         type: Exact
         value: /
       headers:
-      - type: RegularExpression
-        name: User-Agent
-        value: Mozilla.*
-      # - type: Exact
-      #   # name: X-Geo-Country
-      #   name: x-geo-country
-      #   value: AT
+      # - type: RegularExpression
+      #   name: User-Agent
+      #   value: Mozilla.*
+      - type: Exact
+        # name: X-Geo-Country
+        name: x-geo-country
+        value: AT
     - method: GET
       path:
         type: PathPrefix
