@@ -154,16 +154,16 @@ spec:
   ports:
   - name: http
     port: 80
-    nodePort: 32080
+    # nodePort: 32080
     targetPort: 8080
   - name: https
     port: 443
-    nodePort: 32443
+    # nodePort: 32443
     targetPort: 8443
   - name: apps
     port: 8444
     # 49791
-    nodePort: 32444
+    # nodePort: 32444
     targetPort: 8444
   - name: admin
     port: 9901
