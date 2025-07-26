@@ -25,7 +25,7 @@ spec:
         type: Exact
         value: /
       header:
-      - name: X-Geo-Country:
+      - name: X-Geo-Country
         value: asdsad
     - method: GET
       path:
