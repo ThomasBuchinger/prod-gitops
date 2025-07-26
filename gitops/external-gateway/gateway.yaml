@@ -190,7 +190,8 @@ spec:
             x_geo_country: "%REQ(x-geo-country)%"
       sinks:
       - type: File
-        path: /dev/stdout
+        file:
+          path: /dev/stdout
   bootstrap:
     type: Merge
     value: |-
