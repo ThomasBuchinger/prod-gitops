@@ -259,7 +259,7 @@ metadata:
   name: envoy-admin
 spec:
   rules:
-  - host: envoy-gateway.10.0.0.21.nip.io
+  - host: envoy.buc.sh
     http:
       paths:
       - path: /ui
