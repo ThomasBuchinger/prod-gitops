@@ -110,7 +110,7 @@ spec:
     sectionName: mtls
   hostnames:
   - "echo-mtls.10.0.0.21.nip.io"
-  - "echo.mtls.buc.sh
+  - "echo.mtls.buc.sh"
   rules:
   - backendRefs:
     - group: ""
