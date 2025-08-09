@@ -84,7 +84,6 @@ spec:
     name: external-gateway
   hostnames:
   - "echo.cloud.buc.sh"
-  - "echo.mtls.buc.sh"
   - "echo.10.0.0.21.nip.io"
   rules:
   - backendRefs:
@@ -111,6 +110,7 @@ spec:
     sectionName: mtls
   hostnames:
   - "echo-mtls.10.0.0.21.nip.io"
+  - "echo.mtls.buc.sh
   rules:
   - backendRefs:
     - group: ""
