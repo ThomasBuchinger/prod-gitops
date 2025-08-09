@@ -251,10 +251,6 @@ spec:
     port: 445
     nodePort: 32445
     targetPort: 10445
-  # - name: ui
-  #   port: 9000
-  #   targetPort: 9000
-
 
 ---
 apiVersion: networking.k8s.io/v1
