@@ -1,3 +1,4 @@
 resources:
 - ntfy-app.yaml
 - cron-work.yaml
+- http-route.yaml

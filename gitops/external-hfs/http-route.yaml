@@ -1,0 +1,62 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: route-files-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "files.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: hfs
+      port: 8080
+      weight: 1
+    matches:
+    - method: GET
+      path:
+        type: Exact
+        value: /
+    - method: GET
+      path:
+        type: RegularExpression
+        value: "/(public|guests|private).*"
+    - path:
+        type: RegularExpression
+        value: "/~/(api/get_|api/login|api/logout|frontend).*"
+
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /~/api/
+    - path:
+        type: PathPrefix
+        value: /~/admin/
+    - path:
+        type: PathPrefix
+        value: /~/nas/
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.envoyproxy.io
+        kind: HTTPRouteFilter
+        name: 403-denied
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: 403-denied
+spec:
+  directResponse:
+    contentType: text/html
+    statusCode: 404
+    body:
+      type: Inline
+      inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied / Not allowed on Public Interface</p></body></html>
