@@ -23,7 +23,7 @@ data:
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
   PAPERLESS_PORT: "8000"                     # Overwrite K8s variable, used by gunicorn
-  PAPERLESS_URL: https://paperless.mtls.buc.sh    # Fix CSRF issue, when using https (http works) 
+  PAPERLESS_URL: https://paperless.mtls.buc.sh"8443    # Fix CSRF issue, when using https (http works) 
   PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.mtls.buc.sh:8443
   PAPERLESS_CORS_ALLOWED_HOSTS: https://paperless.mtls.buc.sh:8443
   PAPERLESS_DEBUG: "true"
