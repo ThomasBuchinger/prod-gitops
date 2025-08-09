@@ -24,8 +24,8 @@ data:
   PAPERLESS_CONSUMPTION_DIR: /data/in
   PAPERLESS_PORT: "8000"                     # Overwrite K8s variable, used by gunicorn
   PAPERLESS_URL: https://paperless.buc.sh    # Fix CSRF issue, when using https (http works) 
-  PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.mtls.buc.sh:6443
-  PAPERLESS_CORS_ALLOWED_HOSTS: https://paperless.mtls.buc.sh:6443
+  PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.mtls.buc.sh:8443
+  PAPERLESS_CORS_ALLOWED_HOSTS: https://paperless.mtls.buc.sh:8443
 
 ---
 apiVersion: external-secrets.io/v1
