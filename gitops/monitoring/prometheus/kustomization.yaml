@@ -23,10 +23,11 @@ patches:
     metadata:
       name: monitoring-kube-state-metrics
       namespace: monitoring
-    selector:
-      matchLabels:
-        app.kubernetes.io/instance: monitoring-prometheus
-        app.kubernetes.io/name: kube-state-metrics
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: monitoring-prometheus
+          app.kubernetes.io/name: kube-state-metrics
 
 
 # ---
