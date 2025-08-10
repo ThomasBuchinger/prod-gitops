@@ -236,8 +236,6 @@ spec:
     app.kubernetes.io/managed-by: envoy-gateway
     app.kubernetes.io/name: envoy
     gateway.envoyproxy.io/owning-gatewayclass: gwclass-external
-    # gateway.envoyproxy.io/owning-gateway-name: external-gateway
-    # gateway.envoyproxy.io/owning-gateway-namespace: external-gateway
   type: NodePort
   ports:
   - name: metrics
@@ -246,10 +244,6 @@ spec:
   - name: admin
     port: 19000
     targetPort: 19000
-  - name: http-80      # HTTP
-    port: 80
-    nodePort: 32080
-    targetPort: 10080
   - name: https-443     # https
     port: 443
     nodePort: 32443
@@ -262,6 +256,10 @@ spec:
     port: 445
     nodePort: 32445
     targetPort: 10445
+  - name: http-80      # HTTP
+    port: 80
+    nodePort: 32080
+    targetPort: 10080
 
 ---
 apiVersion: networking.k8s.io/v1
