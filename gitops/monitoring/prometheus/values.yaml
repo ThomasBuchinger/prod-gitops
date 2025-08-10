@@ -40,4 +40,4 @@ prometheus:
     #   fsGroup: 2000
 
 kube-state-metrics:
-  releaseLabeL: false
+  releaseLabel: false
