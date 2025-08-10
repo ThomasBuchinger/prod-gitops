@@ -28,6 +28,20 @@ patches:
         matchLabels:
           app.kubernetes.io/instance: monitoring-prometheus
           app.kubernetes.io/name: kube-state-metrics
+- target:
+    kind: ServiceMonitor
+    name: monitoring-prometheus-node-exporter
+  patch: |-
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: monitoring-prometheus-node-exporter
+      namespace: monitoring
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: monitoring-prometheus
+          app.kubernetes.io/name: kube-state-metrics
 
 
 # ---
