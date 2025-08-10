@@ -199,10 +199,10 @@ spec:
             x_agent_name: "%REQ(X-AGENTNAME)%"
             x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
             x_geo_country: "%REQ(x-geo-country)%"
-            "x_request_headers": "%DYNAMIC_METADATA(envoy.lua:request_headers)%"
-            "x_request_body": "%DYNAMIC_METADATA(envoy.lua:request_body)%"
-            "x_response_headers": "%DYNAMIC_METADATA(envoy.lua:response_headers)%"
-            "x_response_body": "%DYNAMIC_METADATA(envoy.lua:response_body)%"
+            # "x_request_headers": "%DYNAMIC_METADATA(envoy.lua:request_headers)%"
+            # "x_request_body": "%DYNAMIC_METADATA(envoy.lua:request_body)%"
+            # "x_response_headers": "%DYNAMIC_METADATA(envoy.lua:response_headers)%"
+            # "x_response_body": "%DYNAMIC_METADATA(envoy.lua:response_body)%"
         sinks:
         - type: File
           file:
