@@ -14,6 +14,7 @@ resources:
 
 configMapGenerator:
 - name: homelab-dashboards
+  namespace: monitoring
   files:
     - HomeLAB-Dashboard.json
 
