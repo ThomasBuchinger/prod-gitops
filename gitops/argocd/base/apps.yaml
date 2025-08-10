@@ -24,25 +24,21 @@ spec:
         path: gitops/okd-console
         wave: "1"
       - name: monitoring-prometheus
-        rev: main
+        rev: feat-gateway
         path: gitops/monitoring/prometheus
         wave: "1"
       - name: monitoring-loki
-        rev: main
+        rev: feat-gateway
         path: gitops/monitoring/loki
         wave: "2"
       - name: monitoring-tempo
-        rev: main
+        rev: feat-gateway
         path: gitops/monitoring/tempo
         wave: "2"
       - name: monitoring-shared
-        rev: main
+        rev: feat-gateway
         path: gitops/monitoring/shared
         wave: "2"
-      - name: envoy-gateway
-        rev: feat-gateway
-        path: gitops/envoy-gateway
-        wave: "1"
       # === Apps ===
       - name: paperless
         rev: feat-gateway
