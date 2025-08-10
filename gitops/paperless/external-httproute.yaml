@@ -31,7 +31,7 @@ spec:
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
 metadata:
-  name: lua-geoip-block
+  name: lua-dump-body
 spec:
   targetRefs:
   - group: gateway.networking.k8s.io
