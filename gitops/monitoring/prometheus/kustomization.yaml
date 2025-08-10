@@ -18,11 +18,15 @@ patches:
     kind: ServiceMonitor
     name: monitoring-kube-state-metrics
   patch: |-
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: monitoring-kube-state-metrics
+      namespace: monitoring
     selector:
       matchLabels:
         app.kubernetes.io/instance: monitoring-prometheus
         app.kubernetes.io/name: kube-state-metrics
-
 
 
 # ---
