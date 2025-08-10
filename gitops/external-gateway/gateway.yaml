@@ -198,6 +198,8 @@ spec:
             x_agent_name: "%REQ(X-AGENTNAME)%"
             x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
             x_geo_country: "%REQ(x-geo-country)%"
+            x_request_body: "%BYTES_RECEIVED%"
+            x_response_body: "%BYTES_SENT%"
         sinks:
         - type: File
           file:
