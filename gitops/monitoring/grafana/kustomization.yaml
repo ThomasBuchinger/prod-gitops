@@ -17,7 +17,8 @@ configMapGenerator:
   namespace: monitoring
   files:
   - HomeLAB-Dashboard.json
-  - dashboard=landing.json
+  - dashboard-landing.json
+
 generatorOptions:
   disableNameSuffixHash: true
   labels:

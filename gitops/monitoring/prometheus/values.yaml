@@ -38,3 +38,6 @@ prometheus:
     #   runAsNonRoot: true
     #   runAsUser: 1000
     #   fsGroup: 2000
+
+kube-state-metrics:
+  releaseLabeL: false
