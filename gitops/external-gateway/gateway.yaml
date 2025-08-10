@@ -115,11 +115,12 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
-      frontendValidation:
-        caCertificateRefs:
-        - kind: "Secret"
-          group: ""
-          name: "root-ca-mtls"
+      # Not yet supported in envoy-gateway: v1.4.2
+      # frontendValidation:
+      #   caCertificateRefs:
+      #   - kind: "Secret"
+      #     group: ""
+      #     name: "root-ca-mtls"
     allowedRoutes:
       namespaces:
         from: All
