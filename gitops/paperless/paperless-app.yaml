@@ -26,7 +26,7 @@ data:
   PAPERLESS_URL: https://paperless.buc.sh    # Fix CSRF issue, when using https (http works) 
   PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.mtls.buc.sh:8443,http://paperless.10.0.0.21.nip.io
   PAPERLESS_CORS_ALLOWED_HOSTS: https://paperless.mtls.buc.sh:8443,http://paperless.10.0.0.21.nip.io
-  PAPERLESS_ALLOWED_HOSTS: paperless.mtls.buc.sh:8443,paperless.10.0.0.21.nip.io
+  PAPERLESS_ALLOWED_HOSTS: paperless.mtls.buc.sh,paperless.10.0.0.21.nip.io
 
 ---
 apiVersion: external-secrets.io/v1
