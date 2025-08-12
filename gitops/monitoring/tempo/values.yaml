@@ -49,4 +49,4 @@ persistence:
   storageClassName: local-path
   accessModes:
     - ReadWriteOnce
-  size: 10Gi
+  size: 3Gi
