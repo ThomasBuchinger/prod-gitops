@@ -71,7 +71,7 @@ datasources:
     datasources:
     - name: Tempo
       type: tempo
-      isDefault: true
+      isDefault: false
       url: http://tempo:3200
       version: 1
 dashboards:
