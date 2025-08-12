@@ -16,7 +16,7 @@ tempoQuery:
   repository: grafana/tempo-query
   enabled: true
   service:
-    port: 7777
+    port: 16686
   ingress:
     enabled: true
     path: /
