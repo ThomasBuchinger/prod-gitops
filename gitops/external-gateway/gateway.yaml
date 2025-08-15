@@ -179,12 +179,12 @@ spec:
           namespace: monitoring
           port: 4317
         type: OpenTelemetry
-      customTags:
-        header1:
-          type: RequestHeader
-          requestHeader:
-            name: X-Geo-Country
-            defaultValue: "-"
+      # customTags:
+      #   header1:
+      #     type: RequestHeader
+      #     requestHeader:
+      #       name: X-Geo-Country
+      #       defaultValue: "-"
     accessLog:
       settings:
       - format:
