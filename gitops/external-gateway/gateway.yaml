@@ -224,15 +224,16 @@ spec:
   logging:
     level:
       default: warn
-      upstream: debug
-      http: debug
-      # connection: warn
-      admin: debug
-      # client: debug
-      # filter: debug
-      main: debug
-      router: debug
-      runtime: debug
+      # upstream: debug
+      # http: debug
+      # # connection: warn
+      # admin: debug
+      # # client: debug
+      # # filter: debug
+      # main: debug
+      # router: debug
+      # runtime: debug
+      tracing: debug
 
 ---
 kind: Service
