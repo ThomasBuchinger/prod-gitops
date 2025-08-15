@@ -172,12 +172,13 @@ spec:
     tracing:
       samplingRate: 100
       provider:
-        backendRefs:
-        - group: ''
-          kind: Service
-          name: tempo
-          namespace: monitoring
-          port: 4317
+        # backendRefs:
+        # - group: ''
+        #   kind: Service
+        #   name: tempo
+        #   namespace: monitoring
+        #   port: 4317
+        host: tempo.monitoring.svc
         type: OpenTelemetry
       # customTags:
       #   header1:
