@@ -178,14 +178,14 @@ spec:
         #   name: tempo
         #   namespace: monitoring
         #   port: 4317
-        host: tempo.monitoring.svc
+        host: tempo.monitoring.svc   # For some reason using the backend-refs does not work. Maybe cillium is blocking accessing PodIPs directly?
         type: OpenTelemetry
-      # customTags:
-      #   header1:
-      #     type: RequestHeader
-      #     requestHeader:
-      #       name: X-Geo-Country
-      #       defaultValue: "-"
+      customTags:
+        header1:
+          type: RequestHeader
+          requestHeader:
+            name: X-Geo-Country
+            defaultValue: "-"
     accessLog:
       settings:
       - format:
@@ -234,7 +234,7 @@ spec:
       # main: debug
       # router: debug
       # runtime: debug
-      tracing: debug
+      # tracing: debug
 
 ---
 kind: Service
