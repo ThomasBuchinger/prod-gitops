@@ -114,6 +114,31 @@ spec:
       value: *geoip
 
 
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: x-forward-client-cert-policy
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: GatewayClass
+    name: gwclass-external
+  type: JSONPatch
+  jsonPatches:
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/mtls
+    operation:
+      op: add
+      path: "/filter_chains/0/filters/0/typed_config"
+      value:
+        forward_client_cert_details: SANITIZE_SET
+        set_current_client_cert_details:
+          subject: true
+          dns: true
+          uri: true
+
+
 # ---
 # apiVersion: gateway.envoyproxy.io/v1alpha1
 # kind: SecurityPolicy
