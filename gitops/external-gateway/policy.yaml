@@ -130,13 +130,16 @@ spec:
     name: external-gateway/external-gateway/mtls
     operation:
       op: add
-      path: "/filter_chains/0/filters/0/typed_config"
+      path: "/filter_chains/0/filters/0/typed_config/forward_client_cert_details"
+  - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+    name: external-gateway/external-gateway/mtls
+    operation:
+      op: add
+      path: "/filter_chains/0/filters/0/typed_config/set_current_client_cert_details"
       value:
-        forward_client_cert_details: SANITIZE_SET
-        set_current_client_cert_details:
-          subject: true
-          dns: true
-          uri: true
+        subject: true
+        dns: true
+        uri: true
 
 
 # ---
