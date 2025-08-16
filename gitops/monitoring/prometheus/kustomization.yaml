@@ -10,3 +10,64 @@ helmCharts:
 
 resources:
 - ns.yaml
+
+
+# ArgoCD overrides the instance-Label of the service, causing the seletor to be empty
+patches:
+- target:
+    kind: ServiceMonitor
+    name: monitoring-kube-state-metrics
+  patch: |-
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: monitoring-kube-state-metrics
+      namespace: monitoring
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: monitoring-prometheus
+          app.kubernetes.io/name: kube-state-metrics
+- target:
+    kind: ServiceMonitor
+    name: monitoring-prometheus-node-exporter
+  patch: |-
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: monitoring-prometheus-node-exporter
+      namespace: monitoring
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: monitoring-prometheus
+          app.kubernetes.io/name: kube-state-metrics
+
+
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   creationTimestamp: '2024-12-15T12:03:22Z'
+#   generation: 1
+#   labels:
+#     app.kubernetes.io/component: metrics
+#     app.kubernetes.io/instance: monitoring-prometheus
+#     app.kubernetes.io/managed-by: Helm
+#     app.kubernetes.io/name: kube-state-metrics
+#     app.kubernetes.io/part-of: kube-state-metrics
+#     app.kubernetes.io/version: 2.16.0
+#     helm.sh/chart: kube-state-metrics-6.1.4
+#   name: monitoring-kube-state-metrics
+#   namespace: monitoring
+#   resourceVersion: '134747203'
+#   uid: d5a6b114-adb4-43a0-9121-f3e68c68e972
+# spec:
+#   endpoints:
+#     - honorLabels: true
+#       port: http
+#   jobLabel: app.kubernetes.io/name
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/instance: monitoring
+#       app.kubernetes.io/name: kube-state-metrics

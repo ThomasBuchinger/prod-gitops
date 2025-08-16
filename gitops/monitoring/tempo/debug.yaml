@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo-debug
+  namespace: monitoring
+spec:
+  ports:
+    - name: debug
+      port: 7777
+      targetPort: 7777
+  selector:
+    app.kubernetes.io/instance: tempo
+    app.kubernetes.io/name: tempo
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tempo-debug
+  namespace: monitoring
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: tracing-debug.10.0.0.21.nip.io
+      http:
+        paths:
+          - backend:
+              service:
+                name: tempo-debug
+                port:
+                  number: 7777
+            path: /
+            pathType: Prefix
+status:
+  loadBalancer: {}

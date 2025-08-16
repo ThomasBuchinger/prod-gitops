@@ -1,0 +1,394 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-gateway
+spec: {}
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: external-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-cloud-buc-sh
+    creationPolicy: Owner
+    template:
+      type: kubernetes.io/tls
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-secure-http-buc-sh
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: mtls-ca
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: root-ca-mtls
+    creationPolicy: Owner
+    template:
+      type: kubernetes.io/tls
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: mtls-buc-root-ca
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: gwclass-external
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: config
+    namespace: external-gateway
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-gateway-http
+spec:
+  gatewayClassName: gwclass-external
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-gateway
+spec:
+  gatewayClassName: gwclass-external
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: hidden
+    protocol: HTTPS
+    port: 444
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: mtls
+    protocol: HTTPS
+    port: 445
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+      # Not yet supported in envoy-gateway: v1.4.2
+      # frontendValidation:
+      #   caCertificateRefs:
+      #   - kind: "Secret"
+      #     group: ""
+      #     name: "root-ca-mtls"
+    allowedRoutes:
+      namespaces:
+        from: All
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: config
+spec:
+  mergeGateways: true
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 1
+        pod:
+          volumes:
+          - name: geoip
+            emptyDir: {}
+        container:
+          volumeMounts:
+          - name: geoip
+            mountPath: /geoip-envoy
+        patch:
+          value:
+            spec:
+              template:
+                spec:
+                  initContainers:
+                  - name: download-geoip
+                    image: ghcr.io/thomasbuchinger/homelab-api:main
+                    command:
+                    - ./copy-geoip-for-envoy
+                    imagePullPolicy: Always
+                    env:
+                    - name: GEOIP_DATABASE
+                      value: /geoip/GeoLite2-City.mmdb
+                    - name: COPY_GEOIP_DATABASE
+                      value: /geoip-envoy/GeoLite2-City.mmdb
+                    volumeMounts:
+                    - name: geoip
+                      mountPath: /geoip-envoy
+      envoyService:
+        type: NodePort
+        name: external-gateway
+
+  telemetry:
+    tracing:
+      samplingRate: 100
+      provider:
+        # backendRefs:
+        # - group: ''
+        #   kind: Service
+        #   name: tempo
+        #   namespace: monitoring
+        #   port: 4317
+        host: tempo.monitoring.svc   # For some reason using the backend-refs does not work. Maybe cillium is blocking accessing PodIPs directly?
+        type: OpenTelemetry
+      customTags:
+        geo_country:
+          type: RequestHeader
+          requestHeader:
+            name: X-Geo-Country
+            defaultValue: "-"
+        request_id:
+          type: RequestHeader
+          requestHeader:
+            name: X-REQUEST-ID
+            defaultValue: "-"
+    accessLog:
+      settings:
+      - format:
+          type: JSON
+          json:
+            authority: "%REQ(:AUTHORITY)%"
+            method: "%REQ(:METHOD)%"
+            referer: "%REQ(REFERER)%"
+            request_id: "%REQ(X-REQUEST-ID)%"
+            path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+            protocol: "%PROTOCOL%"
+            response_code: "%RESPONSE_CODE%"
+            x_response_code_details: "%RESPONSE_CODE_DETAILS%"
+            response_flags: "%RESPONSE_FLAGS%"
+            route_name: "%ROUTE_NAME%"
+            upstream_host: "%UPSTREAM_HOST%"
+            user_agent: "%REQ(USER-AGENT)%"
+            x_agent_name: "%REQ(X-AGENTNAME)%"
+            x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+            x_geo_country: "%REQ(x-geo-country)%"
+            # "x_request_headers": "%DYNAMIC_METADATA(envoy.lua:request_headers)%"
+            # "x_request_body": "%DYNAMIC_METADATA(envoy.lua:request_body)%"
+            # "x_response_headers": "%DYNAMIC_METADATA(envoy.lua:response_headers)%"
+            # "x_response_body": "%DYNAMIC_METADATA(envoy.lua:response_body)%"
+        sinks:
+        - type: File
+          file:
+            path: /dev/stdout
+  bootstrap:
+    type: Merge
+    value: |-
+      admin:
+        address:
+          socket_address:
+            address: 0.0.0.0
+    jsonPatches: []
+  logging:
+    level:
+      default: warn
+      # upstream: debug
+      # http: debug
+      # # connection: warn
+      # admin: debug
+      # # client: debug
+      # # filter: debug
+      # main: debug
+      # router: debug
+      # runtime: debug
+      # tracing: debug
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: external-gateway
+spec:
+  externalTrafficPolicy: Local
+  selector:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/managed-by: envoy-gateway
+    app.kubernetes.io/name: envoy
+    gateway.envoyproxy.io/owning-gatewayclass: gwclass-external
+  type: NodePort
+  ports:
+  - name: metrics
+    port: 19001
+    targetPort: 19001
+  - name: admin
+    port: 19000
+    targetPort: 19000
+  - name: https-443     # https
+    port: 443
+    nodePort: 32443
+    targetPort: 10443
+  - name: https-444     # hidden
+    port: 444
+    nodePort: 32444
+    targetPort: 10444
+  - name: https-445     # mtls
+    port: 445
+    nodePort: 32445
+    targetPort: 10445
+  - name: http-80      # HTTP
+    port: 80
+    nodePort: 32080
+    targetPort: 10080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: envoy-admin
+spec:
+  rules:
+  - host: envoy.buc.sh
+    http:
+      paths:
+      - path: /ui
+        pathType: Prefix
+        backend:
+          service:
+            name: envoy-ui
+            port:
+              name: ui
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: external-gateway
+            port:
+              name: admin
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-ui
+  labels:
+    app.kubernetes.io/name: envoy-ui
+    app.kubernetes.io/instance: external-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy-ui
+      app.kubernetes.io/instance: external-gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: envoy-ui
+        app.kubernetes.io/instance: external-gateway
+    spec:
+      containers:
+      - name: envoy-ui
+        image: gonitro/envoy-ui:42bae1c
+        imagePullPolicy: IfNotPresent
+        command:
+        - envoy-ui/envoy-ui
+        - "--listen-port=9000"
+        - "--host=external-gateway"
+        - "--port=19000"
+        env: []
+        ports:
+        - name: ui
+          containerPort: 9000
+        livenessProbe:
+          httpGet:
+            path: /
+            scheme: HTTP
+            port: ui
+        readinessProbe:
+          httpGet:
+            path: /
+            scheme: HTTP
+            port: ui
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits: {}
+      securityContext: {}
+      terminationGracePeriodSeconds: 10
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: envoy-ui
+  labels:
+    app.kubernetes.io/name: envoy-ui
+    app.kubernetes.io/instance: external-gateway
+spec:
+  selector:
+    app.kubernetes.io/name: envoy-ui
+    app.kubernetes.io/instance: external-gateway
+  type: ClusterIP
+  ports:
+  - name: ui
+    port: 9000
+    targetPort: 9000
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: envoy-metrics
+  labels:
+    release: monitoring
+spec:
+  endpoints:
+  - honorLabels: true
+    port: "admin"
+    path: /stats/prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/managed-by: envoy-gateway
+      app.kubernetes.io/name: envoy
+      gateway.envoyproxy.io/owning-gatewayclass: gwclass-external
+

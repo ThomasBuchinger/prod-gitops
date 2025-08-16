@@ -14,7 +14,7 @@ tempo:
 
 tempoQuery:
   repository: grafana/tempo-query
-  enabled: true
+  enabled: false
   service:
     port: 16686
   ingress:
@@ -42,3 +42,11 @@ traces:
       enabled: false
   opencensus:
     enabled: false
+persistence:
+  enabled: true
+    # -- Enable StatefulSetAutoDeletePVC feature
+  enableStatefulSetAutoDeletePVC: false
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  size: 3Gi

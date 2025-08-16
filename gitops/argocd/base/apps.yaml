@@ -61,10 +61,6 @@ spec:
         rev: feat-gateway
         path: gitops/ntfy
         wave: "2"
-      - name: external-http
-        rev: feat-gateway
-        path: gitops/external-http
-        wave: "2"
       - name: external-gateway
         rev: feat-gateway
         path: gitops/external-gateway
