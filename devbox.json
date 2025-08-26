@@ -3,6 +3,9 @@
     "renovate@41.49.0",
     "talosctl@1.10.6"
   ],
+  "env": {
+    "KUBECONFIG": "./kubeconfig"
+  },
   "shell": {
     "init_hook": [
       "echo 'Welcome to devbox!' > /dev/null"
