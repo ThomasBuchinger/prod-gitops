@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 3,
+  "id": 2,
   "links": [],
   "liveNow": true,
   "panels": [
@@ -62,7 +62,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "yellow",
@@ -84,7 +84,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "APPs 2xx"
+                "value": "HTTPS 2xx"
               },
               {
                 "id": "thresholds",
@@ -93,7 +93,7 @@
                   "steps": [
                     {
                       "color": "blue",
-                      "value": null
+                      "value": 0
                     },
                     {
                       "color": "green",
@@ -116,7 +116,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "APPs 3xx"
+                "value": "HTTPS 3xx"
               }
             ]
           },
@@ -128,7 +128,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "APPs 4xx"
+                "value": "HTTPS 4xx"
               }
             ]
           },
@@ -140,7 +140,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "APPs 5xx"
+                "value": "HTTPS 5xx"
               }
             ]
           }
@@ -152,7 +152,7 @@
         "x": 0,
         "y": 1
       },
-      "id": 13,
+      "id": 12,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -171,7 +171,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -179,8 +179,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=~\"hidden_apps\", envoy_response_code_class=~\"2|3|4|5\"} ",
+          "editorMode": "builder",
+          "expr": "envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=~\"https-10443\", envoy_response_code_class=~\"2|3|4|5\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
           "instant": false,
@@ -209,6 +209,7 @@
             "cellOptions": {
               "type": "auto"
             },
+            "filterable": false,
             "inspect": false
           },
           "mappings": [],
@@ -217,7 +218,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -259,30 +260,6 @@
                 }
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "envoy_cluster_name"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Upstream"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "envoy_response_code"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "HTTP Code"
-              }
-            ]
           }
         ]
       },
@@ -305,7 +282,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -327,6 +304,41 @@
         }
       ],
       "title": "HTTP Requests BY HOST",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "regexp",
+            "keepTime": false,
+            "regExp": "/([^/]*/){2}(?<route>[^/]*)/",
+            "replace": false,
+            "source": "envoy_cluster_name"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "envoy_cluster_name": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "Value": 4,
+              "envoy_cluster_name": 1,
+              "envoy_response_code": 3,
+              "route": 2
+            },
+            "renameByName": {
+              "Value": "Hits",
+              "envoy_response_code": "HTTP Code",
+              "route": "Upstream"
+            }
+          }
+        }
+      ],
       "type": "table"
     },
     {
@@ -346,7 +358,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#EAB839",
@@ -386,7 +398,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -424,7 +436,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -481,7 +493,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -572,7 +584,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -620,11 +632,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -715,7 +728,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -758,7 +771,19 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "Applications"
+                "value": "Hidden"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mTLS"
               }
             ]
           }
@@ -779,11 +804,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -792,7 +818,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"public_http\"}[$__rate_interval])",
+          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"http-10080\"}[$__rate_interval])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": false,
@@ -808,8 +834,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"public_https\"}[$__rate_interval])",
+          "editorMode": "builder",
+          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"https-10443\"}[$__rate_interval])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": false,
@@ -824,13 +850,34 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"hidden_apps\"}[$__rate_interval])",
+          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"https-10444\"}[$__rate_interval])",
+          "fullMetaSearch": false,
           "hide": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "C"
+          "refId": "C",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix=\"https-10445\"}[$__rate_interval])",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "D",
+          "useBackend": false
         }
       ],
       "title": "",
@@ -863,7 +910,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "yellow",
@@ -885,27 +932,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTPS 2xx"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "blue",
-                      "value": null
-                    },
-                    {
-                      "color": "green",
-                      "value": 1
-                    },
-                    {
-                      "color": "red",
-                      "value": 20
-                    }
-                  ]
-                }
+                "value": "mTLS 2xx"
               }
             ]
           },
@@ -917,7 +944,23 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTPS 3xx"
+                "value": "mTLS 3xx"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": 0
+                    },
+                    {
+                      "color": "red",
+                      "value": 500
+                    }
+                  ]
+                }
               }
             ]
           },
@@ -929,7 +972,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTPS 4xx"
+                "value": "mTLS 4xx"
               }
             ]
           },
@@ -941,7 +984,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTPS 5xx"
+                "value": "mTLS 5xx"
               }
             ]
           }
@@ -953,7 +996,7 @@
         "x": 0,
         "y": 4
       },
-      "id": 12,
+      "id": 8,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -972,7 +1015,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -980,8 +1023,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=~\"public_https\", envoy_response_code_class=~\"2|3|4|5\"} ",
+          "editorMode": "builder",
+          "expr": "envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=~\"https-10445\", envoy_response_code_class=~\"2|3|4|5\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
           "instant": false,
@@ -1024,7 +1067,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "yellow",
@@ -1063,7 +1106,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1113,7 +1156,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "yellow",
@@ -1135,7 +1178,27 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTP 2xx"
+                "value": "Hidden 2xx"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 20
+                    }
+                  ]
+                }
               }
             ]
           },
@@ -1147,23 +1210,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTP 3xx"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "blue",
-                      "value": null
-                    },
-                    {
-                      "color": "red",
-                      "value": 500
-                    }
-                  ]
-                }
+                "value": "Hidden 3xx"
               }
             ]
           },
@@ -1175,7 +1222,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTP 4xx"
+                "value": "Hidden 4xx"
               }
             ]
           },
@@ -1187,7 +1234,7 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "HTTP 5xx"
+                "value": "Hidden 5xx"
               }
             ]
           }
@@ -1199,7 +1246,7 @@
         "x": 0,
         "y": 7
       },
-      "id": 8,
+      "id": 13,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -1218,7 +1265,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1226,8 +1273,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=~\"public_http\", envoy_response_code_class=~\"2|3|4|5\"} ",
+          "editorMode": "builder",
+          "expr": "envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=~\"https-10444\", envoy_response_code_class=~\"2|3|4|5\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
           "instant": false,
@@ -1259,6 +1306,7 @@
       "id": 3,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -1267,7 +1315,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1309,7 +1357,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -1415,7 +1463,7 @@
           }
         ]
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1463,6 +1511,7 @@
       "id": 7,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -1471,7 +1520,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1518,7 +1567,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#EAB839",
@@ -1558,7 +1607,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1600,7 +1649,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -1633,7 +1682,7 @@
         "showThresholdMarkers": false,
         "sizing": "auto"
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1706,7 +1755,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -1739,7 +1788,7 @@
         "showThresholdMarkers": false,
         "sizing": "auto"
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -1795,8 +1844,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
       },
       "fieldConfig": {
         "defaults": {
@@ -1817,7 +1866,11 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           }
@@ -1826,16 +1879,16 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Value"
+              "options": "Value #B"
             },
             "properties": [
               {
-                "id": "displayName",
-                "value": "Hits"
-              },
-              {
                 "id": "custom.width",
                 "value": 50
+              },
+              {
+                "id": "displayName",
+                "value": "#"
               }
             ]
           },
@@ -1858,12 +1911,8 @@
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 50
-              },
-              {
                 "id": "displayName",
-                "value": "C"
+                "value": "Country"
               }
             ]
           }
@@ -1871,8 +1920,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 4,
-        "x": 10,
+        "w": 3,
+        "x": 11,
         "y": 18
       },
       "id": 23,
@@ -1886,27 +1935,22 @@
           ],
           "show": false
         },
+        "frameIndex": 2,
         "showHeader": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
           },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum by(city, country) (homelabapi_geoip_requests_total)",
-          "format": "table",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A",
-          "useBackend": false
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "sum by(country) (count_over_time({app=\"envoy\"} |= `geo` | json country=\"x_geo_country\" [$__auto]))",
+          "hide": false,
+          "queryType": "instant",
+          "refId": "B"
         }
       ],
       "title": "",
@@ -1918,7 +1962,7 @@
             "sort": [
               {
                 "desc": true,
-                "field": "Value"
+                "field": "Value #B"
               }
             ]
           }
@@ -1950,7 +1994,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2042,7 +2086,7 @@
           "zoom": 15
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -2084,7 +2128,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#EAB839",
@@ -2124,7 +2168,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -2133,13 +2177,31 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "node_filesystem_free_bytes{mountpoint=\"/mnt/raidpool\"}",
+          "expr": "node_filesystem_free_bytes{mountpoint=\"/mnt/user\"}",
           "fullMetaSearch": false,
+          "hide": true,
           "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(node_btrfs_device_unused_bytes{device!~\"loop3|loop2\"})",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B",
           "useBackend": false
         }
       ],
@@ -2172,7 +2234,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2248,7 +2310,7 @@
           }
         ]
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
@@ -2278,7 +2340,7 @@
       "type": "table"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2286,50 +2348,52 @@
         "y": 30
       },
       "id": 25,
-      "panels": [
-        {
-          "description": "",
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 10,
-            "w": 22,
-            "x": 2,
-            "y": 28
-          },
-          "id": 24,
-          "options": {
-            "alertInstanceLabelFilter": "",
-            "alertName": "",
-            "dashboardAlerts": false,
-            "folder": "",
-            "groupBy": [],
-            "groupMode": "default",
-            "maxItems": 20,
-            "sortOrder": 5,
-            "stateFilter": {
-              "error": true,
-              "firing": true,
-              "noData": true,
-              "normal": false,
-              "pending": true
-            },
-            "viewMode": "list"
-          },
-          "title": "",
-          "transparent": true,
-          "type": "alertlist"
-        }
-      ],
+      "panels": [],
       "title": "Alerts",
       "type": "row"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 22,
+        "x": 2,
+        "y": 31
+      },
+      "id": 24,
+      "options": {
+        "alertInstanceLabelFilter": "",
+        "alertName": "",
+        "dashboardAlerts": false,
+        "folder": "",
+        "groupBy": [],
+        "groupMode": "default",
+        "maxItems": 20,
+        "showInactiveAlerts": false,
+        "sortOrder": 5,
+        "stateFilter": {
+          "error": true,
+          "firing": true,
+          "noData": true,
+          "normal": false,
+          "pending": true,
+          "recovering": true
+        },
+        "viewMode": "list"
+      },
+      "pluginVersion": "12.1.0",
+      "title": "",
+      "transparent": true,
+      "type": "alertlist"
     }
   ],
   "preload": false,
   "refresh": "5m",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
@@ -2353,6 +2417,5 @@
   "timezone": "",
   "title": "HomeLAB Dashboard",
   "uid": "ead0bda3-7415-44d3-a9cf-a3cd933c2e47",
-  "version": 5,
-  "weekStart": ""
+  "version": 6
 }

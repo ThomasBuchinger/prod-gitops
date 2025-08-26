@@ -14,10 +14,13 @@ resources:
 
 configMapGenerator:
 - name: homelab-dashboards
+  namespace: monitoring
   files:
-    - HomeLAB-Dashboard.json
+  - HomeLAB-Dashboard.json
+  - dashboard-landing.json
 
 generatorOptions:
+  disableNameSuffixHash: true
   labels:
     grafana_dashboard: "1"
   annotations:

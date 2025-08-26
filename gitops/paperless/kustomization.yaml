@@ -18,3 +18,4 @@ helmCharts:
 resources:
 - paperless-app.yaml
 - paperless-pv.yaml
+- external-httproute.yaml
