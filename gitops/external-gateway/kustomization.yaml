@@ -5,7 +5,7 @@ namespace: external-gateway
 resources:
 - gateway.yaml
 - policy.yaml
-- test-deployment.yaml
+- echo-server.yaml
 - routes.yaml
 - network-policy.yaml
 
