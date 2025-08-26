@@ -24,19 +24,19 @@ spec:
         path: gitops/okd-console
         wave: "1"
       - name: monitoring-prometheus
-        rev: feat-gateway
+        rev: main
         path: gitops/monitoring/prometheus
         wave: "1"
       - name: monitoring-loki
-        rev: feat-gateway
+        rev: main
         path: gitops/monitoring/loki
         wave: "2"
       - name: monitoring-tempo
-        rev: feat-gateway
+        rev: main
         path: gitops/monitoring/tempo
         wave: "2"
       - name: monitoring-shared
-        rev: feat-gateway
+        rev: feat-s3manager
         path: gitops/monitoring/shared
         wave: "2"
       - name: envoy-gateway
@@ -59,6 +59,14 @@ spec:
       - name: mediarr
         rev: main
         path: gitops/mediarr
+        wave: "1"
+      - name: s3manager
+        rev: feat-s3manager
+        path: gitops/s3manager
+        wave: "1"
+      - name: sqlitebackup
+        rev: feat-s3manager
+        path: gitops/sqlite-backup
         wave: "1"
       # === Internet Facing
       - name: ntfy
