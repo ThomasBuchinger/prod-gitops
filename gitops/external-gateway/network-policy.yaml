@@ -36,6 +36,9 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    - namespaceSelector:
+        matchLabels:
           kubernetes.io/metadata.name: external-hfs
     - namespaceSelector:
         matchLabels:
