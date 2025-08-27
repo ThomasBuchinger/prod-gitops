@@ -40,7 +40,8 @@ data:
     dbs:
     - path: /var/syncthing/config/index-v2/main.db
       replicas:
-      - endpoint: s3.buc.sh:9000
+      - type: s3
+        endpoint: s3.buc.sh:9000
         region: us-east-1
         bucket: litestream-backups
         path: syncthing
