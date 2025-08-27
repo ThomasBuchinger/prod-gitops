@@ -30,6 +30,20 @@ data:
 
 
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: syncthing-init
+data:
+  litestream.yml: |-
+    dbs:
+    - path: /var/syncthing/config/index-v2/main.db
+      replicas:
+      - url: s3://s3.buc.sh:9000/litestream-backups/syncthing/
+        region: us-east-1
+
+
 
 # ---
 # apiVersion: external-secrets.io/v1
@@ -113,11 +127,12 @@ spec:
         - 'restore'
         - '-if-db-not-exists'
         - '-if-replica-exists'
-        - -o=/var/syncthing/config/index-v2/main.db
-        - s3://s3.buc.sh:9000/litestream-backups/syncthing/
         volumeMounts:
         - name: data-root
           mountPath: /var/syncthing
+        - name: configmap
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
         env:
         - name: LITESTREAM_ACCESS_KEY_ID
           valueFrom:
@@ -180,11 +195,12 @@ spec:
         image: litestream/litestream:0.3.13
         args:
         - 'replicate'
-        - /var/syncthing/config/index-v2/main.db
-        - s3://s3.buc.sh:9000/litestream-backups/syncthing/
         volumeMounts:
         - name: data-root
           mountPath: /var/syncthing
+        - name: configmap
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
         env:
         - name: LITESTREAM_ACCESS_KEY_ID
           valueFrom:
@@ -220,6 +236,10 @@ spec:
         emptyDir: {}
       - name: data-root
         emptyDir: {}
+      - name: configmap
+        configMap:
+          name: litestream
+
       # - name: data-bs13
       #   persistentVolumeClaim:
       #     claimName: syncthing-bs13
