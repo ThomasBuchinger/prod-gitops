@@ -60,6 +60,24 @@ data:
 #       decodingStrategy: None
 #       metadataPolicy: None
 
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litestream-paperless
+data:
+  litestream.yml: |-
+    dbs:
+    - path: /data/data/db.sqlite3
+      replicas:
+      - type: s3
+        endpoint: http://s3.buc.sh:9000
+        region: us-east-1
+        bucket: litestream-backups
+        path: paperless
+
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -82,6 +100,31 @@ spec:
         runAsNonRoot: false
         fsGroup: 1000
       automountServiceAccountToken: true
+      initContainers:
+      - name: init-litestream
+        image: litestream/litestream:0.3.13
+        args:
+        - 'restore'
+        - '-if-db-not-exists'
+        - '-if-replica-exists'
+        - /data/data/db.sqlite3
+        volumeMounts:
+        - mountPath: /data
+          name: paperless-nfs
+        - name: configmap
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
+        env:
+        - name: LITESTREAM_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: eso-s3-credentials
+              key: LITESTREAM_ACCESS_KEY_ID
+        - name: LITESTREAM_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: eso-s3-credentials
+              key: LITESTREAM_SECRET_ACCESS_KEY
       containers:
       - name: paperless
         image:  ghcr.io/paperless-ngx/paperless-ngx:2.18.2
@@ -128,9 +171,34 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: paperless-nfs
+      - name: litestream
+        image: litestream/litestream:0.3.13
+        args:
+        - 'replicate'
+        volumeMounts:
+        - mountPath: /data
+          name: paperless-nfs
+        - name: configmap
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
+        env:
+        - name: LITESTREAM_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: eso-s3-credentials
+              key: LITESTREAM_ACCESS_KEY_ID
+        - name: LITESTREAM_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: eso-s3-credentials
+              key: LITESTREAM_SECRET_ACCESS_KEY
+        ports:
+        - name: metrics
+          containerPort: 9090
       volumes:
       - name: paperless-nfs
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: paperless-test-local
 
 ---
 apiVersion: v1
@@ -174,3 +242,17 @@ spec:
             port:
               number: 8000
 
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: paperless-test-local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: local-path
+  volumeMode: Filesystem

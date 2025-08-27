@@ -47,6 +47,20 @@ data:
         path: syncthing
 
 
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: syncthing-test-local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: local-path
+  volumeMode: Filesystem
+
 
 # ---
 # apiVersion: external-secrets.io/v1
@@ -219,7 +233,7 @@ spec:
         ports:
         - name: metrics
           containerPort: 9090
-      hostname: prod-syncthing-backup-test
+      hostname: syncthing-backup-test
       hostNetwork: false
       securityContext:
         runAsNonRoot: true
@@ -239,7 +253,8 @@ spec:
       - name: config-root
         emptyDir: {}
       - name: data-root
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: syncthing-test-local
       - name: configmap
         configMap:
           name: litestream
