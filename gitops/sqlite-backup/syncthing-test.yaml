@@ -45,7 +45,6 @@ data:
         region: us-east-1
         bucket: litestream-backups
         path: syncthing
-      #   force-path-style: true
 
 
 
