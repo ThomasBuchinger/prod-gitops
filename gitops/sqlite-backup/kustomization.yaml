@@ -1,0 +1,5 @@
+kind: Kustomization
+
+namespace: sqlite-backup
+resources:
+- syncthing-test.yaml

@@ -1,0 +1,249 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sqlite-backup
+  labels:
+    # Allow syncthing to use hostnetwork for it's Local LAN Discovery
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/version: latest
+
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: syncthing-init
+# data:
+#   init.sh: |-
+#     #!/bin/sh
+#     DIR=/var/syncthing
+#     set -eu
+
+#     mkdir -p $DIR/config
+#     cp -f /tls-config/tls.crt $DIR/config/cert.pem
+#     cp -f /tls-config/tls.key $DIR/config/key.pem
+#     if [ ! -f $DIR/config/config.xml ]; then
+#         syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
+#         sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
+#     fi
+
+#     find $DIR/config
+
+# ---
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: syncthing-credentials
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: eso-syncthing-credentials
+#     creationPolicy: Owner
+#   data:
+#   - secretKey: ADMIN_USER
+#     remoteRef:
+#       key: static-secrets
+#       property: cred_admin_user
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+#   - secretKey: ADMIN_PASSWORD
+#     remoteRef:
+#       key: static-secrets
+#       property: cred_admin_password
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+# ---
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: syncthing-application
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: eso-syncthing-application
+#     creationPolicy: Owner
+#   dataFrom:
+#   - extract:
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       key: syncthing-secrets
+#       metadataPolicy: None
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: syncthing
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: syncthing
+    spec:
+      # initContainers:
+      # - name: gen-config
+      #   command:
+      #   - /bin/sh
+      #   - /scripts/init.sh
+      #   image: docker.io/syncthing/syncthing:1.30
+      #   env:
+      #   - name: ADMIN_USER
+      #     valueFrom:
+      #       secretKeyRef:
+      #         name: eso-syncthing-credentials
+      #         key: ADMIN_USER
+      #   - name: ADMIN_PASSWORD
+      #     valueFrom:
+      #       secretKeyRef:
+      #         name: eso-syncthing-credentials
+      #         key: ADMIN_PASSWORD
+      #   volumeMounts:
+      #   - name: scripts
+      #     mountPath: /scripts
+      #   - name: tls-config
+      #     mountPath: /tls-config
+      #   - name: data-root
+      #     mountPath: /var/syncthing/
+      #   # - name: data-root-old
+      #   #   mountPath: /var/syncthing-old/
+      containers:
+      - name: syncthing
+        command:
+        - syncthing
+        - serve
+        - --no-default-folder
+        image: docker.io/syncthing/syncthing:2.0.0
+        imagePullPolicy: IfNotPresent
+        # env:
+        # - name: STGUIAPIKEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: eso-syncthing-application
+        #       key: apikey
+        ports:
+        - containerPort: 8384
+          name: http
+          protocol: TCP
+        - containerPort: 22000
+          name: sync
+          protocol: UDP
+        - containerPort: 22000
+          name: sync-tcp
+          protocol: TCP
+        - containerPort: 21027
+          name: discovery
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 10m
+            memory: 60M
+        volumeMounts:
+        # - mountPath: /var/syncthing-old/
+        #   name: data-root-old
+        - mountPath: /var/syncthing/
+          name: data-root
+        # - mountPath: /var/syncthing/bs13-data
+        #   name: data-bs13
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /rest/noauth/health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      hostname: prod-syncthing-backup-test
+      hostNetwork: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 99
+        runAsGroup: 100
+        fsGroup: 100
+        # sysctls:
+        # - name: fs.inotify.max_user_watches
+        #   value: "204800"
+      volumes:
+      # - name: tls-config
+      #   secret:
+      #     secretName: eso-syncthing-application
+      # - name: scripts
+      #   configMap:
+      #     name: syncthing-init
+      - name: config-root
+        emptyDir: {}
+      - name: data-root
+        emptyDir: {}
+      # - name: data-bs13
+      #   persistentVolumeClaim:
+      #     claimName: syncthing-bs13
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing
+spec:
+  selector:
+    app.kubernetes.io/app: syncthing
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8384
+    targetPort: http
+
+# ---
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: syncthing-cert
+#   namespace: syncthing
+# spec:
+#   refreshInterval: 1h
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: cert-syncthing-buc-sh
+#     creationPolicy: Owner
+#   dataFrom:
+#   - extract:
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       key: cert-syncthing-buc-sh
+#       metadataPolicy: None
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: syncthing-tls
+spec:
+  # tls:
+  # - hosts:
+  #     - syncthing.buc.sh
+  #   secretName: cert-syncthing-buc-sh
+  rules:
+  - host: "syncthing-backup-test.10.0.0.21.nip.io"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: syncthing
+            port:
+              name: http
