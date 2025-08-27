@@ -124,7 +124,6 @@ spec:
         command:
         - syncthing
         - serve
-        - --no-default-folder
         image: docker.io/syncthing/syncthing:2.0.0
         imagePullPolicy: IfNotPresent
         # env:
