@@ -59,6 +59,19 @@ spec:
       labels:
         app.kubernetes.io/name: s3-manager
     spec:
+      volumes:
+      - name: cookie-secret-vol
+        emptyDir: {}
+      initContainers:
+      - name: generate-cookie-secret
+        image: busybox:1.36
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            head -c 32 /dev/urandom | base64 > /secret/cookie_secret
+        volumeMounts:
+          - name: cookie-secret-vol
+            mountPath: /secret
       containers:
       - name: s3-manager
         image: cloudlena/s3manager:latest
@@ -96,22 +109,10 @@ spec:
           value: "https://dex.buc.sh"
         - name: OAUTH2_PROXY_CLIENT_ID
           value: "login"
-          # valueFrom:
-          #   secretKeyRef:
-          #     name: oauth2-secret
-          #     key: client_id
         - name: OAUTH2_PROXY_CLIENT_SECRET
           value: notaSecretDexisLocal
-          # valueFrom:
-          #   secretKeyRef:
-          #     name: oauth2-secret
-          #     key: client_secret
-        - name: OAUTH2_PROXY_COOKIE_SECRET
-          value: QFJoClIuG13R0Pupy2u7IRZXnul4yeQl27s1bs0tfwI=
-          # valueFrom:
-          #   secretKeyRef:
-          #     name: oauth2-secret
-          #     key: cookie_secret
+        - name: OAUTH2_PROXY_COOKIE_SECRET-FILE
+          value: /secret/cookie_secret
         - name: OAUTH2_PROXY_REDIRECT_URL
           value: "https://r2.buc.sh/oauth2/callback"
         - name: OAUTH2_PROXY_EMAIL_DOMAINS
@@ -131,6 +132,10 @@ spec:
             drop:
             - ALL
           runAsNonRoot: true
+        volumeMounts:
+        - name: cookie-secret-vol
+          mountPath: /secret
+          readOnly: true
 
 ---
 kind: Service
