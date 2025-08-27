@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-manager
+  labels:
+    app.kubernetes.io/name: s3-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: s3-manager
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: s3-manager
+    spec:
+      containers:
+        - name: s3-manager
+          image: cloudlena/s3manager:latest
+          env:
+          - name: ENDPOINT
+            value: "10.0.0.19:9000"
+          - name: USE_SSL
+            value: "false"
+          - name: REGION
+            value: us-east-1
+          - name: ACCESS_KEY_ID
+            value: s3admin
+          - name: SECRET_ACCESS_KEY
+            value: changeme
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: s3-manager
+spec:
+  selector:
+      app.kubernetes.io/name: s3-manager
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cert-r2-buc-sh
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-r2-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-r2-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: s3-manager
+spec:
+  tls:
+  - hosts:
+      - r2.buc.sh
+    secretName: cert-r2-buc-sh
+  rules:
+  - host: r2.buc.sh
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: s3-manager
+            port:
+              name: http
