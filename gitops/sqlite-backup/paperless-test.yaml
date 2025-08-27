@@ -199,7 +199,9 @@ spec:
       - name: paperless-nfs
         persistentVolumeClaim:
           claimName: paperless-test-local
-
+      - name: configmap
+        configMap:
+          name: litestream-paperless
 ---
 apiVersion: v1
 kind: Service
