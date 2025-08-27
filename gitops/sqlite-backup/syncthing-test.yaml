@@ -137,15 +137,15 @@ spec:
         - containerPort: 8384
           name: http
           protocol: TCP
-        - containerPort: 22000
-          name: sync
-          protocol: UDP
-        - containerPort: 22000
-          name: sync-tcp
-          protocol: TCP
-        - containerPort: 21027
-          name: discovery
-          protocol: TCP
+        # - containerPort: 22000
+        #   name: sync
+        #   protocol: UDP
+        # - containerPort: 22000
+        #   name: sync-tcp
+        #   protocol: TCP
+        # - containerPort: 21027
+        #   name: discovery
+        #   protocol: TCP
         resources:
           requests:
             cpu: 10m
@@ -167,7 +167,7 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
       hostname: prod-syncthing-backup-test
-      hostNetwork: true
+      hostNetwork: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 99
