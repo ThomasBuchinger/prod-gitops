@@ -109,12 +109,15 @@ spec:
           mountPath: /var/syncthing/
       - name: init-litestream
         image: litestream/litestream:0.3.13
-        args: ['restore', '-if-db-not-exists', '-if-replica-exists', '/var/syncthing/config/index-v2/main.db']
+        args:
+        - 'restore'
+        - '-if-db-not-exists'
+        - '-if-replica-exists'
+        - -o=/var/syncthing/config/index-v2/main.db
+        - s3://s3.buc.sh:9000/litestream-backups/syncthing/
         volumeMounts:
-        - name: data
-          mountPath: /var/lib/myapp
-        - name: configmap
-          mountPath: /etc/litestream.yml
+        - name: data-root
+          mountPath: /var/syncthing
           subPath: litestream.yml
         env:
         - name: LITESTREAM_ACCESS_KEY_ID
