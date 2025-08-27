@@ -1,4 +1,48 @@
 ---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: s3-credantials
+  namespace: paperless
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: eso-s3-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: ACCESS_KEY_ID
+    remoteRef:
+      key: static-secrets
+      property: s3_accesskey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: SECRET_ACCESS_KEY
+    remoteRef:
+      key: static-secrets
+      property: s3_secretkey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: RO_ACCESS_KEY_ID
+    remoteRef:
+      key: static-secrets
+      property: s3_ro_accesskey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: RO_SECRET_ACCESS_KEY
+    remoteRef:
+      key: static-secrets
+      property: s3_ro_secretkey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,19 +60,73 @@ spec:
         app.kubernetes.io/name: s3-manager
     spec:
       containers:
-        - name: s3-manager
-          image: cloudlena/s3manager:latest
-          env:
-          - name: ENDPOINT
-            value: "10.0.0.19:9000"
-          - name: USE_SSL
-            value: "false"
-          - name: REGION
-            value: us-east-1
-          - name: ACCESS_KEY_ID
-            value: s3admin
-          - name: SECRET_ACCESS_KEY
-            value: changeme
+      - name: s3-manager
+        image: cloudlena/s3manager:latest
+        env:
+        - name: ENDPOINT
+          value: "10.0.0.19:9000"
+        - name: USE_SSL
+          value: "false"
+        - name: REGION
+          value: us-east-1
+        - name: ACCESS_KEY_ID
+          value: s3admin
+          # valueFrom:
+          #   secretKeyRef:
+          #     key: ACCESS_KEY_ID
+          #     name: eso-s3-credentials
+        - name: SECRET_ACCESS_KEY
+          value: changeme
+          # valueFrom:
+          #   secretKeyRef:
+          #     key: SECRET_ACCESS_KEY
+          #     name: eso-s3-credentials
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+      - name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        ports:
+          - containerPort: 4180
+        env:
+        - name: OAUTH2_PROXY_PROVIDER
+          value: "oidc"
+        - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+          value: "https://dex.buc.sh"
+        - name: OAUTH2_PROXY_CLIENT_ID
+          value: "login"
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: oauth2-secret
+          #     key: client_id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          value: notaSecretDexisLocal
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: oauth2-secret
+          #     key: client_secret
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          value: QFJoClIuG13R0Pupy2u7IRZXnul4yeQl27s1bs0tfwI=
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: oauth2-secret
+          #     key: cookie_secret
+        - name: OAUTH2_PROXY_REDIRECT_URL
+          value: "https://r2.buc.sh/oauth2/callback"
+        - name: OAUTH2_PROXY_EMAIL_DOMAINS
+          value: "*"
+        - name: OAUTH2_PROXY_HTTP_ADDRESS
+          value: "0.0.0.0:4180"
+        - name: OAUTH2_PROXY_UPSTREAMS
+          value: "http://localhost:8080"  # or your actual backend if you want proxying
+        - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+          value: "true"
+        - name: OAUTH2_PROXY_SCOPE
+          value: "openid email profile"
+        - name: OAUTH2_PROXY_COOKIE_SECURE
+          value: "true"
 
 ---
 kind: Service
@@ -40,10 +138,12 @@ spec:
       app.kubernetes.io/name: s3-manager
   type: ClusterIP
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
-      protocol: TCP
+  - name: http
+    port: 8080
+    targetPort: 8080
+  - name: oauth2
+    port: 4180
+    targetPort: 4180
 
 ---
 apiVersion: external-secrets.io/v1
@@ -85,4 +185,4 @@ spec:
           service:
             name: s3-manager
             port:
-              name: http
+              name: oauth
