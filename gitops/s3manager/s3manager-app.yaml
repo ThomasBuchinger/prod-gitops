@@ -3,7 +3,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: s3-credantials
-  namespace: paperless
 spec:
   refreshInterval: 1h
   secretStoreRef:
@@ -68,7 +67,7 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |
-            head -c 32 /dev/urandom | base64 > /secret/cookie_secret
+            dd if=/dev/urandom bs=32 count=1 2>/dev/null | base64 | tr -d -- '\n' | tr -- '+/' '-_'  > /secret/cookie_secret
         volumeMounts:
           - name: cookie-secret-vol
             mountPath: /secret
