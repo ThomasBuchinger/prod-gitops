@@ -43,7 +43,7 @@ data:
       - endpoint: s3.buc.sh:9000
         region: us-east-1
         bucket: litestream-backups
-        path: syncthing
+        # path: syncthing
 
 
 
