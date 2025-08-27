@@ -25,6 +25,7 @@ data:
         syncthing generate --home $DIR/config --gui-user=admin --gui-password=changeme
         sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
     fi
+    rm -rf $DIR/config/index-v2
 
     find $DIR/config
 

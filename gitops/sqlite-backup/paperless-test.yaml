@@ -101,6 +101,15 @@ spec:
         fsGroup: 1000
       automountServiceAccountToken: true
       initContainers:
+      - name: rm-dbconfig
+        command:
+        - /bin/sh
+        - -c
+        - rm /data/data/db.sqlite3 /data/data/db.sqlite3-shm /data/data/db.sqlite3-wal
+        image: docker.io/syncthing/syncthing:2.0.3
+        volumeMounts:
+        - mountPath: /data
+          name: paperless-nfs
       - name: init-litestream
         image: litestream/litestream:0.3.13
         args:
@@ -202,6 +211,8 @@ spec:
       - name: configmap
         configMap:
           name: litestream-paperless
+
+
 ---
 apiVersion: v1
 kind: Service
