@@ -189,4 +189,4 @@ spec:
           service:
             name: s3-manager
             port:
-              name: oauth
+              name: oauth2
