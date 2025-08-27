@@ -109,7 +109,7 @@ spec:
           value: "login"
         - name: OAUTH2_PROXY_CLIENT_SECRET
           value: notaSecretDexisLocal
-        - name: OAUTH2_PROXY_COOKIE_SECRET-FILE
+        - name: OAUTH2_PROXY_COOKIE_SECRET_FILE
           value: /secret/cookie_secret
         - name: OAUTH2_PROXY_REDIRECT_URL
           value: "https://r2.buc.sh/oauth2/callback"
