@@ -118,7 +118,6 @@ spec:
         volumeMounts:
         - name: data-root
           mountPath: /var/syncthing
-          subPath: litestream.yml
         env:
         - name: LITESTREAM_ACCESS_KEY_ID
           valueFrom:
