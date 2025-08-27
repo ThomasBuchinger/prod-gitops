@@ -45,8 +45,7 @@ data:
         region: us-east-1
         bucket: litestream-backups
         path: syncthing
-        force-path-style: true
-        # url: s3://r2.buc.sh/litestream-backups/syncthing
+      #   force-path-style: true
 
 
 
