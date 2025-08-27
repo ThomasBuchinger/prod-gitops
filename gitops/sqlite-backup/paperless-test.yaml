@@ -163,7 +163,7 @@ metadata:
     app.kubernetes.io/name: paperless
 spec:
   rules:
-  - host: paperless-test.10.0.0.21.nip.io
+  - host: paperless-backup-test.10.0.0.21.nip.io
     http:
       paths:
       - path: /
