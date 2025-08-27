@@ -34,7 +34,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: syncthing-init
+  name: litestream
 data:
   litestream.yml: |-
     dbs:
