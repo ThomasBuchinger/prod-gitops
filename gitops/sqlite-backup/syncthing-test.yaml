@@ -127,6 +127,7 @@ spec:
         - 'restore'
         - '-if-db-not-exists'
         - '-if-replica-exists'
+        - /var/syncthing/config/index-v2/main.db
         volumeMounts:
         - name: data-root
           mountPath: /var/syncthing
