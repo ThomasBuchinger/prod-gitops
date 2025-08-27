@@ -7,26 +7,29 @@ metadata:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/version: latest
 
-# ---
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: syncthing-init
-# data:
-#   init.sh: |-
-#     #!/bin/sh
-#     DIR=/var/syncthing
-#     set -eu
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: syncthing-init
+data:
+  init.sh: |-
+    #!/bin/sh
+    DIR=/var/syncthing
+    set -eu
 
-#     mkdir -p $DIR/config
-#     cp -f /tls-config/tls.crt $DIR/config/cert.pem
-#     cp -f /tls-config/tls.key $DIR/config/key.pem
-#     if [ ! -f $DIR/config/config.xml ]; then
-#         syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
-#         sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
-#     fi
+    mkdir -p $DIR/config
+    # cp -f /tls-config/tls.crt $DIR/config/cert.pem
+    # cp -f /tls-config/tls.key $DIR/config/key.pem
+    if [ ! -f $DIR/config/config.xml ]; then
+        syncthing generate --home $DIR/config --gui-user=admin --gui-password=changeme
+        sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
+    fi
 
-#     find $DIR/config
+    find $DIR/config
+
+
+
 
 # ---
 # apiVersion: external-secrets.io/v1
@@ -93,32 +96,39 @@ spec:
       labels:
         app.kubernetes.io/app: syncthing
     spec:
-      # initContainers:
-      # - name: gen-config
-      #   command:
-      #   - /bin/sh
-      #   - /scripts/init.sh
-      #   image: docker.io/syncthing/syncthing:1.30
-      #   env:
-      #   - name: ADMIN_USER
-      #     valueFrom:
-      #       secretKeyRef:
-      #         name: eso-syncthing-credentials
-      #         key: ADMIN_USER
-      #   - name: ADMIN_PASSWORD
-      #     valueFrom:
-      #       secretKeyRef:
-      #         name: eso-syncthing-credentials
-      #         key: ADMIN_PASSWORD
-      #   volumeMounts:
-      #   - name: scripts
-      #     mountPath: /scripts
-      #   - name: tls-config
-      #     mountPath: /tls-config
-      #   - name: data-root
-      #     mountPath: /var/syncthing/
-      #   # - name: data-root-old
-      #   #   mountPath: /var/syncthing-old/
+      initContainers:
+      - name: gen-config
+        command:
+        - /bin/sh
+        - /scripts/init.sh
+        image: docker.io/syncthing/syncthing:2.0.3
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: data-root
+          mountPath: /var/syncthing/
+      initContainers:
+      - name: init-litestream
+        image: litestream/litestream:0.3.13
+        args: ['restore', '-if-db-not-exists', '-if-replica-exists', '/var/syncthing/config/index-v2/main.db']
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/myapp
+        - name: configmap
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
+        env:
+        - name: LITESTREAM_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: litestream
+              key: LITESTREAM_ACCESS_KEY_ID
+        - name: LITESTREAM_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: litestream
+              key: LITESTREAM_SECRET_ACCESS_KEY
+
       containers:
       - name: syncthing
         command:
@@ -165,6 +175,32 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
+      - name: litestream
+        image: litestream/litestream:0.3.13
+        args:
+        - 'replicate'
+        - /var/syncthing/config/index-v2/main.db
+        - s3://s3.buc.sh:9000/litestream-backups/syncthing/
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/myapp
+        - name: configmap
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
+        env:
+        - name: LITESTREAM_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: litestream
+              key: LITESTREAM_ACCESS_KEY_ID
+        - name: LITESTREAM_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: litestream
+              key: LITESTREAM_SECRET_ACCESS_KEY
+        ports:
+        - name: metrics
+          containerPort: 9090
       hostname: prod-syncthing-backup-test
       hostNetwork: false
       securityContext:
