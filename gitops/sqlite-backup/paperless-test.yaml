@@ -292,11 +292,11 @@ spec:
   mountOptions:
   - endpoint-url http://10.0.0.19:9000
   - region us-east-1
-  # - debug
-  # - debug-crt
-  - force-path-style
+  - debug
+  - debug-crt
+  # - force-path-style
   # - no-sign-request
-  - allow-delete
+  # - allow-delete
   # - foreground
   # - prefix paperless
   csi:
