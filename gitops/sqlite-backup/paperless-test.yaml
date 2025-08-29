@@ -294,9 +294,9 @@ spec:
   - region us-east-1
   - incremental-upload
   - upload-checksums crc32c
-  # - prefix paperless
   - allow-delete
   - allow-overwrite
+  - debug
   csi:
     driver: s3.csi.aws.com
     volumeHandle: s3-csi-driver-volume
