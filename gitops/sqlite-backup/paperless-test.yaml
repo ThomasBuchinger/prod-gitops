@@ -299,6 +299,9 @@ spec:
     volumeHandle: s3-csi-driver-volume
     volumeAttributes:
       bucketName: paperless-in
+      cache: emptyDir
+      cacheEmptyDirSizeLimit: 1Gi
+      cacheEmptyDirMedium: Memory
 
 ---
 apiVersion: v1
