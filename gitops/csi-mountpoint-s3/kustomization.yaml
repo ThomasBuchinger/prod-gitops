@@ -10,8 +10,6 @@ helmCharts:
   valuesInline:
     mountpointPod:
       namespace: csi-mountpoint-s3
-    awsAccessSecret:
-      name: eso-s3-credentials
     supportLegacySystemDMounts: false
 
 resources:
