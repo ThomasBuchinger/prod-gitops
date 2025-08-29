@@ -87,7 +87,7 @@ metadata:
   labels:
     app.kubernetes.io/name: paperless
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: paperless
@@ -178,10 +178,10 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /data
+        - mountPath: /data/data
           name: paperless-nfs
-        # - mountPath: /data/in
-        #   name: paperless-s3
+        - mountPath: /data
+          name: paperless-s3
       - name: litestream
         image: litestream/litestream:0.3.13
         args:
@@ -210,9 +210,9 @@ spec:
       - name: paperless-nfs
         persistentVolumeClaim:
           claimName: paperless-test-local
-      # - name: paperless-s3
-      #   persistentVolumeClaim:
-      #     claimName: paperless-s3
+      - name: paperless-s3
+        persistentVolumeClaim:
+          claimName: paperless-s3
       - name: configmap
         configMap:
           name: litestream-paperless
@@ -292,18 +292,14 @@ spec:
   mountOptions:
   - endpoint-url http://10.0.0.19:9000
   - region us-east-1
-  - debug
-  - debug-crt
-  # - force-path-style
-  # - no-sign-request
-  # - allow-delete
-  # - foreground
-  # - prefix paperless
+  - incremental-upload
+  - prefix paperless
+  - allow-delete
   csi:
     driver: s3.csi.aws.com
     volumeHandle: s3-csi-driver-volume
     volumeAttributes:
-      bucketName: paperless-in
+      bucketName: paperless
       cache: emptyDir
       cacheEmptyDirSizeLimit: 1Gi
       cacheEmptyDirMedium: Memory
