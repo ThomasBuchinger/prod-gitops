@@ -180,6 +180,8 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: paperless-nfs
+        - mountPath: /data/in
+          name: paperless-s3
       - name: litestream
         image: litestream/litestream:0.3.13
         args:
@@ -206,6 +208,9 @@ spec:
           containerPort: 9090
       volumes:
       - name: paperless-nfs
+        persistentVolumeClaim:
+          claimName: paperless-test-local
+      - name: paperless-s3
         persistentVolumeClaim:
           claimName: paperless-test-local
       - name: configmap
@@ -287,11 +292,13 @@ spec:
   mountOptions:
   - endpoint-url http://s3.buc.sh:9000
   - region us-east-1
+  # - allow-delete
+  # - prefix paperless
   csi:
     driver: s3.csi.aws.com
     volumeHandle: s3-csi-driver-volume
     volumeAttributes:
-      bucketName: amzn-s3-demo-bucket
+      bucketName: paperless-in
 
 ---
 apiVersion: v1
@@ -301,7 +308,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: 
+  storageClassName: ""
   resources:
     requests:
       storage: 1200Gi
