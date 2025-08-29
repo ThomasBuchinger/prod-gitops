@@ -13,6 +13,7 @@ spec:
     - region us-east-1
     - debug
     - debug-crt
+    - upload_checksums crc32c
     # - force-path-style
     # - no-sign-request
     # - allow-delete
