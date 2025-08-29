@@ -295,7 +295,7 @@ spec:
   - debug
   - debug-crt
   - force-path-style
-  - no-sign-request
+  # - no-sign-request
   - allow-delete
   # - foreground
   # - prefix paperless
