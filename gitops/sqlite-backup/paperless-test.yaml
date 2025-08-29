@@ -269,3 +269,40 @@ spec:
       storage: 3Gi
   storageClassName: local-path
   volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-s3-pv
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 1200Gi
+  storageClassName: ""
+  claimRef:
+    namespace: sqlite-backup
+    name: paperless-s3
+  mountOptions:
+  - endpoint-url http://s3.buc.sh:9000
+  - region us-east-1
+  csi:
+    driver: s3.csi.aws.com
+    volumeHandle: s3-csi-driver-volume
+    volumeAttributes:
+      bucketName: amzn-s3-demo-bucket
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-s3
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: 
+  resources:
+    requests:
+      storage: 1200Gi
+  volumeName: paperless-s3-pv
