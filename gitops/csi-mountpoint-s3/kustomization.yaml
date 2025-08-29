@@ -8,6 +8,8 @@ helmCharts:
   namespace: kube-system
   # valuesFile: values.yaml
   valuesInline:
+    mountpointPod:
+      namespace: csi-mountpoint-s3
     awsAccessSecret:
       name: eso-s3-credentials
     supportLegacySystemDMounts: false
