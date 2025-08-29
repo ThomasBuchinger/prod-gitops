@@ -13,3 +13,6 @@ helmCharts:
     awsAccessSecret:
       name: eso-s3-credentials
     supportLegacySystemDMounts: false
+
+resources:
+- s3-credentials.yaml
