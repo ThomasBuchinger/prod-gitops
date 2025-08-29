@@ -14,7 +14,7 @@ spec:
     - debug
     - debug-crt
     - upload-checksums crc32c
-    - incremental_upload true
+    - incremental-upload true
     # - force-path-style
     # - no-sign-request
     # - allow-delete
