@@ -10,8 +10,14 @@ spec:
   storageClassName: "" # Required for static provisioning
   mountOptions:
     - endpoint-url http://10.0.0.19:9000
-    - allow-delete
     - region us-east-1
+    - debug
+    - debug-crt
+    # - force-path-style
+    # - no-sign-request
+    # - allow-delete
+    # - foreground
+    # - prefix paperless
     # - prefix some-s3-prefix/
   csi:
     driver: s3.csi.aws.com # Required

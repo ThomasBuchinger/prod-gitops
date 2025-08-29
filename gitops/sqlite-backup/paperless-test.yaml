@@ -180,8 +180,8 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: paperless-nfs
-        - mountPath: /data/in
-          name: paperless-s3
+        # - mountPath: /data/in
+        #   name: paperless-s3
       - name: litestream
         image: litestream/litestream:0.3.13
         args:

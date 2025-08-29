@@ -23,4 +23,4 @@ resources:
 - s3.yaml
 - syncthing-test.yaml
 - paperless-test.yaml
-# - s3-test.yaml
+- s3-test.yaml
