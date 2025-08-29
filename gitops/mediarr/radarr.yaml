@@ -108,6 +108,10 @@ spec:
           requests:
             cpu: 1m
             memory: 64Mi
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
       volumes:
       - name: config
         persistentVolumeClaim:

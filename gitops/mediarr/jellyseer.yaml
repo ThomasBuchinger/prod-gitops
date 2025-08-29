@@ -52,6 +52,10 @@ spec:
         - name: config
           mountPath: "app/config"
           subPath: jellyseer
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
       volumes:
         - name: config
           persistentVolumeClaim:

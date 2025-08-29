@@ -80,6 +80,10 @@ spec:
           mountPath: "/media/nas"
         - name: incomplete-downloads-bittorrent
           mountPath: "/media/incomplete"
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
       volumes:
       - name: config
         configMap:
