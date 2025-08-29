@@ -293,8 +293,10 @@ spec:
   - endpoint-url http://10.0.0.19:9000
   - region us-east-1
   - debug
+  - force-path-style
+  - no-sign-request
+  - allow-delete
   # - foreground
-  # - allow-delete
   # - prefix paperless
   csi:
     driver: s3.csi.aws.com
