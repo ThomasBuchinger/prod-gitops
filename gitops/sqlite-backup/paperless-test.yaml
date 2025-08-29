@@ -290,8 +290,10 @@ spec:
     namespace: sqlite-backup
     name: paperless-s3
   mountOptions:
-  - endpoint-url http://s3.buc.sh:9000
+  - endpoint-url http://10.0.0.19:9000
   - region us-east-1
+  - debug
+  - foreground
   # - allow-delete
   # - prefix paperless
   csi:
