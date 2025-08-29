@@ -292,8 +292,8 @@ spec:
   mountOptions:
   - endpoint-url http://10.0.0.19:9000
   - region us-east-1
-  - debug
-  - debug-crt
+  # - debug
+  # - debug-crt
   - force-path-style
   # - no-sign-request
   - allow-delete
