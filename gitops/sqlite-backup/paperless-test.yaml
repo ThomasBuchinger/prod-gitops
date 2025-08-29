@@ -105,7 +105,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - rm /data/data/db.sqlite3 /data/data/db.sqlite3-shm /data/data/db.sqlite3-wal
+        - rm /data/data/db.sqlite3 /data/data/db.sqlite3-shm /data/data/db.sqlite3-wal || true
         image: docker.io/syncthing/syncthing:2.0.3
         volumeMounts:
         - mountPath: /data
