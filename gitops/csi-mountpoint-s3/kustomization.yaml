@@ -8,5 +8,6 @@ helmCharts:
   namespace: kube-system
   # valuesFile: values.yaml
   valuesInline:
-    node:
-      supportLegacySystemDMounts: false
+    awsAccessSecret:
+      name: eso-s3-credentials
+    supportLegacySystemDMounts: false

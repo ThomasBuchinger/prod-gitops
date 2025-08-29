@@ -22,7 +22,7 @@ spec:
       - name: csi-mountpoint-s3
         rev: feat-s3manager
         path: gitops/csi-mountpoint-s3
-        wave: "1"
+        wave: "2"
       - name: okd-console
         rev: main
         path: gitops/okd-console
