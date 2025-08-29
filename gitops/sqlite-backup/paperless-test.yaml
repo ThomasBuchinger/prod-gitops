@@ -212,7 +212,7 @@ spec:
           claimName: paperless-test-local
       - name: paperless-s3
         persistentVolumeClaim:
-          claimName: paperless-test-local
+          claimName: paperless-s3
       - name: configmap
         configMap:
           name: litestream-paperless
