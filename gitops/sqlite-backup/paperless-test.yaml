@@ -293,7 +293,7 @@ spec:
   - endpoint-url http://10.0.0.19:9000
   - region us-east-1
   - debug
-  - foreground
+  # - foreground
   # - allow-delete
   # - prefix paperless
   csi:
