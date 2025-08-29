@@ -1,0 +1,12 @@
+kind: Kustomization
+
+helmCharts:
+- name: mountpoint-s3-csi-driver
+  repo: https://awslabs.github.io/
+  version: 2.0.0
+  releaseName: aws-mountpoint-s3-csi-driver
+  namespace: kube-system
+  # valuesFile: values.yaml
+  valuesInline:
+    node:
+      supportLegacySystemDMounts: false
