@@ -22,7 +22,7 @@ data:
     cp -f /tls-config/tls.crt $DIR/config/cert.pem
     cp -f /tls-config/tls.key $DIR/config/key.pem
     if [ ! -f $DIR/config/config.xml ]; then
-        syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD --no-default-folder
+        syncthing generate --home $DIR/config --gui-user=$ADMIN_USER --gui-password=$ADMIN_PASSWORD
         sed -i -e 's|<urAccepted>0</urAccepted>|<urAccepted>-1</urAccepted>|' -e 's|<urSeen>0</urSeen>|<urSeen>3</urSeen>|' $DIR/config/config.xml
     fi
 
@@ -127,7 +127,6 @@ spec:
         command:
         - syncthing
         - serve
-        - --no-default-folder
         image: ghcr.io/syncthing/syncthing:2.0.3
         imagePullPolicy: IfNotPresent
         env:
