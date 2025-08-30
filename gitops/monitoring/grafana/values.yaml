@@ -101,9 +101,9 @@ grafana.ini:
     api_url: https://dex.buc.sh/userinfo
 
 
-    # allow_assign_grafana_admin: true
-    # role_attribute_path: "'Editor'"
-    # skip_org_role_sync: false
+    allow_assign_grafana_admin: true
+    role_attribute_path: "'GrafanaAdmin'"
+    skip_org_role_sync: false
   users:
     auto_assign_org: true
     auto_assign_org_role: Admin
