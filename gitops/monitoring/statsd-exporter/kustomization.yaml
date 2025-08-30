@@ -9,3 +9,5 @@ helmCharts:
   namespace: monitoring
   valuesFile: values.yaml
   
+resources:
+- nodeport.yaml
