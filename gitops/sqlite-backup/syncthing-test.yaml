@@ -171,7 +171,7 @@ spec:
         command:
         - syncthing
         - serve
-        image: docker.io/syncthing/syncthing:2.0.0
+        image: docker.io/syncthing/syncthing:2.0.3
         imagePullPolicy: IfNotPresent
         # env:
         # - name: STGUIAPIKEY
