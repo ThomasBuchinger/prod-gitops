@@ -13,9 +13,9 @@ spec:
       port: 9125
       protocol: TCP
       targetPort: statsd-tcp
-      nodePort: 39125
+      nodePort: 32125
     - name: statsd-udp
       port: 9125
       protocol: UDP
       targetPort: statsd-udp
-      nodePort: 39125
+      nodePort: 32125
