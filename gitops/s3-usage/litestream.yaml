@@ -1,0 +1,93 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: s3-credantials
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: eso-s3-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: LITESTREAM_ACCESS_KEY_ID
+    remoteRef:
+      key: static-secrets
+      property: s3_accesskey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: LITESTREAM_SECRET_ACCESS_KEY
+    remoteRef:
+      key: static-secrets
+      property: s3_secretkey
+      conversionStrategy: Default
+      decodingStrategy: None
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litestream-config
+data:
+  litestream.yml: |-
+    dbs:
+    - path: /data/data/db.sqlite3
+      replicas:
+      - type: s3
+        endpoint: http://s3.buc.sh:9000
+        region: us-east-1
+        bucket: litestream-backups
+        path: paperless
+
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: litestream-restore
+        image: litestream/litestream:0.3.13
+        args:
+        - 'restore'
+        - '-if-db-not-exists'
+        - '-if-replica-exists'
+        - /data/db.sqlite3
+        volumeMounts:
+        - name: db
+          mountPath: /data
+        - name: litestream-config
+          mountPath: /etc
+        envFrom:
+        - secretRef:
+            name: eso-s3-credentials
+      containers:
+      # Main Container...
+
+      # Litestream
+      - name: litestream
+        image: litestream/litestream:0.3.13
+        args:
+        - 'replicate'
+        volumeMounts:
+        - name: db
+          mountPath: /data
+        - name: litestream-config
+          mountPath: /etc
+        envFrom:
+        - secretRef:
+            name: eso-s3-credentials
+        ports:
+        - name: metrics
+          containerPort: 9090
+      # Volumes
+      volumes:
+      - name: db
+        persistentVolumeClaim:
+          claimName: localpath-pv
+      - name: litestream-config
+        configMap:
+          name: litestream-config
