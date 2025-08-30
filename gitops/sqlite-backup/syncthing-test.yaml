@@ -346,10 +346,10 @@ spec:
   - region us-east-1
   - incremental-upload
   - upload-checksums crc32c
-  # - allow-delete
-  # - allow-overwrite
-  - allow-root
-  # - allow-other
+  - allow-delete
+  - allow-overwrite
+  # - allow-root
+  - allow-other
   - debug
   csi:
     driver: s3.csi.aws.com
