@@ -10,10 +10,10 @@ resources:
 persistence:
   enabled: false
 
-admin:
-  existingSecret: grafana-admin-cred
-  userKey: username
-  passwordKey: password
+# admin:
+#   existingSecret: grafana-admin-cred
+#   userKey: username
+#   passwordKey: password
 
 sidecar:
   dashboards:
