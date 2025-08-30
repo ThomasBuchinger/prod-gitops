@@ -90,6 +90,8 @@ assertNoLeakedSecrets: false
 grafana.ini:
   server:
     root_url: https://grafana.buc.sh
+  auth.basic:
+    enabled: false
   auth.generic_oauth:
     name: BUC Login
     enabled: true
@@ -103,7 +105,6 @@ grafana.ini:
 
     allow_assign_grafana_admin: true
     role_attribute_path: "'GrafanaAdmin'"
-    skip_org_role_sync: true
   users:
     auto_assign_org: true
     auto_assign_org_role: Admin
