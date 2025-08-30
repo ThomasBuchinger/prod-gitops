@@ -102,7 +102,7 @@ grafana.ini:
 
 
     allow_assign_grafana_admin: true
-    role_attribute_path: "'GrafanaAdmin'"
+    role_attribute_path: "'Editor'"
     skip_org_role_sync: false
 
       
