@@ -5,3 +5,4 @@ resources:
 - ../grafana
 - ../metrics-server
 - ../external-monitoring
+- ../statsd-exporter
