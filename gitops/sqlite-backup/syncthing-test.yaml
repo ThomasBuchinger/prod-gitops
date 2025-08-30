@@ -350,12 +350,12 @@ spec:
   - allow-overwrite
   # - allow-root
   - allow-other
-  - debug
+  # - debug
   csi:
     driver: s3.csi.aws.com
     volumeHandle: s3-csi-driver-volume
     volumeAttributes:
-      bucketName: paperless
+      bucketName: syncthing
       # cache: emptyDir
       # cacheEmptyDirSizeLimit: 1Gi
       # cacheEmptyDirMedium: Memory

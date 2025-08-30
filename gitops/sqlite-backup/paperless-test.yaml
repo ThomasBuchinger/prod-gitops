@@ -288,9 +288,6 @@ spec:
   capacity:
     storage: 10Gi
   storageClassName: ""
-  claimRef:
-    namespace: sqlite-backup
-    name: paperless-s3
   mountOptions:
   - endpoint-url http://10.0.0.19:9000
   - region us-east-1
@@ -300,7 +297,7 @@ spec:
   - allow-overwrite
   # - allow-root
   - allow-other
-  - debug
+  # - debug
   csi:
     driver: s3.csi.aws.com
     volumeHandle: s3-csi-driver-volume
