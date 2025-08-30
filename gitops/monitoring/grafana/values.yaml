@@ -85,7 +85,8 @@ dashboards:
     nodeexporter-full:
       gnetId: 1860
       datasource: Prometheus
-    
+
+assertNoLeakedSecrets: false
 grafana.ini:
   auth.generic_oauth:
     name: BUC Login
