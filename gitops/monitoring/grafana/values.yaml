@@ -86,5 +86,18 @@ dashboards:
       gnetId: 1860
       datasource: Prometheus
     
+grafana.ini:
+  auth.generic_oauth:
+    name: BUC Login
+    enabled: true
+    client_id: login
+    client_secret: notaSecretDexisLocal
+    scopes: openid email profile groups offline_access
+    auth_url: https://dex.buc.sh/auth
+    token_url: https://dex.buc.sh/token
+    api_url: https://dex.buc.sh/userinfo
+
+    allow_assign_grafana_admin: true
+    role: Admin
 
       
