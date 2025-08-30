@@ -1,0 +1,13 @@
+kind: Kustomization
+
+namespace: monitoring
+helmCharts:
+- name: prometheus-statsd-exporter
+  repo: oci://ghcr.io/prometheus-community/charts
+  version: 0.15.1
+  releaseName: statsd-exporter
+  namespace: monitoring
+  valuesFile: values.yaml
+  
+resources:
+- nodeport.yaml

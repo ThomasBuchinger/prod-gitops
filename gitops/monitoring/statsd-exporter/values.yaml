@@ -1,0 +1,10 @@
+serviceMonitor:
+  enabled: true
+
+ingress:
+  enabled: true
+  hosts:
+  - host: statsd-exporter.10.0.0.21.nip.io
+    paths:
+    - path: /
+      pathType: Prefix

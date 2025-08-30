@@ -10,10 +10,10 @@ resources:
 persistence:
   enabled: false
 
-admin:
-  existingSecret: grafana-admin-cred
-  userKey: username
-  passwordKey: password
+# admin:
+#   existingSecret: grafana-admin-cred
+#   userKey: username
+#   passwordKey: password
 
 sidecar:
   dashboards:
@@ -85,6 +85,29 @@ dashboards:
     nodeexporter-full:
       gnetId: 1860
       datasource: Prometheus
-    
 
+assertNoLeakedSecrets: false
+grafana.ini:
+  server:
+    root_url: https://grafana.buc.sh
+  auth:
+    disable_login_form: true
+  auth.basic:
+    enabled: false
+  auth.generic_oauth:
+    name: BUC Login
+    enabled: true
+    client_id: login
+    client_secret: notaSecretDexisLocal
+    scopes: openid email profile groups offline_access
+    auth_url: https://dex.buc.sh/auth
+    token_url: https://dex.buc.sh/token
+    api_url: https://dex.buc.sh/userinfo
+
+
+    allow_assign_grafana_admin: true
+    role_attribute_path: "'GrafanaAdmin'"
+  users:
+    auto_assign_org: true
+    auto_assign_org_role: Admin
       
