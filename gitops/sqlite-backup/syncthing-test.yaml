@@ -349,7 +349,7 @@ spec:
   # - allow-delete
   # - allow-overwrite
   - allow-root
-  - no-allow-other
+  - allow-other false
   - debug
   csi:
     driver: s3.csi.aws.com
