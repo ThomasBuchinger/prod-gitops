@@ -102,6 +102,6 @@ grafana.ini:
 
 
     allow_assign_grafana_admin: true
-    role: Admin
+    role_attribute_path: "'GrafanaAdmin'"
 
       
