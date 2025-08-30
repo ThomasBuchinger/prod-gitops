@@ -2,8 +2,8 @@ kind: Kustomization
 
 helmCharts:
 - name: prometheus-statsd-exporter
-  repo: oci://ghcr.io/prometheus-community/charts
-  version: 6.15.1
+  repo: oci://ghcr.io/prometheus-community/charts/prometheus-statsd-exporter
+  version: 0.15.1
   releaseName: statsd-exporter
   namespace: monitoring
   valuesFile: values.yaml
