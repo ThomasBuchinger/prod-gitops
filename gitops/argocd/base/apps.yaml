@@ -68,10 +68,6 @@ spec:
         rev: main
         path: gitops/s3manager
         wave: "1"
-      - name: sqlitebackup
-        rev: main
-        path: gitops/sqlite-backup
-        wave: "1"
       # === Internet Facing
       - name: ntfy
         rev: main
