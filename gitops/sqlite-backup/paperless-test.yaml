@@ -21,6 +21,7 @@ data:
   # PAPERLESS_TRASH_DIR: /data/media/Trash
   # Not really used, but we put it on the PV anyway
   PAPERLESS_CONSUMPTION_DIR: /data/in
+  PAPERLESS_CONSUMER_POLLING: "300"
   PAPERLESS_PORT: "8000"                     # Overwrite K8s variable, used by gunicorn
   # PAPERLESS_URL: https://paperless.buc.sh    # Fix CSRF issue, when using https (http works) 
   # PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.mtls.buc.sh:8443,https://paperless.mtls.buc.sh,http://paperless.10.0.0.21.nip.io
