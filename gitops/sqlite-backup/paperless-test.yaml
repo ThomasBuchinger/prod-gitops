@@ -286,7 +286,7 @@ spec:
   accessModes:
     - ReadWriteMany
   capacity:
-    storage: 1200Gi
+    storage: 10Gi
   storageClassName: ""
   claimRef:
     namespace: sqlite-backup
@@ -321,5 +321,5 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: 1200Gi
+      storage: 10Gi
   volumeName: paperless-s3-pv
