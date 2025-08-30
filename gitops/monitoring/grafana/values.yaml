@@ -88,6 +88,8 @@ dashboards:
 
 assertNoLeakedSecrets: false
 grafana.ini:
+  server:
+    root_url: https://grafana.buc.sh
   auth.generic_oauth:
     name: BUC Login
     enabled: true
@@ -97,6 +99,7 @@ grafana.ini:
     auth_url: https://dex.buc.sh/auth
     token_url: https://dex.buc.sh/token
     api_url: https://dex.buc.sh/userinfo
+
 
     allow_assign_grafana_admin: true
     role: Admin
