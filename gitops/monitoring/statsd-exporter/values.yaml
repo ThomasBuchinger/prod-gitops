@@ -7,3 +7,4 @@ ingress:
   - host: statsd-exporter.10.0.0.21.nio.io
     paths:
     - path: /
+      pathType: Prefix
