@@ -10,10 +10,10 @@ resources:
 persistence:
   enabled: false
 
-# admin:
-#   existingSecret: grafana-admin-cred
-#   userKey: username
-#   passwordKey: password
+admin:
+  existingSecret: grafana-admin-cred
+  userKey: username
+  passwordKey: password
 
 sidecar:
   dashboards:
@@ -90,10 +90,10 @@ assertNoLeakedSecrets: false
 grafana.ini:
   server:
     root_url: https://grafana.buc.sh
-  auth:
-    disable_login_form: true
-  auth.basic:
-    enabled: false
+  # auth:
+  #   disable_login_form: true
+  # auth.basic:
+  #   enabled: false
   auth.generic_oauth:
     name: BUC Login
     enabled: true
