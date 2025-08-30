@@ -20,7 +20,7 @@ spec:
         path: gitops/local-path-storage/base
         wave: "1"
       - name: csi-mountpoint-s3
-        rev: feat-s3manager
+        rev: main
         path: gitops/csi-mountpoint-s3
         wave: "2"
       - name: okd-console
@@ -40,7 +40,7 @@ spec:
         path: gitops/monitoring/tempo
         wave: "2"
       - name: monitoring-shared
-        rev: feat-s3manager
+        rev: main
         path: gitops/monitoring/shared
         wave: "2"
       - name: envoy-gateway
@@ -65,11 +65,11 @@ spec:
         path: gitops/mediarr
         wave: "1"
       - name: s3manager
-        rev: feat-s3manager
+        rev: main
         path: gitops/s3manager
         wave: "1"
       - name: sqlitebackup
-        rev: feat-s3manager
+        rev: main
         path: gitops/sqlite-backup
         wave: "1"
       # === Internet Facing
