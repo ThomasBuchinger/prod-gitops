@@ -90,6 +90,8 @@ assertNoLeakedSecrets: false
 grafana.ini:
   server:
     root_url: https://grafana.buc.sh
+  auth:
+    disable_login_form: true
   auth.basic:
     enabled: false
   auth.generic_oauth:
