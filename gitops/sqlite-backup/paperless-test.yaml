@@ -296,7 +296,8 @@ spec:
   - upload-checksums crc32c
   - allow-delete
   - allow-overwrite
-  - allow-root
+  # - allow-root
+  - allow-other
   - debug
   csi:
     driver: s3.csi.aws.com
