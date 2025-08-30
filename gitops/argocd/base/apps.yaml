@@ -43,10 +43,6 @@ spec:
         rev: main
         path: gitops/monitoring/shared
         wave: "2"
-      - name: envoy-gateway
-        rev: main
-        path: gitops/envoy-gateway
-        wave: "1"
       # === Apps ===
       - name: paperless
         rev: main
