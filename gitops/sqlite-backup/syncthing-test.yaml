@@ -353,7 +353,7 @@ spec:
   - debug
   csi:
     driver: s3.csi.aws.com
-    volumeHandle: s3-csi-driver-volume
+    volumeHandle: s3-csi-driver-syncthing-s3-pv
     volumeAttributes:
       bucketName: syncthing
       # cache: emptyDir
