@@ -81,6 +81,10 @@ spec:
         rev: main
         path: gitops/external-hfs
         wave: "2"
+      - name: external-frigate
+        rev: feat-expose-frigate
+        path: gitops/external-frigate
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
