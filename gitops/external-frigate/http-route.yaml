@@ -32,7 +32,7 @@ spec:
   - backendRefs:
     - group: ""
       kind: Service
-      name: frigate
+      name: external-frigate
       port: 8971
       weight: 1
     matches:
