@@ -22,13 +22,14 @@ metadata:
   namespace: external-frigate
   labels:
     kubernetes.io/service-name: external-frigate
-addressType: FQDN
+addressType: IPv4
 ports:
 - name: http
   port: 8971
 endpoints:
 - addresses:
-  - "cams.10.0.0.9.nip.io"
+  - "10.0.0.9"
+  conditions: {}
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
