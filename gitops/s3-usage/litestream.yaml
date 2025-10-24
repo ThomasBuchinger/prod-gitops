@@ -60,10 +60,12 @@ spec:
         - name: db
           mountPath: /data
         - name: litestream-config
-          mountPath: /etc
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
         envFrom:
         - secretRef:
             name: eso-s3-credentials
+        # securityContext: {}          # Need copy SecurityContext from main container
       containers:
       # Main Container...
 
@@ -76,13 +78,15 @@ spec:
         - name: db
           mountPath: /data
         - name: litestream-config
-          mountPath: /etc
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
         envFrom:
         - secretRef:
             name: eso-s3-credentials
         ports:
         - name: metrics
           containerPort: 9090
+        # securityContext: {}          # Need copy SecurityContext from main container
       # Volumes
       volumes:
       - name: db
