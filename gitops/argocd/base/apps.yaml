@@ -70,7 +70,7 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-gateway
-        rev: main
+        rev: feat-expose-frigate
         path: gitops/external-gateway
         wave: "2"
       - name: external-homelabapi
