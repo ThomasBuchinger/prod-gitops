@@ -65,11 +65,19 @@ spec:
     - method: GET
       path:
         type: PathPrefix
+        value: /fonts
+    - method: GET
+      path:
+        type: PathPrefix
         value: /locales
     - method: GET
       path:
         type: Exact
         value: /favicon.ico
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /clips
     - method: GET
       path:
         type: PathPrefix
