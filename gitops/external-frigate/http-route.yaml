@@ -79,6 +79,26 @@ spec:
         name: 403-denied
 
 ---
+# increase local Rate Limit for Frigate
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: ratelimit-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: external-frigate
+  rateLimit:
+    type: Local
+    local:
+      rules:
+      - limit:
+          requests: 1000
+          unit: Minute
+
+
+---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: HTTPRouteFilter
 metadata:
