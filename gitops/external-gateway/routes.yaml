@@ -108,6 +108,9 @@ spec:
     kind: Gateway
     name: external-gateway
     sectionName: mtls
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
   hostnames:
   - "echo-mtls.10.0.0.21.nip.io"
   - "echo.mtls.buc.sh"
