@@ -7,11 +7,30 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-service
+  name: external-frigate
   namespace: external-frigate
 spec:
-  type: ExternalName
-  externalName: cams.10.0.0.9.nip.io
+  ports:
+    - port: 8971
+      protocol: TCP
+      name: http
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: external-frigate
+  namespace: external-frigate
+  labels:
+    kubernetes.io/service-name: external-frigate
+addressType: IPv4
+ports:
+- name: http
+  port: 8971
+endpoints:
+- addresses:
+  - "10.0.0.9"
+  conditions: {}
+
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -22,43 +41,30 @@ spec:
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
-    name: external-gateway
+    name: external-gateway-mtls
     namespace: external-gateway
-    sectionName: mtls
   hostnames:
   - "cams.mtls.buc.sh"
   rules:
   - backendRefs:
     - group: ""
       kind: Service
-      name: frigate
-      port: 8080
+      name: external-frigate
+      port: 8971
       weight: 1
     matches:
     - method: GET
       path:
-        type: Exact
+        type: PathPrefix
         value: /
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /assets
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /locales
-    - method: GET
-      path:
-        type: Exact
-        value: /favicon.ico
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /api
     - method: POST
       path:
         type: PathPrefix
         value: /api/faces/train
+    - method: POST
+      path:
+        type: PathPrefix
+        value: /api/review/viewed
  
   - matches:
     - path:
@@ -70,6 +76,26 @@ spec:
         group: gateway.envoyproxy.io
         kind: HTTPRouteFilter
         name: 403-denied
+
+---
+# increase local Rate Limit for Frigate
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: ratelimit-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: cams-mtls-buc-sh
+  rateLimit:
+    type: Local
+    local:
+      rules:
+      - limit:
+          requests: 1000
+          unit: Minute
+
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
