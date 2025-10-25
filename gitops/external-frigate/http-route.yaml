@@ -77,6 +77,10 @@ spec:
     - method: GET
       path:
         type: PathPrefix
+        value: /review
+    - method: GET
+      path:
+        type: PathPrefix
         value: /clips
     - method: GET
       path:
@@ -86,6 +90,10 @@ spec:
       path:
         type: PathPrefix
         value: /api/faces/train
+    - method: POST
+      path:
+        type: PathPrefix
+        value: /api/review/viewed
  
   - matches:
     - path:
