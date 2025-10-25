@@ -125,35 +125,6 @@ spec:
       namespaces:
         from: All
 
-  - name: sec
-    protocol: HTTPS
-    port: 446
-    hostname: "*.cloud.buc.sh"
-    tls:
-      mode: Terminate
-      certificateRefs:
-      - kind: Secret
-        group: ""
-        name: cert-cloud-buc-sh
-    allowedRoutes:
-      namespaces:
-        from: All
-  - name: secmtls
-    protocol: HTTPS
-    hostname: "*.mtls.buc.sh"
-    port: 446
-    tls:
-      mode: Terminate
-      certificateRefs:
-      - kind: Secret
-        group: ""
-        name: cert-cloud-buc-sh
-    allowedRoutes:
-      namespaces:
-        from: All
-
-
-
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
