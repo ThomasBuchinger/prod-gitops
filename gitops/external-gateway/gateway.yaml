@@ -128,7 +128,7 @@ spec:
   - name: sec
     protocol: HTTPS
     port: 446
-    hostname: ".cloud.buc.sh"
+    hostname: "*.cloud.buc.sh"
     tls:
       mode: Terminate
       certificateRefs:
