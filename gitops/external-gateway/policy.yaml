@@ -9,6 +9,9 @@ spec:
     kind: Gateway
     name: external-gateway
     sectionName: mtls
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
   tls:
     clientValidation:
       optional: false

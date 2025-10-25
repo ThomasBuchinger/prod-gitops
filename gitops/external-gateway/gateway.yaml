@@ -137,7 +137,7 @@ spec:
     hostname: echo.mtls.buc.sh
     name: echo
     protocol: HTTPS
-    port: 446
+    port: 443
     tls:
       mode: Terminate
       certificateRefs:
