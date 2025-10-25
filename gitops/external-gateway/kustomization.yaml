@@ -8,7 +8,6 @@ resources:
 - echo-server.yaml
 - routes.yaml
 - network-policy.yaml
-- debug-combined-mtls.yaml
 
 
 helmCharts:
