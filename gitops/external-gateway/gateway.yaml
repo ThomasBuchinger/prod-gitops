@@ -125,6 +125,47 @@ spec:
       namespaces:
         from: All
 
+  - name: combi1
+    protocol: HTTPS
+    port: 446
+    hostname: "https.test.buc.sh"
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+      # Not yet supported in envoy-gateway: v1.4.2
+      # frontendValidation:
+      #   caCertificateRefs:
+      #   - kind: "Secret"
+      #     group: ""
+      #     name: "root-ca-mtls"
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: combi2
+    protocol: HTTPS
+    hostname: "mtls.test.buc.sh"
+    port: 446
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+      # Not yet supported in envoy-gateway: v1.4.2
+      # frontendValidation:
+      #   caCertificateRefs:
+      #   - kind: "Secret"
+      #     group: ""
+      #     name: "root-ca-mtls"
+    allowedRoutes:
+      namespaces:
+        from: All
+
+
+
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
