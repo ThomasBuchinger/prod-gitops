@@ -56,36 +56,8 @@ spec:
     matches:
     - method: GET
       path:
-        type: Exact
+        type: PathPrefix
         value: /
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /assets
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /fonts
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /locales
-    - method: GET
-      path:
-        type: Exact
-        value: /favicon.ico
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /review
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /clips
-    - method: GET
-      path:
-        type: PathPrefix
-        value: /api
     - method: POST
       path:
         type: PathPrefix
