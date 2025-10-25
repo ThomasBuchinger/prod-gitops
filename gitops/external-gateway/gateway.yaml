@@ -126,6 +126,31 @@ spec:
         from: All
 
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-gateway-mtls
+spec:
+  gatewayClassName: gwclass-external
+  listeners:
+  - &mtls
+    hostname: echo.mtls.buc.sh
+    protocol: HTTPS
+    port: 446
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
+  - <<: *mtls
+    hostname: paperless.mtls.buc.sh
+  - <<: *mtls
+    hostname: cams.mtls.buc.sh
+---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
