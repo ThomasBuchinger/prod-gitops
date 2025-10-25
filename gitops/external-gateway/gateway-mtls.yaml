@@ -1,0 +1,101 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-gateway-mtls
+spec:
+  gatewayClassName: gwclass-external
+  listeners:
+  - &mtls
+    hostname: echo.mtls.buc.sh
+    name: echo
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+    allowedRoutes:
+      namespaces:
+        from: All
+  - <<: *mtls
+    hostname: paperless.mtls.buc.sh
+    name: paperless
+  - <<: *mtls
+    hostname: cams.mtls.buc.sh
+    name: frigate
+
+
+
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: EnvoyPatchPolicy
+# metadata:
+#   name: x-forward-client-cert-policy
+# spec:
+#   targetRef:
+#     group: gateway.networking.k8s.io
+#     kind: GatewayClass
+#     name: gwclass-external
+#   type: JSONPatch
+#   jsonPatches:
+#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+#     name: external-gateway/external-gateway/https
+#     operation: &patch_enable_ccf
+#       op: add
+#       path: "/filter_chains/1/filters/0/typed_config/forward_client_cert_details"
+#       value: SANITIZE_SET
+#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+#     name: external-gateway/external-gateway/https
+#     operation: &patch_configure_ccf
+#       op: add
+#       path: "/filter_chains/1/filters/0/typed_config/set_current_client_cert_details"
+#       value:
+#         subject: true
+#         dns: true
+#         uri: true
+  
+#   # Configure ClientCertificateForwarding for each additional mTLS listener
+#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+#     name: external-gateway/external-gateway/https
+#     operation:
+#       <<: *patch_enable_ccf
+#       path: "/filter_chains/2/filters/0/typed_config/forward_client_cert_details"
+#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+#     name: external-gateway/external-gateway/https
+#     operation:
+#       <<: *patch_configure_ccf
+#       path: "/filter_chains/1/filters/0/typed_config/set_current_client_cert_details"
+
+
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: mtls-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    sectionName: mtls
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
+  tls:
+    clientValidation:
+      optional: false
+      caCertificateRefs:
+      - kind: "Secret"
+        group: ""
+        name: "root-ca-mtls"
+  headers:
+    xForwardedClientCert:
+      mode: SanitizeSet
+      certDetailsToAdd:
+      - Subject
+      - DNS
+      - URI
