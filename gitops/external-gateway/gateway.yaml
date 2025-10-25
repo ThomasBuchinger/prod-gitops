@@ -135,6 +135,7 @@ spec:
   listeners:
   - &mtls
     hostname: echo.mtls.buc.sh
+    name: echo
     protocol: HTTPS
     port: 446
     tls:
@@ -148,8 +149,10 @@ spec:
         from: All
   - <<: *mtls
     hostname: paperless.mtls.buc.sh
+    name: paperless
   - <<: *mtls
     hostname: cams.mtls.buc.sh
+    name: frigate
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
