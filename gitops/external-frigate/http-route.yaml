@@ -41,8 +41,8 @@ spec:
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
-    name: external-gateway
-    namespace: external-gateway-mtls
+    name: external-gateway-mtls
+    namespace: external-gateway
   hostnames:
   - "cams.mtls.buc.sh"
   rules:
