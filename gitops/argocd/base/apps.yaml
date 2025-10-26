@@ -45,7 +45,7 @@ spec:
         wave: "2"
       # === Apps ===
       - name: paperless
-        rev: main
+        rev: feat-expose-frigate
         path: gitops/paperless
         wave: "2"
       - name: syncthing
