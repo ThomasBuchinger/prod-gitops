@@ -104,10 +104,6 @@ metadata:
   name: backend-mtls
 spec:
   parentRefs:
-  # - group: gateway.networking.k8s.io
-  #   kind: Gateway
-  #   name: external-gateway
-  #   sectionName: mtls
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: external-gateway-mtls

@@ -17,9 +17,17 @@ spec:
       - kind: Secret
         group: ""
         name: cert-cloud-buc-sh
+      # Not yet supported in envoy-gateway: v1.5.4
+      # frontendValidation:
+      #   caCertificateRefs:
+      #   - kind: "Secret"
+      #     group: ""
+      #     name: "root-ca-mtls"
     allowedRoutes:
       namespaces:
         from: All
+  
+  # TODO: When Adding a mTLS listener, you must also add the geoip-HTTP-Filter to that HTTP-FilterChain in policy.yaml
   - <<: *mtls
     hostname: cams.mtls.buc.sh
     name: frigate
@@ -34,10 +42,6 @@ metadata:
   name: mtls-policy
 spec:
   targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: external-gateway
-    sectionName: mtls
   - group: gateway.networking.k8s.io
     kind: Gateway
     name: external-gateway-mtls
