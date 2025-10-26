@@ -1,21 +1,3 @@
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: ClientTrafficPolicy
-metadata:
-  name: mtls-policy
-spec:
-  targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: external-gateway
-    sectionName: mtls
-  tls:
-    clientValidation:
-      optional: false
-      caCertificateRefs:
-      - kind: "Secret"
-        group: ""
-        name: "root-ca-mtls"
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -106,95 +88,23 @@ spec:
       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
       value: *geoip
 
+  # TODO: mTLS. For Every mTLS Listener, you need to re-add the GeoIP to the default FilterChain
   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-    name: external-gateway/external-gateway/mtls
+    name: external-gateway/external-gateway/https
     operation:
       op: add
-      path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
+      path: "/filter_chains/1/filters/0/typed_config/http_filters/0"
       value: *geoip
-
-
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: EnvoyPatchPolicy
-metadata:
-  name: x-forward-client-cert-policy
-spec:
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: GatewayClass
-    name: gwclass-external
-  type: JSONPatch
-  jsonPatches:
   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-    name: external-gateway/external-gateway/mtls
+    name: external-gateway/external-gateway/https
     operation:
       op: add
-      path: "/filter_chains/0/filters/0/typed_config/forward_client_cert_details"
-      value: SANITIZE_SET
+      path: "/filter_chains/2/filters/0/typed_config/http_filters/0"
+      value: *geoip
   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-    name: external-gateway/external-gateway/mtls
+    name: external-gateway/external-gateway/https
     operation:
       op: add
-      path: "/filter_chains/0/filters/0/typed_config/set_current_client_cert_details"
-      value:
-        subject: true
-        dns: true
-        uri: true
-
-
-# ---
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: SecurityPolicy
-# metadata:
-#   name: cors-default-policy
-# spec:
-#   targetRefs:
-#   - group: gateway.networking.k8s.io
-#     kind: Gateway
-#     name: external-gateway
-#   cors:
-#     allowOrigins: []
-#     allowMethods:
-#     - GET
-
-# ---
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: EnvoyPatchPolicy
-# metadata:
-#   name: csrf-default-policy
-# spec:
-#   targetRef:
-#     group: gateway.networking.k8s.io
-#     # kind: Gateway
-#     # name: external-gateway
-#     kind: GatewayClass
-#     name: gwclass-external
-#   type: JSONPatch
-#   jsonPatches:
-#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-#     name: external-gateway/external-gateway/https
-#     operation:
-#       op: add
-#       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
-#       value: &csrf
-#         name: envoy.filters.http.csrf
-#         typed_config:
-#           "@type": type.googleapis.com/envoy.extensions.filters.http.csrf.v3.CsrfPolicy
-#           filter_enabled:
-#             default_value:
-#               numerator: 100
-#               denominator: HUNDRED
-#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-#     name: external-gateway/external-gateway/hidden
-#     operation:
-#       op: add
-#       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
-#       value: *csrf
-#   - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
-#     name: external-gateway/external-gateway/mtls
-#     operation:
-#       op: add
-#       path: "/filter_chains/0/filters/0/typed_config/http_filters/0"
-#       value: *csrf
+      path: "/filter_chains/3/filters/0/typed_config/http_filters/0"
+      value: *geoip
 

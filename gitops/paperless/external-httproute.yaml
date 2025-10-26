@@ -8,9 +8,8 @@ spec:
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
-    name: external-gateway
     namespace: external-gateway
-    sectionName: mtls
+    name: external-gateway-mtls
   hostnames:
   - "paperless.mtls.buc.sh"
   rules:
@@ -24,6 +23,3 @@ spec:
     - path:
         type: PathPrefix
         value: /
-
-
-

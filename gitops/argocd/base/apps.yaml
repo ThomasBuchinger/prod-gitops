@@ -45,7 +45,7 @@ spec:
         wave: "2"
       # === Apps ===
       - name: paperless
-        rev: feat-expose-frigate
+        rev: main
         path: gitops/paperless
         wave: "2"
       - name: syncthing
@@ -70,7 +70,7 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-gateway
-        rev: feat-expose-frigate
+        rev: main
         path: gitops/external-gateway
         wave: "2"
       - name: external-homelabapi
@@ -82,7 +82,7 @@ spec:
         path: gitops/external-hfs
         wave: "2"
       - name: external-frigate
-        rev: feat-expose-frigate
+        rev: main
         path: gitops/external-frigate
         wave: "2"
   template:

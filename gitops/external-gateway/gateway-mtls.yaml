@@ -1,0 +1,61 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-gateway-mtls
+spec:
+  gatewayClassName: gwclass-external
+  listeners:
+  - &mtls
+    hostname: echo.mtls.buc.sh
+    name: echo
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: cert-cloud-buc-sh
+      # Not yet supported in envoy-gateway: v1.5.4
+      # frontendValidation:
+      #   caCertificateRefs:
+      #   - kind: "Secret"
+      #     group: ""
+      #     name: "root-ca-mtls"
+    allowedRoutes:
+      namespaces:
+        from: All
+  
+  # TODO: When Adding a mTLS listener, you must also add the geoip-HTTP-Filter to that HTTP-FilterChain in policy.yaml
+  - <<: *mtls
+    hostname: cams.mtls.buc.sh
+    name: frigate
+  - <<: *mtls
+    hostname: paperless.mtls.buc.sh
+    name: paperless
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: mtls-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
+  tls:
+    clientValidation:
+      optional: false
+      caCertificateRefs:
+      - kind: "Secret"
+        group: ""
+        name: "root-ca-mtls"
+  headers:
+    xForwardedClientCert:
+      mode: SanitizeSet
+      certDetailsToAdd:
+      - Subject
+      - DNS
+      - URI
