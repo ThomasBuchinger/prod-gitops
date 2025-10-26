@@ -23,6 +23,9 @@ spec:
   - <<: *mtls
     hostname: cams.mtls.buc.sh
     name: frigate
+  - <<: *mtls
+    hostname: paperless.mtls.buc.sh
+    name: paperless
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
