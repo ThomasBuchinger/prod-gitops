@@ -45,10 +45,9 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /usr/share/nginx/html/config.chat.10.0.0.21.nip.io.json
-          name: config
-        - mountPath: /usr/share/nginx/html/config.chat.cloud.buc.sh.json
-          name: config
+        - name: config
+          mountPath: /app/config.json
+          subPath: element-config.json
       securityContext:
         fsGroup: 1000
         runAsNonRoot: true
@@ -56,11 +55,6 @@ spec:
       - name: config
         configMap:
           name: element-config
-          items:
-          - key: element-config.json
-            path: config.chat.10.0.0.21.nip.io.json
-          - key: element-config.json
-            path: config.chat.cloud.buc.sh.json
 ---
 kind: Service
 apiVersion: v1
