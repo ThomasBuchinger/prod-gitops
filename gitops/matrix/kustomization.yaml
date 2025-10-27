@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: matrix
 resources:
 - synapse.yaml
+- element.yaml
 
 configMapGenerator:
 - name: synapse-data
