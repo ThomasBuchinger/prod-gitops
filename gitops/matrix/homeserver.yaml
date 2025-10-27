@@ -3,7 +3,7 @@
 # For more information on how to configure Synapse, including a complete accounting of
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
-server_name: "chat.cloud.buc.sh"
+server_name: "matrix.cloud.buc.sh"
 pid_file: /tmp/homeserver.pid
 listeners:
   - port: 8008
@@ -17,18 +17,28 @@ database:
   name: sqlite3
   args:
     database: /db/homeserver.db
-log_config: "/data/chat.cloud.buc.sh.log.config"
+log_config: "/data/matrix.cloud.buc.sh.log.config"
 media_store_path: /media/media_store
 report_stats: true
 serve_server_wellknown: true
-public_baseurl: https://chat.cloud.buc.sh
-default_identity_server: https://chat.cloud.buc.sh
+public_baseurl: https://matrix.cloud.buc.sh
+default_identity_server: https://matrix.org
 extra_well_known_client_content:
   foo: bar
-  # "m.homeserver": { "base_url": "https://chat.cloud.buc.sh" }
-  # "m.identity_server": { "base_url": "https://chat.cloud.buc.sh"}
 
 web_client_location: https://chat.cloud.buc.sh/
+oidc_providers:
+- idp_id: dex
+  idp_name: HomeLAB Dex
+  issuer: "https://dex.buc.sh"
+  client_id: "login"
+  client_secret: "notaSecretDexisLocal"
+  scopes: ["openid", "profile"]
+  user_mapping_provider:
+    config:
+      localpart_template: "{{ user.name }}"
+      display_name_template: "{{ user.name|capitalize }}"
+
 
 suppress_key_server_warning: true
 trusted_key_servers: []
@@ -36,8 +46,8 @@ trusted_key_servers: []
 
 # === Optional Config ====
 # The Signing Key seems to be only used for Federatin and Cross-Server Communication. I think it can be auto-generated
-# signing_key_path: "/data/chat.cloud.buc.sh.signing.key"
-signing_key_path: /tmp/chat.cloud.buc.sh.signing.key
+# signing_key_path: "/data/matrix.cloud.buc.sh.signing.key"
+signing_key_path: /tmp/matrix.cloud.buc.sh.signing.key
 
 # Auto-Generate that Secret: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#registration_shared_secret
 # registration_shared_secret: "-;5*sy5&quh,Tw5ED3&+kHTOknIom,lAFmE&e@X5hFu+OGXd,I"
