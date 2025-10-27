@@ -1,0 +1,40 @@
+# Configuration file for Synapse.
+#
+# For more information on how to configure Synapse, including a complete accounting of
+# each option, go to docs/usage/configuration/config_documentation.md or
+# https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+server_name: "chat.cloud.buc.sh"
+pid_file: /tmp/homeserver.pid
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+database:
+  name: sqlite3
+  args:
+    database: /db/homeserver.db
+log_config: "/data/chat.cloud.buc.sh.log.config"
+media_store_path: /data/media_store
+report_stats: true
+
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+# === Optional Config ====
+# The Signing Key seems to be only used for Federatin and Cross-Server Communication. I think it can be auto-generated
+# signing_key_path: "/data/chat.cloud.buc.sh.signing.key"
+signing_key_path: /tmp/chat.cloud.buc.sh.signing.key
+
+# Auto-Generate that Secret: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#registration_shared_secret
+# registration_shared_secret: "-;5*sy5&quh,Tw5ED3&+kHTOknIom,lAFmE&e@X5hFu+OGXd,I"
+registration_shared_secret_path: /tmp/registration_shared_secret
+# Only used for guest access: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#macaroon_secret_key
+# macaroon_secret_key: "xbPVY;xm7mUE2Poa0FTX5c_aB^m._M1i#x3c5~kN22X~QwtBq:"
+# Related to the User-Consent-Form: I think we can auto-generate that secret too: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#form_secret
+# form_secret: "bTVBqd_^3v7I&PCRM*#soj^Ct01ubi&c-vNo5R446*2hWE&yPC"
+form_secret_path: /tmp/form_secret
+
