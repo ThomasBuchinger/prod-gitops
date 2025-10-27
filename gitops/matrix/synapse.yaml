@@ -57,7 +57,7 @@ spec:
       volumes:
       - name: db
         emptyDir: {}
-      - name: configs
+      - name: data
         configMap:
           name: synapse-data
       - name: tmp
