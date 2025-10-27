@@ -21,13 +21,10 @@ log_config: "/data/chat.cloud.buc.sh.log.config"
 media_store_path: /media/media_store
 report_stats: true
 serve_server_wellknown: true
+public_baseurl: https://chat.10.0.0.21.nip.io
 extra_well_known_client_content:
-  "m.homeserver": {
-    "base_url": "https://chat.10.0.0.21.nip.io"
-  }
-  "m.identity_server": {
-    "base_url": "https://chat.10.0.0.21.nip.io"
-  }
+  # "m.homeserver": { "base_url": "https://chat.10.0.0.21.nip.io" }
+  "m.identity_server": { "base_url": "https://chat.10.0.0.21.nip.io"}
 
   foo: bar
 web_client_location: https://chat.10.0.0.21.nip.io/
