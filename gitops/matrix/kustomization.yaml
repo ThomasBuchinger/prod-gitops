@@ -1,0 +1,11 @@
+kind: Kustomization
+
+namespace: matrix
+resources:
+- synapse.yaml
+
+configMapGenerator:
+- name: synapse-data
+  files:
+  - homeserver.yaml
+  - chat.cloud.buc.sh.log.config
