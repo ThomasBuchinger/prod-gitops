@@ -35,6 +35,6 @@ registration_shared_secret_path: /tmp/registration_shared_secret
 # Only used for guest access: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#macaroon_secret_key
 # macaroon_secret_key: "xbPVY;xm7mUE2Poa0FTX5c_aB^m._M1i#x3c5~kN22X~QwtBq:"
 # Related to the User-Consent-Form: I think we can auto-generate that secret too: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#form_secret
-# form_secret: "bTVBqd_^3v7I&PCRM*#soj^Ct01ubi&c-vNo5R446*2hWE&yPC"
-form_secret_path: /tmp/form_secret
+form_secret: "bTVBqd_^3v7I&PCRM*#soj^Ct01ubi&c-vNo5R446*2hWE&yPC"
+# form_secret_path: /tmp/form_secret
 
