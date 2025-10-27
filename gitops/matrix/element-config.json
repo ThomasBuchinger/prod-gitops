@@ -2,10 +2,10 @@
   "disable_custom_urls": "true",
   "default_server_config": {
     "m.homeserver": {
-      "base_url": "https://chat.10.0.0.21.nip.io"
+      "base_url": "https://chat.cloud.buc.sh"
     },
     "m.identity_server": {
-      "base_url": "https://chat.10.0.0.21.nip.io"
+      "base_url": "https://chat.cloud.buc.sh"
     },
     
     "disable_guests": false,
@@ -19,7 +19,6 @@
     "default_theme": "light",
     "room_directory": {
       "servers": [
-        "chat.10.0.0.21.nip.io",
         "chat.cloud.buc.sh"
       ]
     },
