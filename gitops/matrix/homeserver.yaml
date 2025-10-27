@@ -21,6 +21,8 @@ log_config: "/data/chat.cloud.buc.sh.log.config"
 media_store_path: /media/media_store
 report_stats: true
 serve_server_wellknown: true
+extra_well_known_client_content:
+  foo: bar
 
 suppress_key_server_warning: true
 trusted_key_servers: []
