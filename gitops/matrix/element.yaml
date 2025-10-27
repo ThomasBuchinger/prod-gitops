@@ -46,9 +46,9 @@ spec:
             type: RuntimeDefault
         volumeMounts:
         - mountPath: /usr/share/nginx/html/config.chat.10.0.0.21.nip.io.json
-          name: element-config
+          name: config
         - mountPath: /usr/share/nginx/html/config.chat.cloud.buc.sh.json
-          name: element-config
+          name: config
       securityContext:
         fsGroup: 1000
         runAsNonRoot: true
