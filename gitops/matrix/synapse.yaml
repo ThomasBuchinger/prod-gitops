@@ -170,6 +170,9 @@ spec:
         emptyDir: {}
       - name: tmp
         emptyDir: {}
+      - name: litestream-config
+        configMap:
+          name: litestream-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
