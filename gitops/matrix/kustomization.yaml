@@ -10,3 +10,7 @@ configMapGenerator:
   files:
   - homeserver.yaml
   - chat.cloud.buc.sh.log.config
+- name: element-config
+  files:
+  - config.chat.10.0.0.21.nip.io=element-cconfig.json
+  - config.chat.cloud.buc.sh=element-cconfig.json
