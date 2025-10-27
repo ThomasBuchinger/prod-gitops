@@ -20,16 +20,16 @@ spec:
         image: ghcr.io/element-hq/element-web:v1.12.2
         ports:
         - name: http
-          containerPort: 80
-        # livenessProbe:
-        #   initialDelaySeconds: 60
-        #   httpGet:
-        #     path: /
-        #     port: 80
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 80
+          containerPort: 8080
+        livenessProbe:
+          initialDelaySeconds: 60
+          httpGet:
+            path: /config.json
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /config.json
+            port: http
         resources:
           requests:
             cpu: 5m
@@ -59,4 +59,4 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 80
+      targetPort: http
