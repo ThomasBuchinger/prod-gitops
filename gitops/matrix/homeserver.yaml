@@ -20,9 +20,11 @@ database:
 log_config: "/data/chat.cloud.buc.sh.log.config"
 media_store_path: /media/media_store
 report_stats: true
+serve_server_wellknown: true
 
-trusted_key_servers:
-  - server_name: "matrix.org"
+suppress_key_server_warning: true
+trusted_key_servers: []
+  # - server_name: "matrix.org"
 
 # === Optional Config ====
 # The Signing Key seems to be only used for Federatin and Cross-Server Communication. I think it can be auto-generated
