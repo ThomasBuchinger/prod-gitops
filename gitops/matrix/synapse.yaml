@@ -1,4 +1,48 @@
 ---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: s3-credantials
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: eso-s3-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: LITESTREAM_ACCESS_KEY_ID
+    remoteRef:
+      key: static-secrets
+      property: s3_accesskey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: LITESTREAM_SECRET_ACCESS_KEY
+    remoteRef:
+      key: static-secrets
+      property: s3_secretkey
+      conversionStrategy: Default
+      decodingStrategy: None
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litestream-config
+data:
+  litestream.yml: |-
+    dbs:
+    - path: /db/homeserver.db
+      replicas:
+      - type: s3
+        endpoint: http://s3.buc.sh:9000
+        region: us-east-1
+        bucket: litestream-backups
+        path: matrix
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +59,32 @@ spec:
       labels:
         app.kubernetes.io/name: synapse
     spec:
+    #   initContainers:
+    #   - name: litestream-restore
+    #     image: litestream/litestream:0.5.2
+    #     args:
+    #     - 'restore'
+    #     - '-if-db-not-exists'
+    #     - '-if-replica-exists'
+    #     - /data/homeserver.db
+    #     volumeMounts:
+    #     - name: db
+    #       mountPath: /data
+    #     - name: litestream-config
+    #       mountPath: /etc/litestream.yml
+    #       subPath: litestream.yml
+    #     envFrom:
+    #     - secretRef:
+    #         name: eso-s3-credentials
+    #     securityContext:
+    #       allowPrivilegeEscalation: false
+    #       runAsUser: 1000
+    #       runAsGroup: 1000
+    #       capabilities:
+    #         drop:
+    #         - ALL
+    #       seccompProfile:
+    #         type: RuntimeDefault
       containers:
       - name: synapse
         image: ghcr.io/element-hq/synapse:v1.140.0
@@ -44,6 +114,38 @@ spec:
             cpu: 5m
             memory: 100Mi
           limits: {}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - sh
+              - -c
+              -  register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password mysupersecurepassword --exists-ok --no-admin --user_type bot
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      - name: litestream
+        image: litestream/litestream:0.5.2
+        args:
+        - 'replicate'
+        volumeMounts:
+        - name: db
+          mountPath: /data
+        - name: litestream-config
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
+        envFrom:
+        - secretRef:
+            name: eso-s3-credentials
+        ports:
+        - name: metrics
+          containerPort: 9090
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 1000
@@ -62,10 +164,24 @@ spec:
           name: synapse-data
       - name: db
         emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: matrix
       - name: media
         emptyDir: {}
       - name: tmp
         emptyDir: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: matrix
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
 ---
 kind: Service
 apiVersion: v1
@@ -87,20 +203,17 @@ metadata:
   name: synapse
 spec:
   rules:
-  - host: chat.cloud.buc.sh
+  - host: matrix.10.0.0.21.nip.io
     http:
       paths:
-      - path: /
+      - path: /_matrix
         pathType: Prefix
         backend:
           service:
             name: synapse
             port:
               number: 8008
-  - host: chat.10.0.0.21.nip.io
-    http:
-      paths:
-      - path: /_matrix
+      - path: /_synapse/client
         pathType: Prefix
         backend:
           service:
@@ -114,11 +227,3 @@ spec:
             name: synapse
             port:
               number: 8008
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: element
-            port:
-              number: 80
-
