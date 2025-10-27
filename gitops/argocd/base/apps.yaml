@@ -56,6 +56,10 @@ spec:
         rev: main
         path: gitops/stirling-pdf
         wave: "1"
+      - name: matrix
+        rev: feat-matrix
+        path: gitops/matrix
+        wave: "1"
       - name: mediarr
         rev: main
         path: gitops/mediarr
