@@ -120,7 +120,7 @@ spec:
               command:
               - sh
               - -c
-              - curl http://localhost:8008/health --retry=30 --retry-delay=1  && register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password mysupersecurepassword --exists-ok --no-admin --user_type bot
+              - sleep 60 && register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password mysupersecurepassword --exists-ok --no-admin --user_type bot
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 1000
