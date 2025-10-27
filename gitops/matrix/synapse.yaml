@@ -22,10 +22,12 @@ spec:
         - name: http
           containerPort: 8008
         volumeMounts:
+        - name: configs
+          mountPath: /data
         - name: db
           mountPath: /db
-        - name: data
-          mountPath: /data
+        - name: media
+          mountPath: /media
         - name: tmp
           mountPath: /tmp/
         livenessProbe:
@@ -55,11 +57,13 @@ spec:
         fsGroup: 1000
         runAsNonRoot: true
       volumes:
-      - name: db
-        emptyDir: {}
-      - name: data
+      - name: configs
         configMap:
           name: synapse-data
+      - name: db
+        emptyDir: {}
+      - name: media
+        emptyDir: {}
       - name: tmp
         emptyDir: {}
 ---
