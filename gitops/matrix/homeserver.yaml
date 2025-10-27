@@ -23,6 +23,7 @@ report_stats: true
 serve_server_wellknown: true
 extra_well_known_client_content:
   foo: bar
+web_client_location: https://chat.10.0.0.21.nip.io/
 
 suppress_key_server_warning: true
 trusted_key_servers: []
