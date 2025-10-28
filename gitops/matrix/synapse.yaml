@@ -60,38 +60,38 @@ spec:
       labels:
         app.kubernetes.io/name: synapse
     spec:
-    #   initContainers:
-    #   - name: litestream-restore
-    #     image: litestream/litestream:0.5.2
-    #     args:
-    #     - 'restore'
-    #     - '-if-db-not-exists'
-    #     - '-if-replica-exists'
-    #     - /data/homeserver.db
-    #     volumeMounts:
-    #     - name: db
-    #       mountPath: /data
-    #     - name: litestream-config
-    #       mountPath: /etc/litestream.yml
-    #       subPath: litestream.yml
-    #     envFrom:
-    #     - secretRef:
-    #         name: eso-s3-credentials
-    #     securityContext:
-    #       allowPrivilegeEscalation: false
-    #       runAsUser: 1000
-    #       runAsGroup: 1000
-    #       capabilities:
-    #         drop:
-    #         - ALL
-    #       seccompProfile:
-    #         type: RuntimeDefault
+      initContainers:
+      - name: litestream-restore
+        image: litestream/litestream:0.5.2
+        args:
+        - 'restore'
+        - '-if-db-not-exists'
+        - '-if-replica-exists'
+        - /data/homeserver.db
+        volumeMounts:
+        - name: db
+          mountPath: /data
+        - name: litestream-config
+          mountPath: /etc/litestream.yml
+          subPath: litestream.yml
+        envFrom:
+        - secretRef:
+            name: eso-s3-credentials
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       containers:
       - name: synapse
         image: ghcr.io/element-hq/synapse:v1.140.0
-        env:
-        - name: USER_BOT_PASSWORD
-          value: mysupersecurepassword
+        # env:
+        # - name: USER_BOT_PASSWORD
+        #   value: mysupersecurepassword
         ports:
         - name: http
           containerPort: 8008
@@ -124,7 +124,7 @@ spec:
               command:
               - sh
               - -c
-              - curl http://localhost:8008/health --retry 60 --retry-all-errors --retry-delay 1 --silent && register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password $USER_BOT_PASSWORD --exists-ok --no-admin --user_type bot
+              - curl http://localhost:8008/health --retry 60 --retry-all-errors --retry-delay 1 --silent && register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password $LITESTREAM_SECRET_ACCESS_KEY --exists-ok --no-admin --user_type bot
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 1000
@@ -167,9 +167,8 @@ spec:
         configMap:
           name: synapse-data
       - name: db
-        emptyDir: {}
-        # persistentVolumeClaim:
-        #   claimName: matrix
+        persistentVolumeClaim:
+          claimName: matrix
       - name: media
         emptyDir: {}
       - name: tmp
