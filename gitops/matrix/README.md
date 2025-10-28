@@ -4,7 +4,13 @@ This Matrix Server has a few Problems in the Automation
 
 * The User `@bot` is created "manually" in a PostStartLifecycleHook
   * The password is also in Plain-Text
-* Rooms must be created manually?
+* Rooms are auto-created, but everyone Joining the server auto-joins ALL the rooms
+  * Figure out how to auto-create rooms without everyone joining
+  * Maybe make the Room-names a bit nicer?
 * Media-Files are only stored in EmptyDir
-* A bunch of Kays are auto-generated. restarting the Pod is probably going to cause problems until the user relogs
-* Currently there is a Auto-join room for the Bot, that should not be joined by everyone
+* E2E Encryption is not active for Rooms per default
+
+Things that need to be done manually:
+
+* Add a local Name to the Rooms
+* Add message exiration to Rooms
