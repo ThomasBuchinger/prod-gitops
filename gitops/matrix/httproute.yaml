@@ -116,9 +116,9 @@ spec:
   - to:
     - ipBlock:
         cidr: "0.0.0.0/0"
-        # except:
-        # - 10.0.0.0/24
-        # - 10.0.100.0/24
+        except:
+        - 10.0.0.0/24
+        - 10.0.100.0/24
   ingress:
   # Allow Ingress
   - from:
