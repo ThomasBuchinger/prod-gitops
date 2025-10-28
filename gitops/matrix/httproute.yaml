@@ -111,6 +111,15 @@ spec:
   - to:
     - ipBlock:
         cidr: "0.0.0.16/32"
+    ports:
+    - port: 80
+    - port: 443
+  # Litestream --> S3
+  - to:
+    - ipBlock:
+        cidr: "0.0.0.19/32"
+    ports:
+    - port: 9000
   
   # Allow Access to the Internet, but block internal Access
   - to:
