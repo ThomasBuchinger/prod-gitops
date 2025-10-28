@@ -67,10 +67,10 @@ spec:
         - 'restore'
         - '-if-db-not-exists'
         - '-if-replica-exists'
-        - /data/homeserver.db
+        - /db/homeserver.db
         volumeMounts:
         - name: db
-          mountPath: /data
+          mountPath: /db
         - name: litestream-config
           mountPath: /etc/litestream.yml
           subPath: litestream.yml
@@ -140,7 +140,7 @@ spec:
         - 'replicate'
         volumeMounts:
         - name: db
-          mountPath: /data
+          mountPath: /db
         - name: litestream-config
           mountPath: /etc/litestream.yml
           subPath: litestream.yml
