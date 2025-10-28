@@ -182,6 +182,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: matrix
 spec:
+  storageClassName: local-path
   accessModes:
     - ReadWriteOnce
   resources:
