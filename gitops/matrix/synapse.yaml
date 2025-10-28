@@ -88,6 +88,9 @@ spec:
       containers:
       - name: synapse
         image: ghcr.io/element-hq/synapse:v1.140.0
+        env:
+        - name: USER_BOT_PASSWORD
+          value: mysupersecurepassword
         ports:
         - name: http
           containerPort: 8008
@@ -120,7 +123,7 @@ spec:
               command:
               - sh
               - -c
-              - sleep 60 && register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password mysupersecurepassword --exists-ok --no-admin --user_type bot
+              - curl http://localhost:8000/health --retry 60 --retry-all-errors --retry-delay 1 && register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml --user bot --password $USER_BOT_PASSWORD --exists-ok --no-admin --user_type bot
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 1000
