@@ -4,7 +4,7 @@ kind: ExternalSecret
 metadata:
   name: s3-credantials
 spec:
-  refreshInterval: 1h
+  refreshInterval: 1h0m0s
   secretStoreRef:
     name: k8s-evergreen
     kind: ClusterSecretStore
@@ -25,6 +25,7 @@ spec:
       property: s3_secretkey
       conversionStrategy: Default
       decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: v1
