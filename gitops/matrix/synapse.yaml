@@ -60,32 +60,32 @@ spec:
       labels:
         app.kubernetes.io/name: synapse
     spec:
-      initContainers:
-      - name: litestream-restore
-        image: litestream/litestream:0.5.2
-        args:
-        - 'restore'
-        - '-if-db-not-exists'
-        - '-if-replica-exists'
-        - /data/homeserver.db
-        volumeMounts:
-        - name: db
-          mountPath: /data
-        - name: litestream-config
-          mountPath: /etc/litestream.yml
-          subPath: litestream.yml
-        envFrom:
-        - secretRef:
-            name: eso-s3-credentials
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsGroup: 1000
-          capabilities:
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
+      # initContainers:
+      # - name: litestream-restore
+      #   image: litestream/litestream:0.5.2
+      #   args:
+      #   - 'restore'
+      #   - '-if-db-not-exists'
+      #   - '-if-replica-exists'
+      #   - /data/homeserver.db
+      #   volumeMounts:
+      #   - name: db
+      #     mountPath: /data
+      #   - name: litestream-config
+      #     mountPath: /etc/litestream.yml
+      #     subPath: litestream.yml
+      #   envFrom:
+      #   - secretRef:
+      #       name: eso-s3-credentials
+      #   securityContext:
+      #     allowPrivilegeEscalation: false
+      #     runAsUser: 1000
+      #     runAsGroup: 1000
+      #     capabilities:
+      #       drop:
+      #       - ALL
+      #     seccompProfile:
+      #       type: RuntimeDefault
       containers:
       - name: synapse
         image: ghcr.io/element-hq/synapse:v1.140.0
