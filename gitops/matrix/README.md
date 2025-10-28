@@ -14,3 +14,4 @@ Things that need to be done manually:
 
 * Add a local Name to the Rooms
 * Add message exiration to Rooms
+* Moble-App Login & Device verification
