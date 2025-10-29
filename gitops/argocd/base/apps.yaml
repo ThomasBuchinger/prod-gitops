@@ -89,6 +89,10 @@ spec:
         rev: main
         path: gitops/external-frigate
         wave: "2"
+      - name: external-homeassistant
+        rev: feat-matrix
+        path: gitops/external-homeassistant
+        wave: "2"
   template:
     metadata:
       name: '{{name}}'
