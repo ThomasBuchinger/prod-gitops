@@ -59,6 +59,13 @@ spec:
     ports:
     - port: 8971
       protocol: TCP
+  # Homeassistant
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.24/32
+    ports:
+    - port: 8123
+      protocol: TCP
       
   ingress:
   # Allow all ingress traffic
