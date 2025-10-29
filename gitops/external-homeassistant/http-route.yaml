@@ -50,7 +50,7 @@ spec:
     - group: ""
       kind: Service
       name: external-homeassistant
-      port: 8971
+      port: 8123
       weight: 1
     matches:
     - path:
