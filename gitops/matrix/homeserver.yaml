@@ -1,8 +1,7 @@
 # Configuration file for Synapse.
-#
-# For more information on how to configure Synapse, including a complete accounting of
-# each option, go to docs/usage/configuration/config_documentation.md or
 # https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+
+# === Server Config
 server_name: "matrix.cloud.buc.sh"
 pid_file: /tmp/homeserver.pid
 listeners:
@@ -24,8 +23,6 @@ serve_server_wellknown: true
 web_client_location: https://chat.cloud.buc.sh/
 public_baseurl: https://matrix.cloud.buc.sh
 default_identity_server: https://matrix.org
-# extra_well_known_client_content:
-#   foo: bar
 oidc_providers:
 - idp_id: dex
   idp_name: HomeLAB Dex
@@ -38,7 +35,9 @@ oidc_providers:
       localpart_template: "{{ user.name }}"
       display_name_template: "{{ user.name|capitalize }}"
 enable_metrics: true
-
+suppress_key_server_warning: true
+trusted_key_servers: []
+  # - server_name: "matrix.org"
 url_preview_enabled: true
 url_preview_ip_range_blacklist:
 - 127.0.0.0/8
@@ -60,35 +59,43 @@ url_preview_ip_range_blacklist:
 - 2001:db8::/32
 - ff00::/8
 - fec0::/10
-url_preview_ip_range_whitelist: []
-enable_registration: false
-allow_guest_access: false
+url_preview_ip_range_whitelist:
+- 10.0.0.24/32   # Matrix Frigate URL proxy
+# url_preview_url_blacklist:
+# - path: ^((?!notification).)*$
 
+
+# === Matrix Config
+enable_registration: false
+allow_public_rooms_without_auth: false
+allow_public_rooms_over_federation: false
 autocreate_auto_join_rooms: true
 auto_join_rooms:
 - '#bot:matrix.cloud.buc.sh'
 - '#home:matrix.cloud.buc.sh'
 - '#timerec:matrix.cloud.buc.sh'
-
 auto_accept_invites:
   enabled: true
   only_from_local_users: true
+retention:
+  enabled: true
+  default_policy:
+    min_lifetime: 1d
+    max_lifetime: 90d
+#   allowed_lifetime_min: 1d
+#   allowed_lifetime_max: 1y
 
-suppress_key_server_warning: true
-trusted_key_servers: []
-  # - server_name: "matrix.org"
+# === Guest Access
+allow_guest_access: false
+# Only used for guest access: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#macaroon_secret_key
+# macaroon_secret_key: "xbPVY;xm7mUE2Poa0FTX5c_aB^m._M1i#x3c5~kN22X~QwtBq:"
 
-# === Optional Config ====
 # The Signing Key seems to be only used for Federatin and Cross-Server Communication. I think it can be auto-generated
-# signing_key_path: "/data/matrix.cloud.buc.sh.signing.key"
 signing_key_path: /tmp/matrix.cloud.buc.sh.signing.key
 
 # Auto-Generate that Secret: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#registration_shared_secret
-# registration_shared_secret: "-;5*sy5&quh,Tw5ED3&+kHTOknIom,lAFmE&e@X5hFu+OGXd,I"
 registration_shared_secret_path: /tmp/registration_shared_secret
-# Only used for guest access: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#macaroon_secret_key
-# macaroon_secret_key: "xbPVY;xm7mUE2Poa0FTX5c_aB^m._M1i#x3c5~kN22X~QwtBq:"
-# Related to the User-Consent-Form: I think we can auto-generate that secret too: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#form_secret
+
+# Related to the User-Consent-Form: I think there isn't a downside to having it be public, since we don't need any form of consent-tracking?: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#form_secret
 form_secret: "bTVBqd_^3v7I&PCRM*#soj^Ct01ubi&c-vNo5R446*2hWE&yPC"
-# form_secret_path: /tmp/form_secret
 
