@@ -120,6 +120,13 @@ spec:
         cidr: "10.0.0.19/32"
     ports:
     - port: 9000
+  # HomeAssistant (Frigate Preview)
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.24/32
+    ports:
+    - port: 8123
+      protocol: TCP
   
   # # Allow Access to the Internet, but block internal Access
   # - to:
