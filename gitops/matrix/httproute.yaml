@@ -127,6 +127,12 @@ spec:
     ports:
     - port: 8123
       protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.9/32
+    ports:
+    - port: 8080
+      protocol: TCP
   
   # # Allow Access to the Internet, but block internal Access
   # - to:
