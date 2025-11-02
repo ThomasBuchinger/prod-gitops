@@ -61,6 +61,7 @@ url_preview_ip_range_blacklist:
 - fec0::/10
 url_preview_ip_range_whitelist:
 - 10.0.0.24/32   # Matrix Frigate URL proxy
+- 10.0.0.9/32   # Matrix Frigate URL proxy
 # url_preview_url_blacklist:
 # - path: ^((?!notification).)*$
 
