@@ -179,3 +179,25 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+
+---
+# increase local Rate Limit for Synapse/element
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: ratelimit-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: matrix-cloud--buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: chat-cloud--buc-sh
+  rateLimit:
+    type: Local
+    local:
+      rules:
+      - limit:
+          requests: 10000
+          unit: Minute
