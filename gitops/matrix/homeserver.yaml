@@ -64,8 +64,8 @@ url_preview_ip_range_whitelist:
 - 10.0.0.9/32   # Matrix Frigate URL proxy
 # url_preview_url_blacklist:
 # - path: ^((?!notification).)*$
-remote_media_download_per_second: 500M
-remote_media_download_burst_count: 500M
+remote_media_download_per_second: 50000M
+remote_media_download_burst_count: 50000M
 
 # === Matrix Config
 enable_registration: false
