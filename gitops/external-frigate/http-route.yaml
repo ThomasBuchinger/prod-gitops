@@ -28,7 +28,7 @@ ports:
   port: 8971
 endpoints:
 - addresses:
-  - "10.0.0.9"
+  - "10.0.0.25"
   conditions: {}
 
 ---
