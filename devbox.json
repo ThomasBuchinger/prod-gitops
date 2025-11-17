@@ -1,7 +1,7 @@
 {
   "packages": [
     "renovate@41.132.4",
-    "talosctl@1.10.6"
+    "talosctl@1.11.5"
   ],
   "env": {
     "KUBECONFIG": "./kubeconfig"
