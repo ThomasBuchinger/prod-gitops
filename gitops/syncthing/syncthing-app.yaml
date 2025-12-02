@@ -101,7 +101,7 @@ spec:
         command:
         - /bin/sh
         - /scripts/init.sh
-        image: ghcr.io/syncthing/syncthing:2.0.10
+        image: ghcr.io/syncthing/syncthing:2.0.12
         env:
         - name: ADMIN_USER
           valueFrom:
@@ -127,7 +127,7 @@ spec:
         command:
         - syncthing
         - serve
-        image: ghcr.io/syncthing/syncthing:2.0.10
+        image: ghcr.io/syncthing/syncthing:2.0.12
         imagePullPolicy: IfNotPresent
         env:
         - name: STGUIAPIKEY
