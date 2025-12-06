@@ -97,10 +97,10 @@ spec:
           privileged: false
           readOnlyRootFilesystem: true
         volumeMounts:
-        # - name: netalertx-config
-        #   mountPath: /data/config
-        # - name: netalertx-db
-        #   mountPath: /data/db
+        - name: netalertx-config
+          mountPath: /data/config
+        - name: netalertx-db
+          mountPath: /data/db
         - name: netalertx-tmp
           mountPath: /tmp
 
