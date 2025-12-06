@@ -1,2 +1,7 @@
 resources:
 - app.yaml
+
+configMapGenerator:
+- name: netallertx-app-conf
+  files:
+  - app.conf
