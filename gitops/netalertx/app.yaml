@@ -145,7 +145,7 @@ spec:
       #   limits:
       #     memory: 2048M
       securityContext:
-        runAsUser: 0
+        runAsUser: 20211
         runAsGroup: 20211
         # runAsNonRoot: true
         # fsGroup: 20211
