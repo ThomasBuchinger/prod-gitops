@@ -4,6 +4,6 @@ resources:
 configMapGenerator:
 - options:
     disableNameSuffixHash: true
-  name: netallertx-app-conf
+  name: netalertx-app-conf
   files:
   - app.conf

@@ -99,6 +99,7 @@ spec:
         volumeMounts:
         - name: netalertx-config
           mountPath: /data/config
+          subPath: app.conf
         - name: netalertx-db
           mountPath: /data/db
         - name: netalertx-tmp
@@ -163,8 +164,8 @@ spec:
       - name: netalertx-config
         # emptyDir: {}
         configMap:
-          name: netallertx-app-conf
-          
+          name: netalertx-app-conf
+
       - name: netalertx-db
         emptyDir: {}
         # persistentVolumeClaim:
