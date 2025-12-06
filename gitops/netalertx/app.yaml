@@ -97,8 +97,8 @@ spec:
         #   privileged: false
         #   # readOnlyRootFilesystem: true
         volumeMounts:
-        - name: netalertx-data
-          mountPath: /data
+        # - name: netalertx-data
+        #   mountPath: /data
         - name: netalertx-tmp
           mountPath: /tmp
 
