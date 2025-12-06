@@ -74,11 +74,11 @@ spec:
         envFrom:
         - configMapRef:
             name: netalertx-config
-        containerPorts:
+        ports:
         - name: http
-          port: 20211
+          containerPort: 20211
         - name: graphql
-          port: 20212
+          containerPort: 20212
         securityContext:
           capabilities:
             drop:
