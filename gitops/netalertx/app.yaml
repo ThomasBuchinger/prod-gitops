@@ -144,8 +144,13 @@ spec:
       #     memory: 1024M
       #   limits:
       #     memory: 2048M
-      # securityContext:
-      #   fsGroup: 20211
+      securityContext:
+        runAsUser: 20211
+        runAsGroup: 20211
+        runAsNonRoot: true
+        fsGroup: 20211
+        supplementalGroups:
+          - 20212
 
       hostNetwork: true
       volumes:
