@@ -52,7 +52,7 @@ spec:
   # Frigate
   - to:
     - ipBlock:
-        cidr: 10.0.0.9/32
+        cidr: 10.0.0.25/32
     ports:
     - port: 8971
       protocol: TCP
