@@ -2,6 +2,8 @@ resources:
 - app.yaml
 
 configMapGenerator:
-- name: netallertx-app-conf
+- options:
+    disableNameSuffixHash: true
+  name: netallertx-app-conf
   files:
   - app.conf
