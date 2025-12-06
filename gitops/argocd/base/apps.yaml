@@ -68,6 +68,10 @@ spec:
         rev: main
         path: gitops/s3manager
         wave: "1"
+      - name: netalertx
+        rev: feat-netalertx
+        path: gitops/netalertx
+        wave: "1"
       # === Internet Facing
       - name: ntfy
         rev: main
