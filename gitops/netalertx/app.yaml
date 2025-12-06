@@ -91,11 +91,11 @@ spec:
             - NET_ADMIN
             - NET_RAW
             # - NET_BIND_SERVICE
-          runAsUser: 20211
-          runAsGroup: 20211
-          runAsNonRoot: true
+          # runAsUser: 20211
+          # runAsGroup: 20211
+          # runAsNonRoot: true
           privileged: false
-          readOnlyRootFilesystem: true
+          # readOnlyRootFilesystem: true
         volumeMounts:
         - name: netalertx-data
           mountPath: /data
@@ -142,9 +142,9 @@ spec:
       #     memory: 1024M
       #   limits:
       #     memory: 2048M
-      securityContext:
-        fsGroup: 20211
-        
+      # securityContext:
+      #   fsGroup: 20211
+
       hostNetwork: true
       volumes:
       - name: netalertx-data
