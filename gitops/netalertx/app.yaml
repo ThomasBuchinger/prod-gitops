@@ -133,9 +133,9 @@ spec:
       resources:
         requests:
           cpu: 100m
-          memory: 1024MiB
+          memory: 1024M
         limits:
-          memory: 2048MiB
+          memory: 2048M
       hostNetwork: true
       volumes:
       - name: netalertx-data
