@@ -154,7 +154,7 @@ spec:
         persistentVolumeClaim:
           claimName: netalertx-pvc
 
-      - name: netalertx-confiig
+      - name: netalertx-config
         emptyDir: {}
       - name: netalertx-db
         emptyDir: {}
