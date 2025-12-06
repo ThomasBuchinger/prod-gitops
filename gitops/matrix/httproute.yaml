@@ -129,9 +129,9 @@ spec:
       protocol: TCP
   - to:
     - ipBlock:
-        cidr: 10.0.0.9/32
+        cidr: 10.0.0.25/32
     ports:
-    - port: 8080
+    - port: 8971
       protocol: TCP
   
   # # Allow Access to the Internet, but block internal Access
