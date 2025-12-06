@@ -97,8 +97,10 @@ spec:
           privileged: false
           readOnlyRootFilesystem: true
         volumeMounts:
-        - name: netalertx-data
-          mountPath: /data
+        - name: netalertx-config
+          mountPath: /data/config
+        - name: netalertx-db
+          mountPath: /data/db
         - name: netalertx-tmp
           mountPath: /tmp
 
@@ -151,6 +153,13 @@ spec:
         # emptyDir: {}
         persistentVolumeClaim:
           claimName: netalertx-pvc
+
+      - name: netalertx-confiig
+        emptyDir: {}
+      - name: netalertx-db
+        emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: netalertx-pvc
       - name: netalertx-tmp
         emptyDir: {}
       # - name: litestream-config
