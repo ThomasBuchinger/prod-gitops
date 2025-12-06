@@ -99,8 +99,8 @@ spec:
         volumeMounts:
         - name: netalertx-config
           mountPath: /data/
-        # - name: netalertx-db
-        #   mountPath: /data/db
+        - name: netalertx-db
+          mountPath: /data/db
         - name: netalertx-tmp
           mountPath: /tmp
 
