@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-homeassistant
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-homeassistant
+  namespace: external-homeassistant
+spec:
+  ports:
+    - port: 8123
+      protocol: TCP
+      name: http
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: external-homeassistant
+  namespace: external-homeassistant
+  labels:
+    kubernetes.io/service-name: external-homeassistant
+addressType: IPv4
+ports:
+- name: http
+  port: 8123
+endpoints:
+- addresses:
+  - "10.0.0.24"
+  conditions: {}
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: homeassistant-mtls-buc-sh
+  namespace: external-homeassistant
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
+    namespace: external-gateway
+  hostnames:
+  - "homeassistant.mtls.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: external-homeassistant
+      port: 8123
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+ 
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /
+  #   filters:
+  #   - type: ExtensionRef
+  #     extensionRef:
+  #       group: gateway.envoyproxy.io
+  #       kind: HTTPRouteFilter
+  #       name: 403-denied
+
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: HTTPRouteFilter
+# metadata:
+#   name: 403-denied
+# spec:
+#   directResponse:
+#     contentType: text/html
+#     statusCode: 404
+#     body:
+#       type: Inline
+#       inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied</p></body></html>
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-geoip-block
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: homeassistant-mtls-buc-sh
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        local allowed_countried = { AT=true, DE=true, CH=true, HR=true, IT=true }
+        if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
+          request_handle:respond(
+            {[":status"] = "451"}, "Not available in your country")
+        end
+      end

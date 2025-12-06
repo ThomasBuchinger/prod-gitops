@@ -34,6 +34,9 @@ spec:
   - <<: *mtls
     hostname: paperless.mtls.buc.sh
     name: paperless
+  - <<: *mtls
+    hostname: homeassistant.mtls.buc.sh
+    name: homeassistant
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1

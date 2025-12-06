@@ -57,7 +57,7 @@ spec:
         path: gitops/stirling-pdf
         wave: "1"
       - name: matrix
-        rev: feat-matrix
+        rev: main
         path: gitops/matrix
         wave: "1"
       - name: mediarr
@@ -74,7 +74,7 @@ spec:
         path: gitops/ntfy
         wave: "2"
       - name: external-gateway
-        rev: feat-matrix
+        rev: main
         path: gitops/external-gateway
         wave: "2"
       - name: external-homelabapi
@@ -90,7 +90,7 @@ spec:
         path: gitops/external-frigate
         wave: "2"
       - name: external-homeassistant
-        rev: feat-matrix
+        rev: main
         path: gitops/external-homeassistant
         wave: "2"
   template:

@@ -1,0 +1,203 @@
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: matrix-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: synapse
+      port: 8008
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /_matrix
+    - path:
+        type: PathPrefix
+        value: /_synapse/client
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /.well-known
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: chat-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "chat.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: element
+      port: 80
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-geoip-block
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: chat-cloud-buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: matrix-cloud-buc-sh
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        local allowed_countried = { AT=true, DE=true, CH=true, HR=true, IT=true }
+        if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
+          request_handle:respond(
+            {[":status"] = "451"}, "Not available in your country")
+        end
+      end
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: synapse
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: synapse
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+
+  # dex.buc.sh
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.16/32"
+    ports:
+    - port: 80
+    - port: 443
+  # Litestream --> S3
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.19/32"
+    ports:
+    - port: 9000
+  # HomeAssistant (Frigate Preview)
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.24/32
+    ports:
+    - port: 8123
+      protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.25/32
+    ports:
+    - port: 8971
+      protocol: TCP
+  
+  # # Allow Access to the Internet, but block internal Access
+  # - to:
+  #   - ipBlock:
+  #       cidr: "0.0.0.0/0"
+  #       except:
+  #       - 10.0.0.0/24
+  #       - 10.0.100.0/24
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    ports:
+    - protocol: TCP
+      port: 8008
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: element
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: element
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    ports:
+    - protocol: TCP
+      port: 8080
+
+---
+# increase local Rate Limit for Synapse/element
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: ratelimit-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: matrix-cloud--buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: chat-cloud--buc-sh
+  rateLimit:
+    type: Local
+    local:
+      rules:
+      - limit:
+          requests: 100000000
+          unit: Minute
