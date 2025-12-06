@@ -149,9 +149,9 @@ spec:
         runAsGroup: 20211
         # runAsNonRoot: true
         # fsGroup: 20211
-        supplementalGroups:
-          - 20211
-          - 20212
+        # supplementalGroups:
+        #   - 20211
+        #   - 20212
 
       hostNetwork: true
       volumes:
