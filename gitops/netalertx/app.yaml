@@ -98,9 +98,9 @@ spec:
           readOnlyRootFilesystem: true
         volumeMounts:
         - name: netalertx-config
-          mountPath: /data/
-        # - name: netalertx-db
-        #   mountPath: /data/db
+          mountPath: /data/config
+        - name: netalertx-db
+          mountPath: /data/db
         - name: netalertx-tmp
           mountPath: /tmp
 
