@@ -148,9 +148,9 @@ spec:
       hostNetwork: true
       volumes:
       - name: netalertx-data
-        emptyDir: {}
-        # persistentVolumeClaim:
-        #   claimName: netalertx-pvc
+        # emptyDir: {}
+        persistentVolumeClaim:
+          claimName: netalertx-pvc
       - name: netalertx-tmp
         emptyDir: {}
       # - name: litestream-config
@@ -217,18 +217,18 @@ spec:
                 port:
                   name: http
 
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: netalertx-pvc
-#   namespace: netalertx
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   resources:
-#     requests:
-#       storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: netalertx-pvc
+  namespace: netalertx
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
 
 
 # ---
