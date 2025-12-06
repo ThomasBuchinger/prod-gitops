@@ -99,6 +99,8 @@ spec:
         volumeMounts:
         - name: netalertx-data
           mountPath: /data
+        - name: netalertx-tmp
+          mountPath: /tmp
 
       # Litestream
       # - name: litestream
@@ -143,6 +145,8 @@ spec:
       hostNetwork: true
       volumes:
       - name: netalertx-data
+        emptyDir: {}
+      - name: netalertx-tmp
         emptyDir: {}
         # persistentVolumeClaim:
         #   claimName: netalertx-pvc
