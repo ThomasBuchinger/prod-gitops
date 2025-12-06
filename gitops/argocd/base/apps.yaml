@@ -57,7 +57,7 @@ spec:
         path: gitops/stirling-pdf
         wave: "1"
       - name: matrix
-        rev: main
+        rev: feat-netalertx
         path: gitops/matrix
         wave: "1"
       - name: mediarr
@@ -73,10 +73,6 @@ spec:
         path: gitops/netalertx
         wave: "1"
       # === Internet Facing
-      - name: ntfy
-        rev: main
-        path: gitops/ntfy
-        wave: "2"
       - name: external-gateway
         rev: main
         path: gitops/external-gateway
@@ -90,11 +86,11 @@ spec:
         path: gitops/external-hfs
         wave: "2"
       - name: external-frigate
-        rev: main
+        rev: feat-netalertx
         path: gitops/external-frigate
         wave: "2"
       - name: external-homeassistant
-        rev: main
+        rev: feat-netalertx
         path: gitops/external-homeassistant
         wave: "2"
   template:
