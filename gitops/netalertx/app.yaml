@@ -142,8 +142,8 @@ spec:
       #     memory: 1024M
       #   limits:
       #     memory: 2048M
-      # securityContext:
-      #   fsGroup: 20211
+      securityContext:
+        fsGroup: 20211
 
       hostNetwork: true
       volumes:
