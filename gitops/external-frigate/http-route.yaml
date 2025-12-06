@@ -52,6 +52,14 @@ spec:
       name: external-frigate
       port: 8971
       weight: 1
+    filters:
+    - type: RequestHeaderModifier
+      requestHeaderModifier:
+        add:
+        - name: x-forwarded-user
+          value: external
+        - name: x-forwarded-role
+          value: viewer
     matches:
     - method: GET
       path:
