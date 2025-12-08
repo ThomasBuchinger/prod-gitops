@@ -8,89 +8,68 @@ spec:
       elements:
       # == Cluster Infra ===
       - name: external-secrets
-        rev: main
         path: gitops/external-secrets/base
         wave: "1"
       - name: argocd
-        rev: main
         path: gitops/argocd/additional_config
         wave: "2"
       - name: local-path-storage
-        rev: main
         path: gitops/local-path-storage/base
         wave: "1"
       - name: csi-mountpoint-s3
-        rev: main
         path: gitops/csi-mountpoint-s3
         wave: "2"
       - name: okd-console
-        rev: main
         path: gitops/okd-console
         wave: "1"
       - name: monitoring-prometheus
-        rev: main
         path: gitops/monitoring/prometheus
         wave: "1"
       - name: monitoring-loki
-        rev: main
         path: gitops/monitoring/loki
         wave: "2"
       - name: monitoring-tempo
-        rev: main
         path: gitops/monitoring/tempo
         wave: "2"
       - name: monitoring-shared
-        rev: main
         path: gitops/monitoring/shared
         wave: "2"
       # === Apps ===
       - name: paperless
-        rev: main
         path: gitops/paperless
         wave: "2"
       - name: syncthing
-        rev: main
         path: gitops/syncthing
         wave: "2"
       - name: spdf
-        rev: main
         path: gitops/stirling-pdf
         wave: "1"
       - name: matrix
-        rev: feat-netalertx
         path: gitops/matrix
         wave: "1"
       - name: mediarr
-        rev: main
         path: gitops/mediarr
         wave: "1"
       - name: s3manager
-        rev: main
         path: gitops/s3manager
         wave: "1"
       - name: netalertx
-        rev: feat-netalertx
         path: gitops/netalertx
         wave: "1"
       # === Internet Facing
       - name: external-gateway
-        rev: main
         path: gitops/external-gateway
         wave: "2"
       - name: external-homelabapi
-        rev: main
         path: gitops/external-homelabapi
         wave: "2"
       - name: external-hfs
-        rev: main
         path: gitops/external-hfs
         wave: "2"
       - name: external-frigate
-        rev: feat-netalertx
         path: gitops/external-frigate
         wave: "2"
       - name: external-homeassistant
-        rev: feat-netalertx
         path: gitops/external-homeassistant
         wave: "2"
   template:
@@ -102,7 +81,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: '{{rev}}'
+        targetRevision: feat-netalertx
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
