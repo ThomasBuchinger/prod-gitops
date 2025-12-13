@@ -18,6 +18,5 @@ patches:
     kind: Deployment
     name: immich-server
     namespace: immich
-    # - {"op": "add", "path": "/spec/template/spec/containers/0/env", "value": {"name": "DB_URL", "valueFrom":{"configMapRef": "name": "immich-database-app", key: "url"}}}
   patch: |-
-    - {"op": "add", "path": "/spec/template/spec/containers/0/env/-", "value": {"name": "DB_URL", "valueFrom":{"secretKeyRef":{"name": "immich-database-app", "key": "url"}}}}
+    - {"op": "add", "path": "/spec/template/spec/containers/0/env/-", "value": {"name": "DB_URL", "valueFrom":{"secretKeyRef":{"name": "immich-database-app", "key": "uri"}}}}
