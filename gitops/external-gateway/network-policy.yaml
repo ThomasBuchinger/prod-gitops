@@ -45,13 +45,13 @@ spec:
           kubernetes.io/metadata.name: external-homelabapi
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: ntfy
-    - namespaceSelector:
-        matchLabels:
           kubernetes.io/metadata.name: paperless
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: matrix
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: immich
   # Frigate
   - to:
     - ipBlock:
