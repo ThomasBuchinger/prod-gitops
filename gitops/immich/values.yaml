@@ -1,12 +1,6 @@
 
 
 
-controllers:
-  main:
-    containers:
-      main:
-        image:
-          tag: v2.3.1
 
 immich:
   metrics:
@@ -31,12 +25,24 @@ immich:
     passwordLogin:
       enabled: false
     server:
-      externalDomain: "https://immich.mtls.buc.sh"
+      externalDomain: "https://photos.mtls.buc.sh"
       loginPageMessage: "BUC Photos"
 
 
-
-# Dependencies
+machine-learning:
+  enabled: true
+  persistence:
+    cache:
+      enabled: true
+      size: 10Gi
+      accessMode: ReadWriteOnce
+      storageClass: "local-path"
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          tag: v2.3.1
 valkey:
   enabled: true
   controllers:
@@ -50,11 +56,3 @@ valkey:
   persistence:
     data:
       enabled: false
-machine-learning:
-  enabled: true
-  persistence:
-    cache:
-      enabled: true
-      size: 10Gi
-      accessMode: ReadWriteOnce
-      storageClass: "local-path"

@@ -15,28 +15,27 @@ spec:
     name: k8s-evergreen
     kind: ClusterSecretStore
   target:
-    name: cert-immich-buc-sh
+    name: cert-photos-buc-sh
     creationPolicy: Owner
   dataFrom:
   - extract:
       conversionStrategy: Default
       decodingStrategy: None
       metadataPolicy: None
-      key: cert-immich-buc-sh
+      key: cert-photos-buc-sh
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: immich-tls
-  namespace: immich
 spec:
   tls:
   - hosts:
-      - immich.buc.sh
-    secretName: cert-immich-buc-sh
+      - photos.buc.sh
+    secretName: cert-photos-buc-sh
   rules:
-  - host: "immich.buc.sh"
+  - host: "photos.buc.sh"
     http:
       paths:
       - path: "/"

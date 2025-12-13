@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: immich-mtls-buc-sh
+  name: photos-mtls-buc-sh
 spec:
   parentRefs:
   - group: gateway.networking.k8s.io
@@ -10,7 +10,7 @@ spec:
     name: external-gateway-mtls
     namespace: external-gateway
   hostnames:
-  - "immich.mtls.buc.sh"
+  - "photos.mtls.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -33,7 +33,7 @@ spec:
   targetRefs:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: immich-mtls-buc-sh
+    name: photos-mtls-buc-sh
   rateLimit:
     type: Local
     local:
@@ -51,7 +51,7 @@ spec:
   targetRefs:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: immich-mtls-buc-sh
+    name: photos-mtls-buc-sh
   lua:
   - type: Inline
     inline: |

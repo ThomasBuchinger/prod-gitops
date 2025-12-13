@@ -37,6 +37,9 @@ spec:
   - <<: *mtls
     hostname: homeassistant.mtls.buc.sh
     name: homeassistant
+  - <<: *mtls
+    hostname: photos.mtls.buc.sh
+    name: photos
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
