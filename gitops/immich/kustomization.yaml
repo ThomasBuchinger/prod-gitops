@@ -1,0 +1,12 @@
+namespace: immich
+
+resources:
+- immich-app.yaml
+
+helmCharts:
+- name: immich
+  namespace: immich
+  repo: oci://ghcr.io/immich-app/immich-charts/immich
+  releaseName: immich
+  additionalValuesFiles:
+  - values.yaml
