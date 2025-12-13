@@ -53,8 +53,8 @@ spec:
       - name: s3manager
         path: gitops/s3manager
         wave: "1"
-      - name: netalertx
-        path: gitops/netalertx
+      - name: immich
+        path: gitops/immich
         wave: "1"
       # === Internet Facing
       - name: external-gateway
@@ -81,7 +81,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: feat-netalertx
+        targetRevision: feat-immich
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
