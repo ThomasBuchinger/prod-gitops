@@ -27,7 +27,7 @@ immich:
       clientSecret: notaSecretDexisLocal
       enabled: true
       buttonText: Login with dex.buc.sh
-      autoLaunch: true
+      autoLaunch: false
     newVersionCheck:
       enabled: true
     passwordLogin:

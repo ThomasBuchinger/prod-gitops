@@ -4,6 +4,49 @@ kind: Namespace
 metadata:
   name: immich
 
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: immich-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-immich-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-immich-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich-tls
+  namespace: immich
+spec:
+  tls:
+  - hosts:
+      - immich.buc.sh
+    secretName: cert-immich-buc-sh
+  rules:
+  - host: "immich.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: immich-server
+            port:
+              name: http
+  
 
 ---
 apiVersion: networking.k8s.io/v1
