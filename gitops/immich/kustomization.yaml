@@ -2,6 +2,7 @@ namespace: immich
 
 resources:
 - immich-app.yaml
+- postgres.yaml
 
 helmCharts:
 - name: immich

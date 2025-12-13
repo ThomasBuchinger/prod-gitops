@@ -5,6 +5,23 @@ metadata:
   name: immich
 
 
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich
+spec:
+  - host: immich.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: immich-server
+            port:
+              name: http
+
 
 ---
 apiVersion: v1
