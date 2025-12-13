@@ -16,11 +16,26 @@ immich:
   persistence:
     library:
       existingClaim: immich-library-local
-  # ref: https://immich.app/docs/install/config-file/
+  # https://immich.app/docs/install/config-file/
   configuration:
     storageTemplate:
       enabled: true
       template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+    oauth:
+      autoLaunch: true
+      buttonText: Login with dex.buc.sh
+      clientId: login
+      clientSecret: notaSecretDexisLocal
+      enabled: true
+    newVersionCheck:
+      enabled: true
+    passwordLogin:
+      enabled: false
+    server:
+      externalDomain: "https://immich.mtls.buc.sh"
+      
+
+
 
 # Dependencies
 
