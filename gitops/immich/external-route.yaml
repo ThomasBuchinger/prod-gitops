@@ -1,0 +1,64 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: immich-mtls-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
+    namespace: external-gateway
+  hostnames:
+  - "immich.mtls.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: immich-server
+      port: 2283
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+---
+# increase local Rate Limit for Frigate
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: ratelimit-policy
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: immich-mtls-buc-sh
+  rateLimit:
+    type: Local
+    local:
+      rules:
+      - limit:
+          requests: 1000
+          unit: Minute
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-geoip-block
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: immich-mtls-buc-sh
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        local allowed_countried = { AT=true, DE=true, CH=true, HR=true, IT=true }
+        if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
+          request_handle:respond(
+            {[":status"] = "451"}, "Not available in your country")
+        end
+      end

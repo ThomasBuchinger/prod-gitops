@@ -10,7 +10,7 @@ kind: ExternalSecret
 metadata:
   name: immich-cert
 spec:
-  refreshInterval: 1h
+  refreshInterval: 1h0m0s
   secretStoreRef:
     name: k8s-evergreen
     kind: ClusterSecretStore
@@ -46,26 +46,6 @@ spec:
             name: immich-server
             port:
               name: http
-  
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: immich
-spec:
-  rules:
-  - host: immich.10.0.0.21.nip.io
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: immich-server
-            port:
-              name: http
-
 
 ---
 apiVersion: v1
@@ -84,10 +64,10 @@ spec:
 # apiVersion: v1
 # kind: PersistentVolumeClaim
 # metadata:
-#   name: immich-library
+#   name: immich-library-nfs
 # spec:
 #   accessModes:
-#     - ReadOnlyMany
+#   - ReadWriteMany
 #   resources:
 #     requests:
 #       storage: 50Gi
@@ -107,7 +87,7 @@ spec:
 #   - ReadOnlyMany
 #   nfs:
 #     server: 10.0.0.19
-#     path: /mnt/user/data/kubernetes/paperlessngx
+#     path: /mnt/user/data/kubernetes/immich
 #   mountOptions:
 #   - nfsvers=4.2
 #   - retrans=3

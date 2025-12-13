@@ -7,20 +7,18 @@ controllers:
       main:
         image:
           tag: v2.3.1
-        # env:
-          # DB_HOSTNAME: immich-database-rw
 
 immich:
   metrics:
     enabled: true
   persistence:
     library:
-      existingClaim: immich-library-local
+      existingClaim: immich-library-nfs
   # https://immich.app/docs/install/config-file/
   configuration:
     storageTemplate:
       enabled: true
-      template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+      template: "{{album}}/{{y}}-{{MM}}/{{filename}}"
     oauth:
       issuerUrl: https://dex.buc.sh
       clientId: login
@@ -34,12 +32,11 @@ immich:
       enabled: false
     server:
       externalDomain: "https://immich.mtls.buc.sh"
-
+      loginPageMessage: "BUC Photos"
 
 
 
 # Dependencies
-
 valkey:
   enabled: true
   controllers:
@@ -53,40 +50,11 @@ valkey:
   persistence:
     data:
       enabled: false
-#       size: 1Gi
-#       # Optional: Set this to persistentVolumeClaim to keep job queues persistent
-#       type: emptyDir
-#       accessMode: ReadWriteOnce
-#       # storageClass: your-class
-
-# Immich components
-# server:
-#   enabled: true
-#   controllers:
-#     main:
-#       containers:
-#         main:
-#           image:
-#             repository: ghcr.io/immich-app/immich-server
-#             pullPolicy: IfNotPresent
 machine-learning:
   enabled: true
-#   controllers:
-#     main:
-#       containers:
-#         main:
-#           image:
-#             repository: ghcr.io/immich-app/immich-machine-learning
-#             pullPolicy: IfNotPresent
-#           env:
-#             TRANSFORMERS_CACHE: /cache
-#             HF_XET_CACHE: /cache/huggingface-xet
-#             MPLCONFIGDIR: /cache/matplotlib-config
   persistence:
-#     cache:
-#       enabled: true
-#       size: 10Gi
-# #       # Optional: Set this to persistentVolumeClaim to avoid downloading the ML models every start.
-# #       type: emptyDir
-#       accessMode: ReadWriteOnce
-#       storageClass: "local-path"
+    cache:
+      enabled: true
+      size: 10Gi
+      accessMode: ReadWriteOnce
+      storageClass: "local-path"

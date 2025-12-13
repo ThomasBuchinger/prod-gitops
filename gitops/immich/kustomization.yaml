@@ -3,6 +3,7 @@ namespace: immich
 resources:
 - immich-app.yaml
 - postgres.yaml
+- external-route.yaml
 
 helmCharts:
 - name: immich
