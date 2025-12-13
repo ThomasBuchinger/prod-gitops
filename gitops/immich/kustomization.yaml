@@ -12,3 +12,27 @@ helmCharts:
   version: 0.10.3
   additionalValuesFiles:
   - values.yaml
+
+patches:
+- target:
+    kind: Deployment
+    name: immich-server
+    namespace: immich
+  patch: |-
+    kind: Deployment
+    metadata:
+      name: immich-server
+    spec:
+      template:
+        spec:
+          containers:
+          - env:
+            - name: "DB_URL"
+              valueFrom:
+                configMapRef:
+                  name: immich-database-app
+                  key: url
+# - target:
+#     name: immich-server
+  # patch: |-
+  #   {"opp": "add", "path": "spec/template/spec/containers/0/env/", "value": "{name: DB_URL, valueFrom:{configMap: name: immich-database-app, key: url}}"}
