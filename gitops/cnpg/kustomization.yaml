@@ -1,5 +1,7 @@
 namespace: cnpg-system
 
+resources:
+- ns.yaml
 
 helmCharts:
 - name: cloudnative-pg
