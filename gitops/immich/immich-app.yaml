@@ -10,15 +10,14 @@ metadata:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-library
+  name: immich-library-local
 spec:
   accessModes:
     - ReadOnlyMany
   resources:
     requests:
       storage: 50Gi
-  storageClassName: ""
-  volumeName: immich-library
+  storageClassName: "local-path"
 
 # ---
 # apiVersion: v1
