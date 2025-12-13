@@ -8,5 +8,6 @@ helmCharts:
   namespace: immich
   repo: oci://ghcr.io/immich-app/immich-charts/immich
   releaseName: immich
+  version: 0.10.3
   additionalValuesFiles:
   - values.yaml
