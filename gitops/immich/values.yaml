@@ -88,5 +88,5 @@ machine-learning:
       size: 10Gi
 #       # Optional: Set this to persistentVolumeClaim to avoid downloading the ML models every start.
 #       type: emptyDir
-#       accessMode: ReadWriteMany
+      accessMode: ReadWriteOnce
       storageClass: "local-path"
