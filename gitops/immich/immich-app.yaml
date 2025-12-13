@@ -13,7 +13,7 @@ metadata:
   name: immich-library-local
 spec:
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteMany
   resources:
     requests:
       storage: 50Gi
