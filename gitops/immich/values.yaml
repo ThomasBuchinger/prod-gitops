@@ -22,18 +22,19 @@ immich:
       enabled: true
       template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
     oauth:
-      autoLaunch: true
-      buttonText: Login with dex.buc.sh
+      issuerUrl: https://dex.buc.sh
       clientId: login
       clientSecret: notaSecretDexisLocal
       enabled: true
+      buttonText: Login with dex.buc.sh
+      autoLaunch: true
     newVersionCheck:
       enabled: true
     passwordLogin:
       enabled: false
     server:
       externalDomain: "https://immich.mtls.buc.sh"
-      
+
 
 
 
