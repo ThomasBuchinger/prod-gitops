@@ -8,10 +8,7 @@ controllers:
         image:
           tag: v2.3.1
         env:
-          DB_HOSTNAME: immich-database
-#           REDIS_HOSTNAME: '{{ printf "%s-valkey" .Release.Name }}'
-#           IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
-#           # Add the env vars to connect to your database here.
+          DB_HOSTNAME: immich-database-rw
 
 immich:
   metrics:
@@ -56,20 +53,6 @@ valkey:
 #           image:
 #             repository: ghcr.io/immich-app/immich-server
 #             pullPolicy: IfNotPresent
-# #   ingress:
-#     main:
-#       enabled: false
-#       annotations:
-#         # proxy-body-size is set to 0 to remove the body limit on file uploads
-#         nginx.ingress.kubernetes.io/proxy-body-size: "0"
-#       hosts:
-#         - host: immich.local
-#           paths:
-#             - path: "/"
-#               service:
-#                 identifier: main
-#       tls: []
-
 machine-learning:
   enabled: true
 #   controllers:
