@@ -34,6 +34,9 @@ spec:
       - name: monitoring-shared
         path: gitops/monitoring/shared
         wave: "2"
+      - name: cnpg
+        path: gitops/cnpg
+        wave: "1"
       # === Apps ===
       - name: paperless
         path: gitops/paperless
@@ -55,7 +58,7 @@ spec:
         wave: "1"
       - name: immich
         path: gitops/immich
-        wave: "1"
+        wave: "2"
       # === Internet Facing
       - name: external-gateway
         path: gitops/external-gateway
