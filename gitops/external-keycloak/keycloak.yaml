@@ -16,7 +16,6 @@ spec:
       secret: "keycloak-admin-creds"
   db:
     vendor: dev-file
-    url: jdbc:h2:file:/tmp/keycloak
   http:
     httpEnabled: true
     httpPort: 8080
@@ -42,8 +41,7 @@ spec:
         containers:
         - volumeMounts:
           - name: data
-            mountPath: /data
-            # mountPath: /opt/keycloak/data/h2
+            mountPath: /opt/keycloak/data/h2
         volumes:
         - name: data
           emptyDir: {}
