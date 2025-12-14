@@ -90,6 +90,9 @@ spec:
       weight: 1
     matches:
     - path:
+        type: Exact
+        value: /
+    - path:
         type: PathPrefix
         value: /realms
     - path:

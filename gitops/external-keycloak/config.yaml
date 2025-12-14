@@ -130,7 +130,6 @@ spec:
       value: "changeme"
     realmRoles:
     - offline_access
-    - family-admin
     clientRoles:
       account:
       - "manage-account"
