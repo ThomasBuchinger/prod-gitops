@@ -47,20 +47,6 @@ spec:
     registrationAllowed: false
     rememberMe: true
     resetPasswordAllowed: true
-    roles:
-      realm:
-      - id: family-admin
-        name: family-admin
-        description: Familie Administrator - Grants access to Administrator Settings on supported Services
-        attributes:
-          immich_role:
-          - admin
-      - id: family-user
-        name: family-user
-        description: Familie User - Grants access to services as a normal User
-      - id: other-users
-        name: other-users
-        description: Other Users - Grants access to supported Services as Guest
       
 
 # unmanagedAttributePolicy:
@@ -79,6 +65,7 @@ spec:
       app: realm-buc
   client:
     clientId: immich
+    name: Fotos
     description: OIDC client for Immich
     baseUrl: https://photos.base.buc.sh
     rootUrl: https://photos.root.buc.sh
@@ -96,6 +83,26 @@ spec:
     protocol: openid-connect
     clientAuthenticatorType: client-secret
     fullScopeAllowed: true
+    protocolMappers:
+    - name: "client-role_to_claim"
+      protocol: "openid-connect"
+      protocolMapper: "oidc-usermodel-client-role-mapper"
+      consentRequired: false
+      config:
+        introspection.token.claim: "true"
+        multivalued: "false"
+        userinfo.token.claim: "true"
+        id.token.claim: "true"
+        lightweight.claim: "true"
+        access.token.claim: "true"
+        claim.name: "immich_role"
+        jsonType.label: "String"
+        usermodel.clientRoleMapping.clientId: "testclient"
+  roles:
+  - name: admin
+  - name: user
+
+
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakUser
@@ -126,3 +133,5 @@ spec:
       - "view-profile"
       realm-management:
       - "manage-users"
+      immich:
+      - admin
