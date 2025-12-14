@@ -1,4 +1,3 @@
-# This is a reference for the Realm Manager Operator
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: ExternalKeycloak
 metadata:
@@ -8,6 +7,10 @@ metadata:
 spec:
   url: http://sso-service:8080
   contextRoot: /
+# status:
+#   externalURL: http://sso-service:8080
+#   internalURL: 'http://sso-service:8080'
+
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakRealm
@@ -22,3 +25,6 @@ spec:
   instanceSelector:
     matchLabels:
       app: sso-keycloak
+
+
+
