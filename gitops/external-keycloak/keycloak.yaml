@@ -13,7 +13,7 @@ spec:
   instances: 1
   bootstrapAdmin:
     user:
-      secret: "keycloak-admin-creds"
+      secret: "credential-sso-keycloak"
   db:
     vendor: dev-file
   http:
@@ -47,13 +47,47 @@ spec:
           emptyDir: {}
 
 ---
-apiVersion: v1
-kind: Secret
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
 metadata:
   name: keycloak-admin-creds
-stringData:
-  username: admin
-  password: changeme
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: credential-sso-keycloak
+    creationPolicy: Owner
+  data:
+  - secretKey: username
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_user
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: password
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: ADMIN_USERNAME
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_user
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: ADMIN_PASSWORD
+    remoteRef:
+      key: static-secrets
+      property: cred_admin_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
 
 ---
 apiVersion: v1

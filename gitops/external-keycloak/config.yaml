@@ -1,0 +1,25 @@
+# This is a reference for the Realm Manager Operator
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: ExternalKeycloak
+metadata:
+  name: sso
+  labels:
+    app: sso-keycloak
+spec:
+  url: http://sso-service:8080
+  contextRoot: /
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: buc
+  labels:
+    app: sso-keycloak
+spec:
+  unmanaged: true
+  realm:
+    id: "buc"
+    realm: "BUC HomeLab"
+  instanceSelector:
+    matchLabels:
+      app: sso-keycloak
