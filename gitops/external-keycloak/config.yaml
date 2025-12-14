@@ -2,7 +2,7 @@
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: ExternalKeycloak
 metadata:
-  name: sso
+  name: sso-keycloak
   labels:
     app: sso-keycloak
 spec:
