@@ -105,6 +105,9 @@ spec:
     - path:
         type: PathPrefix
         value: /
+    - path:
+        type: PathPrefix
+        value: /realms/master
     filters:
     - type: ExtensionRef
       extensionRef:

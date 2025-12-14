@@ -83,6 +83,7 @@ spec:
     protocol: openid-connect
     clientAuthenticatorType: client-secret
     fullScopeAllowed: true
+    standardFlowEnabled: true
     defaultClientScopes:
     - basic
     - email
