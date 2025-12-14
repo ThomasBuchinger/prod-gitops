@@ -5,7 +5,7 @@ metadata:
   labels:
     app: sso-keycloak
 spec:
-  url: http://sso-service:8080
+  url: https://keycloak.buc.sh
   contextRoot: /
 # status:
 #   externalURL: http://sso-service:8080

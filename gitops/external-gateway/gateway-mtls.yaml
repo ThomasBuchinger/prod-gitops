@@ -41,12 +41,6 @@ spec:
   - <<: *mtls
     hostname: photos.mtls.buc.sh
     name: photos
-  - <<: *mtls
-    hostname: sso-admin.mtls.buc.sh
-    name: sso-admin
-  - <<: *mtls
-    hostname: sso.mtls.buc.sh
-    name: sso
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1

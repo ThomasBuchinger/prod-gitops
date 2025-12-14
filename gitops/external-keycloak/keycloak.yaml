@@ -26,8 +26,8 @@ spec:
     enabled: false
   #   tlsSecret: example-tls-secret
   hostname:
-    hostname: https://sso.mtls.buc.sh
-    # admin: https://sso-admin.mtls.buc.sh/
+    hostname: https://sso.cloud.buc.sh
+    admin: https://keycloak.buc.sh/
     strict: false
     backchannelDynamic: true
   additionalOptions:

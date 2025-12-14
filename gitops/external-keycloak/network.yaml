@@ -1,42 +1,86 @@
 
 ---
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
 metadata:
-  name: sso-admin-mtls-buc-sh
+  name: keycloak-cert
 spec:
-  parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: external-gateway-mtls
-    namespace: external-gateway
-  hostnames:
-  - "sso-admin.mtls.buc.sh"
+  refreshInterval: 1h
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-keycloak-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-keycloak-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-admin-interface
+spec:
+  tls:
+  - hosts:
+      - keycloak.buc.sh
+    secretName: cert-keycloak-buc-sh
   rules:
-  - backendRefs:
-    - group: ""
-      kind: Service
-      name: sso-service
-      port: 8080
-      weight: 1
-    matches:
-    - path:
-        type: PathPrefix
-        value: /
+  - host: "keycloak.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: sso-service
+            port:
+              name: http
+
+
+
+# ---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: sso-admin-mtls-buc-sh
+# spec:
+#   parentRefs:
+#   - group: gateway.networking.k8s.io
+#     kind: Gateway
+#     name: external-gateway-mtls
+#     namespace: external-gateway
+#   hostnames:
+#   - "sso-admin.mtls.buc.sh"
+#   rules:
+#   - backendRefs:
+#     - group: ""
+#       kind: Service
+#       name: sso-service
+#       port: 8080
+#       weight: 1
+#     matches:
+#     - path:
+#         type: PathPrefix
+#         value: /
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: sso-mtls-buc-sh
+  name: sso-cloud-buc-sh
 spec:
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
-    name: external-gateway-mtls
+    name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "sso.mtls.buc.sh"
+  - "sso.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -54,6 +98,29 @@ spec:
     - path:
         type: PathPrefix
         value: /.well-known
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.envoyproxy.io
+        kind: HTTPRouteFilter
+        name: 403-denied
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: 403-denied
+spec:
+  directResponse:
+    contentType: text/html
+    statusCode: 404
+    body:
+      type: Inline
+      inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied / Not allowed on Public Interface</p></body></html>
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -62,12 +129,12 @@ metadata:
   name: lua-geoip-block
 spec:
   targetRefs:
+  # - group: gateway.networking.k8s.io
+  #   kind: HTTPRoute
+  #   name: sso-admin-mtls-buc-sh
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: sso-admin-mtls-buc-sh
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: sso-mtls-buc-sh
+    name: sso-cloud-buc-sh
   lua:
   - type: Inline
     inline: |
