@@ -27,3 +27,33 @@ spec:
     backchannelDynamic: true
   proxy:
     headers: xforwarded # double check your reverse proxy sets and overwrites the X-Forwarded-* headers
+
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sso-ingress-local
+spec:
+  rules:
+  - host: sso.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sso-service
+            port:
+              name: http
+  - host: sso-admin.10.0.0.21.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sso-service
+            port:
+              name: management
