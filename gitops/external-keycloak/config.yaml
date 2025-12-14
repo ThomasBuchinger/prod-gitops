@@ -46,7 +46,8 @@ spec:
         name: Familie Administrtor
         description: Grants access to Administrator Role on supported Services
         attributes:
-          immich_role: admin
+          immich_role:
+          - admin
       - id: family_user
         name: Familie User
         description: Grants access services as a normal User
