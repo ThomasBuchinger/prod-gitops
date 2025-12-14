@@ -24,7 +24,7 @@ spec:
   #   tlsSecret: example-tls-secret
   hostname:
     hostname: https://sso.mtls.buc.sh
-    admin: https://sso-admin.mtls.buc.sh/admin
+    admin: https://sso-admin.mtls.buc.sh/
     strict: false
     backchannelDynamic: true
   proxy:
