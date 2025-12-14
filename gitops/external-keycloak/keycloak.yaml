@@ -42,7 +42,7 @@ spec:
         containers:
         - volumeMounts:
           - name: data
-            mountPath: /data
+            mountPath: /opt/keycloak/data/h2
         volumes:
         - name: data
           emptyDir: {}
