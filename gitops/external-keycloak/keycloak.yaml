@@ -16,7 +16,7 @@ spec:
   http:
     httpEnabled: true
     httpPort: 8080
-    httpsPort: 8443
+    # httpsPort: 8443
   networkPolicy:
     enabled: false
   ingress:
