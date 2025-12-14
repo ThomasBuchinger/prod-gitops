@@ -14,7 +14,7 @@ immich:
       enabled: true
       template: "{{album}}/{{y}}-{{MM}}/{{filename}}"
     oauth:
-      issuerUrl: https://sso.cloud.buc.sh
+      issuerUrl: https://sso.cloud.buc.sh/realms/buc
       clientId: immich
       clientSecret: TDCWNHYYtkZhZAMfGkmUwRBZbmZ4kZBC7
       enabled: true
