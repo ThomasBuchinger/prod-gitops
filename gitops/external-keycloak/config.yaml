@@ -15,7 +15,7 @@ spec:
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
-  name: buc
+  name: realm-buc
   labels:
     app: realm-buc
 spec:
@@ -33,7 +33,7 @@ spec:
     - en
     loginWithEmailAllowed: true
     maxDeltaTimeSeconds: 300
-    maxFailureWaitSeconfs: 86400
+    maxFailureWaitSeconds: 86400
     # otpPolicyAlgorithm: 
     optPolicyLookAheadWindow: 2
     # passwordPolicy: ""
