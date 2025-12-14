@@ -35,7 +35,7 @@ spec:
     maxDeltaTimeSeconds: 300
     maxFailureWaitSeconds: 86400
     # otpPolicyAlgorithm: 
-    optPolicyLookAheadWindow: 2
+    # optPolicyLookAheadWindow: 2
     # passwordPolicy: ""
     permanentLockout: false
     registrationAllowed: false
