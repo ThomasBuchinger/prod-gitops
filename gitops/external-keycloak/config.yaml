@@ -83,11 +83,15 @@ spec:
     protocol: openid-connect
     clientAuthenticatorType: client-secret
     fullScopeAllowed: true
+    defaultClientScopes:
+    - basic
+    - email
+    - profile
+    - roles
     protocolMappers:
     - name: "client-role_to_claim"
       protocol: "openid-connect"
       protocolMapper: "oidc-usermodel-client-role-mapper"
-      consentRequired: false
       config:
         introspection.token.claim: "true"
         multivalued: "false"
@@ -97,7 +101,7 @@ spec:
         access.token.claim: "true"
         claim.name: "immich_role"
         jsonType.label: "String"
-        usermodel.clientRoleMapping.clientId: "testclient"
+        usermodel.clientRoleMapping.clientId: "immich"
   roles:
   - name: admin
   - name: user
