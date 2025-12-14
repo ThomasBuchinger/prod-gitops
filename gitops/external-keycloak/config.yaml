@@ -24,22 +24,29 @@ spec:
       app: sso-keycloak
   realm:
     id: "buc"
-    realm: "BUC HomeLab"
+    realm: "buc"
+    displayName: "BUC HomeLab"
+    enabled: true
     # authenticationConfig: []
     bruteForceProtected: true
+    internationalizationEnabled: true
     defaultLocale: "de"
     supportedLocales:
     - de
     - en
     loginWithEmailAllowed: true
-    maxDeltaTimeSeconds: 300
-    maxFailureWaitSeconds: 86400
+    failureFactor: 5
+    waitIncrementSeconds: 30
+
+    maxDeltaTimeSeconds: 43200
+    maxFailureWaitSeconds: 43200
     # otpPolicyAlgorithm: 
     # optPolicyLookAheadWindow: 2
     # passwordPolicy: ""
     permanentLockout: false
     registrationAllowed: false
     rememberMe: true
+    resetPasswordAllowed: true
     roles:
       realm:
       - id: family-admin
@@ -55,6 +62,9 @@ spec:
         name: other-users
         description: Other Users - Grants access to supported Services as Guest
       
+
+# unmanagedAttributePolicy:
+# bruteForceStrategy: linear
 
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
