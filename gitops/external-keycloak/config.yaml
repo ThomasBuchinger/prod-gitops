@@ -17,14 +17,101 @@ kind: KeycloakRealm
 metadata:
   name: buc
   labels:
-    app: sso-keycloak
+    app: realm-buc
 spec:
-  realm:
-    id: "buc"
-    realm: "BUC HomeLab"
   instanceSelector:
     matchLabels:
       app: sso-keycloak
+  realm:
+    id: "buc"
+    realm: "BUC HomeLab"
+    # authenticationConfig: []
+    bruteForceProtected: true
+    defaultLocale: "de"
+    supportedLocales:
+    - de
+    - en
+    loginWithEmailAllowed: true
+    maxDeltaTimeSeconds: 300
+    maxFailureWaitSeconfs: 86400
+    # otpPolicyAlgorithm: 
+    optPolicyLookAheadWindow: 2
+    # passwordPolicy: ""
+    permanentLockout: false
+    registrationAllowed: false
+    rememberMe: true
+    roles:
+      realm:
+      - id: famiy_admin
+        name: Familie Administrtor
+        description: Grants access to Administrator Role on supported Services
+        attributes:
+          immich_role: admin
+      - id: family_user
+        name: Familie User
+        description: Grants access services as a normal User
+      - id: other_users
+        name: Other People
+        description: Grants access some Services available for more users
+      
 
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: client-immich
+  labels:
+    app: client-immich
+spec:
+  realmSelector:
+    matchLabels:
+      app: realm-buc
+  client:
+    clientId: immich
+    description: OIDC client for Immich
+    baseUrl: https://photos.base.buc.sh
+    rootUrl: https://photos.root.buc.sh
+    adminUrl: https://photos.admin.buc.sh
+    redirectUris:
+    - "app.immich:///oauth-callback"
+    - "https://photos.mtls.buc.sh/auth/login"
+    - "https://photos.buc.sh/auth/login"
+    webOrigins:
+    - "app.immich:///oauth-callback"
+    - "https://photos.mtls.buc.sh/auth/login"
+    - "https://photos.buc.sh/auth/login"
+    secret: oidc-immich
 
-
+    protocol: openid-connect
+    clientAuthenticatorType: client-secret
+    fullScopeAllowed: true
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: user-buc
+  labels:
+    app: user-buc
+spec:
+  realmSelector:
+    matchLabels:
+      app: realm-buc
+  user:
+    username: "buc"
+    firstName: "Thomas"
+    lastName: "Buchinger"
+    email: "buc@buc.sh"
+    enabled: True
+    emailVerified: true
+    credentials:
+    - type: "password"
+      value: "changeme"
+    realmRoles:
+    - offline_access
+    - family_admin
+    clientRoles:
+      account:
+      - "manage-account"
+      - "view-profile"
+      realm-management:
+      - "manage-users"
