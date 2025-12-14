@@ -17,7 +17,7 @@ spec:
     - group: ""
       kind: Service
       name: sso-service
-      port: 9000
+      port: 8080
       weight: 1
     matches:
     - path:
@@ -47,7 +47,13 @@ spec:
     matches:
     - path:
         type: PathPrefix
-        value: /
+        value: /realms
+    - path:
+        type: PathPrefix
+        value: /resources
+    - path:
+        type: PathPrefix
+        value: /.well-known
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
