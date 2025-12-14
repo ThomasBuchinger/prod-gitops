@@ -78,7 +78,7 @@ spec:
     - "app.immich:///oauth-callback"
     - "https://photos.mtls.buc.sh/auth/login"
     - "https://photos.buc.sh/auth/login"
-    secret: oidc-immich
+    secret: TDCWNHYYtkZhZAMfGkmUwRBZbmZ4kZBC7
 
     protocol: openid-connect
     clientAuthenticatorType: client-secret

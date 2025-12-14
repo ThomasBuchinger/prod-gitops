@@ -14,11 +14,11 @@ immich:
       enabled: true
       template: "{{album}}/{{y}}-{{MM}}/{{filename}}"
     oauth:
-      issuerUrl: https://dex.buc.sh
-      clientId: login
-      clientSecret: notaSecretDexisLocal
+      issuerUrl: https://sso.cloud.buc.sh
+      clientId: immich
+      clientSecret: TDCWNHYYtkZhZAMfGkmUwRBZbmZ4kZBC7
       enabled: true
-      buttonText: Login with dex.buc.sh
+      buttonText: Login with IDP
       autoLaunch: false
     newVersionCheck:
       enabled: true
