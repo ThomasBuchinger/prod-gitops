@@ -75,6 +75,9 @@ spec:
       - name: external-homeassistant
         path: gitops/external-homeassistant
         wave: "2"
+      - name: external-keycloak
+        path: gitops/external-keycloak
+        wave: "1"
   template:
     metadata:
       name: '{{name}}'
