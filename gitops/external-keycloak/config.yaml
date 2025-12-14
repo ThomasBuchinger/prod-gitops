@@ -42,7 +42,7 @@ spec:
     rememberMe: true
     roles:
       realm:
-      - id: famiy_admin
+      - id: family_admin
         name: Familie Administrtor
         description: Grants access to Administrator Role on supported Services
         attributes:
