@@ -1,8 +1,9 @@
+
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: photos-mtls-buc-sh
+  name: sso-admin-mtls-buc-sh
 spec:
   parentRefs:
   - group: gateway.networking.k8s.io
@@ -10,18 +11,44 @@ spec:
     name: external-gateway-mtls
     namespace: external-gateway
   hostnames:
-  - "photos.mtls.buc.sh"
+  - "sso-admin.mtls.buc.sh"
   rules:
   - backendRefs:
     - group: ""
       kind: Service
-      name: immich-server
-      port: 2283
+      name: sso-service
+      port: 9000
       weight: 1
     matches:
     - path:
         type: PathPrefix
         value: /
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: sso-mtls-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway-mtls
+    namespace: external-gateway
+  hostnames:
+  - "sso.mtls.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: sso-service
+      port: 8443
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
@@ -31,7 +58,10 @@ spec:
   targetRefs:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: photos-mtls-buc-sh
+    name: sso-admin-mtls-buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: sso-mtls-buc-sh
   lua:
   - type: Inline
     inline: |
@@ -42,3 +72,4 @@ spec:
             {[":status"] = "451"}, "Not available in your country")
         end
       end
+

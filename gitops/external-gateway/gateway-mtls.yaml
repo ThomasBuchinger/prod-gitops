@@ -28,6 +28,7 @@ spec:
         from: All
   
   # TODO: When Adding a mTLS listener, you must also add the geoip-HTTP-Filter to that HTTP-FilterChain in policy.yaml
+  #    And Add it to the NetworkPolicy in network-policy.yaml
   - <<: *mtls
     hostname: cams.mtls.buc.sh
     name: frigate
@@ -40,6 +41,12 @@ spec:
   - <<: *mtls
     hostname: photos.mtls.buc.sh
     name: photos
+  - <<: *mtls
+    hostname: sso-admin.mtls.buc.sh
+    name: sso-admin
+  - <<: *mtls
+    hostname: sso.mtls.buc.sh
+    name: sso
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1

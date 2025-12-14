@@ -12,4 +12,6 @@ resources:
 - https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_keycloakrealms_crd.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/role.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/service_account.yaml
-- app.yaml
+- keycloak.yaml
+- network.yaml
+- config.yaml
