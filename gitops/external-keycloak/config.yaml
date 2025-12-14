@@ -43,17 +43,14 @@ spec:
     roles:
       realm:
       - id: family_admin
-        name: Familie Administrtor
-        description: Grants access to Administrator Role on supported Services
+        description: Familie Administrator - Grants access to Administrator Settings on supported Services
         attributes:
           immich_role:
           - admin
       - id: family_user
-        name: Familie User
-        description: Grants access services as a normal User
+        description: Familie User - Grants access to services as a normal User
       - id: other_users
-        name: Other People
-        description: Grants access some Services available for more users
+        description: Other Users - Grants access to supported Services as Guest
       
 
 ---
