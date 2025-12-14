@@ -42,14 +42,17 @@ spec:
     rememberMe: true
     roles:
       realm:
-      - id: family_admin
+      - id: family-admin
+        name: family-admin
         description: Familie Administrator - Grants access to Administrator Settings on supported Services
         attributes:
           immich_role:
           - admin
-      - id: family_user
+      - id: family-user
+        name: family-user
         description: Familie User - Grants access to services as a normal User
-      - id: other_users
+      - id: other-users
+        name: other-users
         description: Other Users - Grants access to supported Services as Guest
       
 
@@ -106,7 +109,7 @@ spec:
       value: "changeme"
     realmRoles:
     - offline_access
-    - Familie Administrator
+    - family-admin
     clientRoles:
       account:
       - "manage-account"
