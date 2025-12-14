@@ -52,7 +52,7 @@ kind: ExternalSecret
 metadata:
   name: keycloak-admin-creds
 spec:
-  refreshInterval: 1h
+  refreshInterval: 1h0m0s
   secretStoreRef:
     name: k8s-evergreen
     kind: ClusterSecretStore
