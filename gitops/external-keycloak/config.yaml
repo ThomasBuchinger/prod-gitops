@@ -16,7 +16,6 @@ metadata:
   labels:
     app: sso-keycloak
 spec:
-  unmanaged: true
   realm:
     id: "buc"
     realm: "BUC HomeLab"
