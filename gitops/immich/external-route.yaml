@@ -46,6 +46,10 @@ spec:
     - path:
         type: PathPrefix
         value: /auth
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /_app/immutable/assets/
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
