@@ -52,12 +52,12 @@ spec:
     - method: GET
       path:
         type: PathPrefix
-        value: /
+        value: /_app
         # value: /_app/immutable/
     - method: GET
       path:
         type: RegularExpression
-        value: ^/(custom.css|_app/env.js|service-worker.js)$
+        value: ^/(custom.css|service-worker.js)$
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
