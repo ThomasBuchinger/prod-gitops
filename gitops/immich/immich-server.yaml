@@ -2,52 +2,55 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app.kubernetes.io/controller: main
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: server
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
   name: immich-server
   namespace: immich
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: server
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/controller: main
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: server
   strategy:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        checksum/config: 4783b771917b76ca8be1811c3282e2ee62a2b05d695982c19a674c70fb33462e
       labels:
-        app.kubernetes.io/controller: main
         app.kubernetes.io/instance: immich
         app.kubernetes.io/name: server
     spec:
       automountServiceAccountToken: true
       containers:
-        - env:
-            - name: IMMICH_CONFIG_FILE
-              value: /config/immich-config.yaml
-            - name: IMMICH_MACHINE_LEARNING_URL
-              value: http://immich-machine-learning:3003
-            - name: IMMICH_TELEMETRY_INCLUDE
-              value: all
-            - name: REDIS_HOSTNAME
-              value: immich-valkey
-            - name: DB_URL
-              valueFrom:
-                secretKeyRef:
-                  key: uri
-                  name: immich-database-app
+        - name: main
           image: ghcr.io/immich-app/immich-server:v2.3.1
           imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 2283
+            name: http
+            protocol: TCP
+          - containerPort: 8081
+            name: metrics-api
+            protocol: TCP
+          - containerPort: 8082
+            name: metrics-ms
+            protocol: TCP
+          env:
+          - name: IMMICH_CONFIG_FILE
+            value: /config/immich-config.yaml
+          - name: IMMICH_MACHINE_LEARNING_URL
+            value: http://immich-machine-learning:3003
+          - name: IMMICH_TELEMETRY_INCLUDE
+            value: all
+          - name: REDIS_HOSTNAME
+            value: immich-valkey
+          - name: DB_URL
+            valueFrom:
+              secretKeyRef:
+                key: uri
+                name: immich-database-app
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -56,17 +59,6 @@ spec:
             initialDelaySeconds: 0
             periodSeconds: 10
             timeoutSeconds: 1
-          name: main
-          ports:
-            - containerPort: 2283
-              name: http
-              protocol: TCP
-            - containerPort: 8081
-              name: metrics-api
-              protocol: TCP
-            - containerPort: 8082
-              name: metrics-ms
-              protocol: TCP
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -84,10 +76,10 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 1
           volumeMounts:
-            - mountPath: /config
-              name: config
-            - mountPath: /data
-              name: data
+          - name: config
+            mountPath: /config
+          - name: data
+            mountPath: /data
       dnsPolicy: ClusterFirst
       enableServiceLinks: false
       hostIPC: false
@@ -95,42 +87,60 @@ spec:
       hostPID: false
       serviceAccountName: default
       volumes:
-        - configMap:
-            name: immich-immich-config
-          name: config
-        - name: data
-          persistentVolumeClaim:
-            claimName: immich-library-nfs
+      - name: config
+        configMap:
+          name: immich-immich-config
+      - name: data
+        persistentVolumeClaim:
+          claimName: immich-library-nfs
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: server
-    app.kubernetes.io/service: immich-server
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
   name: immich-server
   namespace: immich
-spec:
-  ports:
-    - name: http
-      port: 2283
-      protocol: TCP
-      targetPort: http
-    - name: metrics-api
-      port: 8081
-      protocol: TCP
-      targetPort: metrics-api
-    - name: metrics-ms
-      port: 8082
-      protocol: TCP
-      targetPort: metrics-ms
-  selector:
-    app.kubernetes.io/controller: main
+  labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: server
+spec:
   type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: server
+  ports:
+  - name: http
+    port: 2283
+    protocol: TCP
+    targetPort: http
+  - name: metrics-api
+    port: 8081
+    protocol: TCP
+    targetPort: metrics-api
+  - name: metrics-ms
+    port: 8082
+    protocol: TCP
+    targetPort: metrics-ms
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: immich-server
+  namespace: immich
+  labels:
+    app.kubernetes.io/instance: immich
+spec:
+  jobLabel: immich-server
+  namespaceSelector:
+    matchNames:
+    - immich
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: server
+  endpoints:
+  - port: metrics-api
+    scheme: http
+  - port: metrics-ms
+    scheme: http
