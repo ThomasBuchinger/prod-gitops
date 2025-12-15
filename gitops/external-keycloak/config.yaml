@@ -148,6 +148,25 @@ spec:
 # stringData:
 #   username: buc
 #   password: changeme
+
+
+---
+apiVersion: batch/v1
+kind: ConfigMap
+metadata:
+  name: set-credentials-script
+data:
+  update-credentials.sh: |-
+    kubectl get keycloakuser $USER_CR -o yaml > /tmo/user.yaml
+    kubectl patch -f /tmp/user.yaml -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}' > /tmp/modified-user.yaml
+    kubectl apply -f /tmp/modified-user.yaml
+    echo username = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.spec.user.username}')
+    echo ns = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.metadata.namespace}')
+    kubectl delete secret credential-${REALM}-buc-keycloak || true
+    
+    # credential-REALM-USER-NS
+
+
 ---
 apiVersion: batch/v1
 kind: Job
@@ -160,11 +179,22 @@ spec:
       - name: kubectl
         image: alpine/kubectl:latest
         command:
-        - kubectl
-        - patch
-        - keycloakuser
-        - user-buc
-        - -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}'
+        - bash
+        - /scripts/update-credentials.sh
+        env:
+        - name: USER_CR
+          value: user-buc
+        - name: PASSWORD
+          value: changeme
+        - name: REALM
+          value: buc
+        volumeMounts:
+          - name: scripts
+            mountPath: /scripts
       restartPolicy: Never
       serviceAccount: keycloak-realm-operator
+      volumes:
+      - name: scripts
+        configMap:
+          name: set-credentials-script
   backoffLimit: 4
