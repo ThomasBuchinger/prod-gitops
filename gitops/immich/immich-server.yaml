@@ -88,7 +88,7 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: immich-immich-config
+          name: immich-app-config
       - name: data
         persistentVolumeClaim:
           claimName: immich-library-nfs
