@@ -5,19 +5,28 @@ resources:
 - postgres.yaml
 - external-route.yaml
 
-helmCharts:
-- name: immich
-  namespace: immich
-  repo: oci://ghcr.io/immich-app/immich-charts/
-  releaseName: immich
-  version: 0.10.3
-  additionalValuesFiles:
-  - values.yaml
+- immich-server.yaml
+- immich-ml.yaml
+- valkey.yaml
 
-patches:
-- target:
-    kind: Deployment
-    name: immich-server
-    namespace: immich
-  patch: |-
-    - {"op": "add", "path": "/spec/template/spec/containers/0/env/-", "value": {"name": "DB_URL", "valueFrom":{"secretKeyRef":{"name": "immich-database-app", "key": "uri"}}}}
+configMapGenerator:
+- name: immich-app-config
+  files:
+  - config.yaml=immich-config.yaml
+
+# helmCharts:
+# - name: immich
+#   namespace: immich
+#   repo: oci://ghcr.io/immich-app/immich-charts/
+#   releaseName: immich
+#   version: 0.10.3
+#   additionalValuesFiles:
+#   - values.yaml
+
+# patches:
+# - target:
+#     kind: Deployment
+#     name: immich-server
+#     namespace: immich
+#   patch: |-
+#     - {"op": "add", "path": "/spec/template/spec/containers/0/env/-", "value": {"name": "DB_URL", "valueFrom":{"secretKeyRef":{"name": "immich-database-app", "key": "uri"}}}}

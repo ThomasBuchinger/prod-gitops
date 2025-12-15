@@ -26,7 +26,7 @@ immich:
       enabled: false
     server:
       externalDomain: "https://photos.mtls.buc.sh"
-      loginPageMessage: "BUC Photos"
+      loginPageMessage: "BUC Fotos"
 
 
 machine-learning:
