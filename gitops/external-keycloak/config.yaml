@@ -159,13 +159,13 @@ data:
   update-credentials.sh: |-
     kubectl get keycloakuser $USER_CR -o yaml > /tmp/user.yaml
     cat /tmp/user.yaml
-    kubectl patch -f /tmp/user.yaml --local --type merge -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}' > /tmp/modified-user.yaml
-    cat /tmp/modified-user.yaml
+    kubectl patch -f /tmp/user.yaml --local --type merge -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}' 
+    cat /tmp/user.yaml
 
-    # kubectl apply -f /tmp/modified-user.yaml
-    # echo username = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.spec.user.username}')
-    # echo ns = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.metadata.namespace}')
-    # kubectl delete secret credential-${REALM}-buc-keycloak || true
+    kubectl apply -f /tmp/user.yaml
+    echo username = $(kubectl get -f /tmp/user.yaml -o jsonpath='{.spec.user.username}')
+    echo ns = $(kubectl get -f /tmp/user.yaml -o jsonpath='{.metadata.namespace}')
+    kubectl delete secret credential-${REALM}-buc-keycloak || true
     
     # credential-REALM-USER-NS
 
