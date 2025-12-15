@@ -139,12 +139,12 @@ spec:
       immich:
       - admin
 
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: credential-buc-buc-keycloak
-type: Opaque
-stringData:
-  username: buc
-  password: changeme
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: credential-buc-buc-keycloak
+# type: Opaque
+# stringData:
+#   username: buc
+#   password: changeme
