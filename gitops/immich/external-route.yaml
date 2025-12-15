@@ -2,15 +2,15 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: photos-mtls-buc-sh
+  name: photos-cloud-buc-sh
 spec:
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
-    name: external-gateway-mtls
+    name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "photos.mtls.buc.sh"
+  - "photos.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -42,3 +42,23 @@ spec:
             {[":status"] = "451"}, "Not available in your country")
         end
       end
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: photos-cloud-buc-sh
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: photos-cloud-buc-sh
+  oidc:
+    provider:
+      issuer: "https://sso.cloud.buc.sh/realms/buc"
+    clientID: "immich"
+    clientSecret:
+      name: "keycloak-client-secret-client-immich"
+      namespace: keycloak
+    redirectURL: "https://www.example.com:8443/auth/login"
+    # logoutPath: "/auth/logout"

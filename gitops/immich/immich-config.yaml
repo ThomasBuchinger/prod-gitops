@@ -9,6 +9,7 @@ oauth:
   enabled: true
   buttonText: Login with IDP
   autoLaunch: false
+  
 newVersionCheck:
   enabled: true
 passwordLogin:
