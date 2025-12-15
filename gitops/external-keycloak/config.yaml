@@ -177,7 +177,7 @@ spec:
     spec:
       containers:
       - name: kubectl
-        image: alpine/kubectl:latest
+        image: bitnami/kubectl:latest
         command:
         - bash
         - /scripts/update-credentials.sh
