@@ -44,7 +44,8 @@ spec:
             mountPath: /opt/keycloak/data/h2
         volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: keycloak-db
 
 ---
 apiVersion: external-secrets.io/v1
