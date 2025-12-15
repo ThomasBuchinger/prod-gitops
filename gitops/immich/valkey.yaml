@@ -2,11 +2,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: immich-valkey
   labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: valkey
-  name: immich-valkey
-  namespace: immich
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -70,11 +69,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: immich-valkey
   labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: valkey
-  name: immich-valkey
-  namespace: immich
 spec:
   type: ClusterIP
   selector:

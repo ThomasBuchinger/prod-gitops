@@ -6,7 +6,6 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: machine-learning
   name: immich-machine-learning
-  namespace: immich
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -82,7 +81,6 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: machine-learning
   name: immich-machine-learning
-  namespace: immich
 spec:
   type: ClusterIP
   selector:
