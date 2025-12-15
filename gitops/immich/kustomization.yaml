@@ -12,7 +12,7 @@ resources:
 configMapGenerator:
 - name: immich-app-config
   files:
-  - immich-config.yaml=immich-config.yaml
+  - immich-config.yaml
 
 # helmCharts:
 # - name: immich
