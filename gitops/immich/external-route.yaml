@@ -107,7 +107,7 @@ spec:
       principal:
         headers:
         - name: cookie
-          value:
+          values:
           - ".*immich_access_token=.*"
 
 ---
