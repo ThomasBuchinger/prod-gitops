@@ -53,6 +53,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: set-user-credentials
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    # argocd.argoproj.io/sync-wave: "2"  # wait for the User-CR to exist
 spec:
   template:
     spec:
