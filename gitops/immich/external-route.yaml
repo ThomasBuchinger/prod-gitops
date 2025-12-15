@@ -94,7 +94,7 @@ spec:
   - type: Inline
     inline: |
       function envoy_on_request(request_handle)
-        if not request_handle:headers():get("Cookie").match(".*immich_access_token=.*") then
+        if not request_handle:headers():get("Cookie").match(".*immich_access_token.*") then
           request_handle:respond(
             {[":status"] = "403"}, "No Cookie")
         end
