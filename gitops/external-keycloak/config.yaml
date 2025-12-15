@@ -160,7 +160,7 @@ data:
     set -e
     kubectl get keycloakuser $USER_CR -o yaml > /tmp/user.yaml
     # kubectl patch -f /tmp/user.yaml --local --type json -p '[{"op":"add","path":"/spec/user/","value": {"credentials":[{"type":"password","value":"TESTME"}]} }]'
-    kubectl patch -f /tmp/user.yaml --local --type merge -p '{"spec": { "credentials": [{ "type": "password", "value": "TESTME" }]}}' -o yaml > /tmp/modified-user.yaml
+    kubectl patch -f /tmp/user.yaml --local --type json -p '[{"op":"replace","path":"/spec/user/credentials","value":{"tpye": "password", "value": "TESTME"} }]' -o yaml > /tmp/modified-user.yaml
     echo -e "\n\nNew Manifest: \n"
     cat /tmp/modified-user.yaml
 
