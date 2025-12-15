@@ -53,7 +53,7 @@ spec:
     - method: GET
       path:
         type: RegularExpression
-        value: ^/custom.css$
+        value: ^/(custom.css|env.js|service-worker.js)$
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
