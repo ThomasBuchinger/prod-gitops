@@ -49,7 +49,8 @@ spec:
     - method: GET
       path:
         type: PathPrefix
-        value: /_app/immutable/
+        value: /
+        # value: /_app/immutable/
     - method: GET
       path:
         type: RegularExpression
