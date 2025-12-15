@@ -100,16 +100,16 @@ spec:
         end
       end
 
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: SecurityPolicy
-metadata:
-  name: photos-cloud-buc-sh
-spec:
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: photos-cloud-buc-sh-api
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: SecurityPolicy
+# metadata:
+#   name: photos-cloud-buc-sh
+# spec:
+#   targetRefs:
+#     - group: gateway.networking.k8s.io
+#       kind: HTTPRoute
+#       name: photos-cloud-buc-sh-api
   # authorization:
   #   rules:
   #   - action: Allow
