@@ -102,6 +102,19 @@ spec:
         claim.name: "immich_role"
         jsonType.label: "String"
         usermodel.clientRoleMapping.clientId: "immich"
+    - name: "map_subject_to_static"
+      protocol: "openid-connect"
+      protocolMapper: "oidc-usermodel-property-mapper"
+      consentRequired: false
+      config:
+        introspection.token.claim: "true"
+        userinfo.token.claim: "true"
+        user.attribute: "username"
+        id.token.claim: "true"
+        lightweight.claim: "true"
+        access.token.claim: "true"
+        claim.name: "sub"
+        jsonType.label: "String"
   roles:
   - name: admin
   - name: user
@@ -119,7 +132,6 @@ spec:
     matchLabels:
       app: realm-buc
   user:
-    id: f1fd57a9-481e-4ed5-9909-7ce6703d4de4
     username: "buc"
     firstName: "Thomas"
     lastName: "Buchinger"
