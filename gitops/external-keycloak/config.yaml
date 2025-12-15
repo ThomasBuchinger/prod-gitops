@@ -105,7 +105,7 @@ spec:
   roles:
   - name: admin
   - name: user
-
+---
 
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
@@ -119,6 +119,7 @@ spec:
     matchLabels:
       app: realm-buc
   user:
+    id: buc
     username: "buc"
     firstName: "Thomas"
     lastName: "Buchinger"
