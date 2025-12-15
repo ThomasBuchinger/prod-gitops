@@ -166,4 +166,5 @@ spec:
         - user-buc
         - -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}'
       restartPolicy: Never
+      serviceAccount: keycloak-realm-operator
   backoffLimit: 4
