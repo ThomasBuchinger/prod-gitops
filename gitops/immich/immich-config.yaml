@@ -9,11 +9,10 @@ oauth:
   enabled: true
   buttonText: Login with IDP
   autoLaunch: false
-  
 newVersionCheck:
   enabled: true
 passwordLogin:
   enabled: false
 server:
-  externalDomain: "https://photos.mtls.buc.sh"
+  externalDomain: "https://photos.cloud.buc.sh"
   loginPageMessage: "BUC Fotos"
