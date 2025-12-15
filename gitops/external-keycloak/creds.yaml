@@ -66,6 +66,8 @@ spec:
         - bash
         - /scripts/update-credentials.sh
         env:
+        - name: REALM
+          value: buc
         - name: USER_CR
           value: user-buc
         - name: PASSWORD
@@ -73,8 +75,6 @@ spec:
             secretKeyRef:
               key: BUC_PASSWORD
               name: eso-user-credentials
-        - name: REALM
-          value: buc
         volumeMounts:
           - name: scripts
             mountPath: /scripts

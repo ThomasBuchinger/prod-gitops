@@ -19,12 +19,10 @@ spec:
   http:
     httpEnabled: true
     httpPort: 8080
-    # httpsPort: 8443
   networkPolicy:
     enabled: false
   ingress:
     enabled: false
-  #   tlsSecret: example-tls-secret
   hostname:
     hostname: https://sso.cloud.buc.sh
     admin: https://keycloak.buc.sh/

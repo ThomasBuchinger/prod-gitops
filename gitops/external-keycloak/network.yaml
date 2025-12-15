@@ -41,33 +41,6 @@ spec:
             port:
               name: http
 
-
-
-# ---
-# apiVersion: gateway.networking.k8s.io/v1
-# kind: HTTPRoute
-# metadata:
-#   name: sso-admin-mtls-buc-sh
-# spec:
-#   parentRefs:
-#   - group: gateway.networking.k8s.io
-#     kind: Gateway
-#     name: external-gateway-mtls
-#     namespace: external-gateway
-#   hostnames:
-#   - "sso-admin.mtls.buc.sh"
-#   rules:
-#   - backendRefs:
-#     - group: ""
-#       kind: Service
-#       name: sso-service
-#       port: 8080
-#       weight: 1
-#     matches:
-#     - path:
-#         type: PathPrefix
-#         value: /
-
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -101,29 +74,6 @@ spec:
     - path:
         type: PathPrefix
         value: /.well-known
-#   - matches:
-#     - path:
-#         type: PathPrefix
-#         value: /realms/master
-#     filters:
-#     - type: ExtensionRef
-#       extensionRef:
-#         group: gateway.envoyproxy.io
-#         kind: HTTPRouteFilter
-#         name: 403-denied
-
-# ---
-# apiVersion: gateway.envoyproxy.io/v1alpha1
-# kind: HTTPRouteFilter
-# metadata:
-#   name: 403-denied
-# spec:
-#   directResponse:
-#     contentType: text/html
-#     statusCode: 404
-#     body:
-#       type: Inline
-#       inline: <html><head><meta charset="UTF-8"></head><body><p style="margin-top:10%;font-size:4em;font-family:'Courier New', Courier, monospace;" align="center">Access Denied / Not allowed on Public Interface</p></body></html>
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
