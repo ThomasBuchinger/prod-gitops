@@ -53,7 +53,7 @@ spec:
     - method: GET
       path:
         type: RegularExpression
-        value: env.js
+        value: /env.js
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
