@@ -103,10 +103,12 @@ spec:
   #       - immich_access_token
   authorization:
     rules:
-      - action: Allow
-        header:
-          name: cookie
-          value: ".*immich_access_token=.*"
+    - action: Allow
+      principal:
+        headers:
+        - name: cookie
+          value:
+          - ".*immich_access_token=.*"
 
 ---
 # increase local Rate Limit for immich
