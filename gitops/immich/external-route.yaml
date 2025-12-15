@@ -97,6 +97,9 @@ spec:
         - immich
       remoteJWKS:
         uri: https://sso.cloud.buc.sh/realms/buc/protocol/openid-connect/certs
+      extractFrom:
+        cookies:
+        - immich_access_token
 
 ---
 # increase local Rate Limit for immich
