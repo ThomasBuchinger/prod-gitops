@@ -125,9 +125,9 @@ spec:
     email: "buc@buc.sh"
     enabled: True
     emailVerified: true
-    credentials:
-    - type: "password"
-      value: "changeme"
+    # credentials:
+    # - type: "password"
+    #   value: "changeme"
     realmRoles:
     - offline_access
     clientRoles:
@@ -138,3 +138,13 @@ spec:
       - "manage-users"
       immich:
       - admin
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: credential-buc-buc-keycloak
+type: Opaque
+stringData:
+  username: buc
+  password: changeme
