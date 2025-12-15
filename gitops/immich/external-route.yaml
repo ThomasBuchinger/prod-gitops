@@ -52,7 +52,7 @@ spec:
         value: /_app/immutable/
     - method: GET
       path:
-        type: PathRegex
+        type: RegularExpression
         value: env.js|custom.css|service-worker.js
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
