@@ -201,4 +201,4 @@ spec:
         configMap:
           name: set-credentials-script
   backoffLimit: 1
-  ttlSecondsAfterFinished: 30
+  ttlSecondsAfterFinished: 60
