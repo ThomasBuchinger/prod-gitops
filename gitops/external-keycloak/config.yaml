@@ -160,6 +160,7 @@ spec:
       - name: kubectl
         image: alpine/kubectl:latest
         command:
+        - kubectl
         - patch
         - keycloakuser
         - user-buc
