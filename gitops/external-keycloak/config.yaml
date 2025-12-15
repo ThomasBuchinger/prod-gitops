@@ -67,16 +67,14 @@ spec:
     clientId: immich
     name: Fotos
     description: OIDC client for Immich
-    baseUrl: https://photos.buc.sh
-    rootUrl: https://photos.buc.sh
+    baseUrl: https://photos.cloud.buc.sh
+    rootUrl: https://photos.cloud.buc.sh
     redirectUris:
     - "app.immich:///oauth-callback"
-    - "https://photos.mtls.buc.sh/auth/login"
-    - "https://photos.buc.sh/auth/login"
+    - "https://photos.cloud.buc.sh/auth/login"
     webOrigins:
     - "app.immich:///oauth-callback"
-    - "https://photos.mtls.buc.sh/auth/login"
-    - "https://photos.buc.sh/auth/login"
+    - "https://photos.cloud.buc.sh/auth/login"
     secret: TDCWNHYYtkZhZAMfGkmUwRBZbmZ4kZBC7
 
     protocol: openid-connect
