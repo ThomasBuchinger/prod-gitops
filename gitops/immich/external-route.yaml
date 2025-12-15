@@ -50,6 +50,10 @@ spec:
       path:
         type: PathPrefix
         value: /_app/immutable/
+    - method: GET
+      path:
+        type: PathRegex
+        value: env.js|custom.css|service-worker.js
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
