@@ -148,3 +148,21 @@ spec:
 # stringData:
 #   username: buc
 #   password: changeme
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: set-user-credentials
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubectl
+        image: alpine/kubectl:latest
+        command:
+        - patch
+        - keycloakuser
+        - user-buc
+        - -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}'
+      restartPolicy: Never
+  backoffLimit: 4
