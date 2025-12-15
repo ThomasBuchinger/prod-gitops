@@ -106,7 +106,7 @@ spec:
     - action: Allow
       principal:
         headers:
-        - name: cookie
+        - name: Cookie
           values:
           - ".*immich_access_token=.*"
 
