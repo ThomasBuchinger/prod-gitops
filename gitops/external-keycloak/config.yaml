@@ -159,7 +159,7 @@ data:
   update-credentials.sh: |-
     set -e
     kubectl get keycloakuser $USER_CR -o yaml > /tmp/user.yaml
-    kubectl patch -f /tmp/user.yaml --local --type json -p '{"op":"add","path":"/spec/user/","value":{"credentials":[{"type":"password","value":"TESTME"}]}}'
+    kubectl patch -f /tmp/user.yaml --local --type json -p '[{"op":"add","path":"/spec/user/","value": {"credentials":[{"type":"password","value":"TESTME"}]} }]'
     echo -e "\n\nNew Manifest: \n"
     cat /tmp/user.yaml
 
