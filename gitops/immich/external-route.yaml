@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: photos-cloud-buc-sh
+  name: photos-cloud-buc-sh-api
 spec:
   parentRefs:
   - group: gateway.networking.k8s.io
@@ -22,6 +22,30 @@ spec:
     - path:
         type: PathPrefix
         value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: photos-cloud-buc-sh-login
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "photos.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: immich-server
+      port: 2283
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /auth
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyExtensionPolicy
@@ -52,12 +76,12 @@ spec:
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      name: photos-cloud-buc-sh
-  oidc:
-    provider:
-      issuer: "https://sso.cloud.buc.sh/realms/buc"
-    clientID: "immich"
-    clientSecret:
-      name: "keycloak-client-secret-client-immich"
-    redirectURL: "https://photos.cloud.buc.sh/auth/login"
-    # logoutPath: "/auth/logout"
+      name: photos-cloud-buc-sh-api
+  jwt:
+    providers:
+    - name: keycloak
+      issuer: https://sso.cloud.buc.sh/realms/buc
+      audiences:
+        - immich
+      remoteJWKS:
+        uri: https://sso.cloud.buc.sh/realms/buc/protocol/openid-connect/certs
