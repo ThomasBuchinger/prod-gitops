@@ -82,3 +82,27 @@ spec:
   # # if NFS server is unreachable, block all IO
   - hard
   - timeo=600
+
+
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: immich-oidc-client
+spec:
+  refreshInterval: 1h0m0s
+  secretStoreRef:
+    name: namespace-keycloak
+    kind: ClusterSecretStore
+  target:
+    name: keycloak-client-secret-client-immich
+    creationPolicy: Owner
+  data:
+  - secretKey: client-secret
+    remoteRef:
+      key: keycloak-client-secret-client-immich
+      property: CLIENT_SECRET
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None

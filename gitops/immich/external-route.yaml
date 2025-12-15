@@ -59,6 +59,5 @@ spec:
     clientID: "immich"
     clientSecret:
       name: "keycloak-client-secret-client-immich"
-      namespace: keycloak
-    redirectURL: "https://www.example.com:8443/auth/login"
+    redirectURL: "https://photos.cloud.buc.sh/auth/login"
     # logoutPath: "/auth/logout"
