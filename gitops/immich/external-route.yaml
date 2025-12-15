@@ -48,7 +48,7 @@ spec:
         value: /auth
     - path:
         type: PathPrefix
-        value: /api/oauth/callback
+        value: /api/oauth/
     - method: GET
       path:
         type: PathPrefix
