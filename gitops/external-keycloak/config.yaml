@@ -158,7 +158,7 @@ metadata:
 data:
   update-credentials.sh: |-
     kubectl get keycloakuser $USER_CR -o yaml > /tmp/user.yaml
-    kubectl patch -f /tmp/user.yaml -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}' > /tmp/modified-user.yaml
+    kubectl patch -f /tmp/user.yaml --local -p '{"spec":{"user":{"credentials":[{"type":"password","value":"TESTME"}]}}}' > /tmp/modified-user.yaml
     kubectl apply -f /tmp/modified-user.yaml
     echo username = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.spec.user.username}')
     echo ns = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.metadata.namespace}')
@@ -198,4 +198,4 @@ spec:
         configMap:
           name: set-credentials-script
   backoffLimit: 1
-  ttlSecondsAfterFinished: 60
+  ttlSecondsAfterFinished: 30
