@@ -82,6 +82,26 @@ spec:
 
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-geoip-block
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: photos-cloud-buc-sh-api
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        if not request_handle:headers():get("Cookie").match(".*immich_access_token=.*") then
+          request_handle:respond(
+            {[":status"] = "403"}, "No Cookie")
+        end
+      end
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
 metadata:
   name: photos-cloud-buc-sh
@@ -90,6 +110,14 @@ spec:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       name: photos-cloud-buc-sh-api
+  # authorization:
+  #   rules:
+  #   - action: Allow
+  #     principal:
+  #       headers:
+  #       - name: Cookie
+  #         values:
+  #         - ".*immich_access_token=.*"
   # jwt:
   #   providers:
   #   - name: keycloak
@@ -101,14 +129,6 @@ spec:
   #     extractFrom:
   #       cookies:
   #       - immich_access_token
-  authorization:
-    rules:
-    - action: Allow
-      principal:
-        headers:
-        - name: Cookie
-          values:
-          - ".*immich_access_token=.*"
 
 ---
 # increase local Rate Limit for immich
