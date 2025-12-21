@@ -1,0 +1,18 @@
+
+storageTemplate:
+  enabled: true
+  template: "{{album}}/{{y}}-{{MM}}/{{filename}}"
+oauth:
+  issuerUrl: https://sso.cloud.buc.sh/realms/buc
+  clientId: immich
+  clientSecret: TDCWNHYYtkZhZAMfGkmUwRBZbmZ4kZBC7
+  enabled: true
+  buttonText: Login with IDP
+  autoLaunch: false
+newVersionCheck:
+  enabled: true
+passwordLogin:
+  enabled: false
+server:
+  externalDomain: "https://photos.cloud.buc.sh"
+  loginPageMessage: "BUC Fotos"

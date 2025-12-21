@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-valkey
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: valkey
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: valkey
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: immich
+        app.kubernetes.io/name: valkey
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - name: valkey
+          image: >-
+            docker.io/valkey/valkey:9.0-alpine@sha256:b4ee67d73e00393e712accc72cfd7003b87d0fcd63f0eba798b23251bfc9c394
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - '-c'
+                - valkey-cli ping | grep PONG
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - '-c'
+                - valkey-cli ping | grep PONG
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - '-c'
+                - valkey-cli ping | grep PONG
+            failureThreshold: 30
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 5
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      serviceAccountName: default
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-valkey
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: valkey
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: valkey
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: redis
