@@ -7,9 +7,6 @@ metadata:
 spec:
   url: https://keycloak.buc.sh
   contextRoot: /
-# status:
-#   externalURL: http://sso-service:8080
-#   internalURL: 'http://sso-service:8080'
 
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1

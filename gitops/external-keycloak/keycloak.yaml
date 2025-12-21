@@ -20,7 +20,7 @@ spec:
     httpEnabled: true
     httpPort: 8080
   networkPolicy:
-    enabled: false
+    enabled: true
   ingress:
     enabled: false
   hostname:
