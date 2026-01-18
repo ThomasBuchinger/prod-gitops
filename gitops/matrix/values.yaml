@@ -1,17 +1,71 @@
 
 elementAdmin:
-  ingress:
-    host: admin.cloud.buc.sh
+  enabled: true
+  # ingress:
+  #   host: admin.cloud.buc.sh
 elementWeb:
-  ingress:
-    host: chat.cloud.buc.sh
+  enabled: true
+  # ingress:
+  #   host: chat.cloud.buc.sh
 matrixAuthenticationService:
-  ingress:
-    host: account.cloud.buc.sh
+  # ingress:
+  #   host: account.cloud.buc.sh
+  # postgres:
+    # host:
+    # port: 5432
+    # user:
+    # database:
+    # sslMode: prefer
+    # Or it can be provided via an existing Secret e.g.:
+    # password:
+    #   secret: existing-secret
+    #   secretKey: key-in-secret
+  additional: {}
+
 matrixRTC:
-  ingress:
-    host: mrtc.cloud.buc.sh
-serverName: cloud.buc.sh
+  enabled: true
+  # ingress:
+  #   host: mrtc.cloud.buc.sh
+serverName: matrix.cloud.buc.sh
 synapse:
-  ingress:
-    host: matrix.cloud.buc.sh
+  # ingress:
+  #   host: matrix.cloud.buc.sh
+
+  # postgres:
+    # host:
+    # port: 5432
+    # user:
+    # database:
+    # sslMode: prefer
+    # Or it can be provided via an existing Secret e.g.:
+    # password:
+    #   secret: existing-secret
+    #   secretKey: key-in-secret
+  media:
+    storage:
+      storageClassName: local-path
+  additionsl: {}
+  appServices: []
+
+
+
+ingress:
+  tlsEnabled: false
+
+initSecrets:
+  enabled: true
+deploymentMarkers:
+  enabled: true
+haproxy:
+  replicas: 1
+postgres:
+  enabled: false
+wellKnownDelegation:
+  enabled: true
+  baseDomainRedirect:
+    enabled: true
+    url: ""
+  additional:
+    client: "{}"
+    server: "{}"
+    support: "{}"
