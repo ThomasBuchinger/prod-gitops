@@ -172,31 +172,31 @@ spec:
         value: /
 
 
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: SecurityPolicy
-metadata:
-  name: matrix-cors
-spec:
-  targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: admin-matrix-cloud-buc-sh
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: matrix-cloud-buc-sh
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: rtc-matrix-cloud-buc-sh
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: chat-cloud-buc-sh
-  cors:
-    allowOrigins:
-    - "https://chat.cloud.buc.sh"
-    - "https://admin-matrix.cloud.buc.sh"
-    - "https://rtc-matrix.cloud.buc.sh"
-    - "https://matrix.cloud.buc.sh"
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: SecurityPolicy
+# metadata:
+#   name: matrix-cors
+# spec:
+#   targetRefs:
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: admin-matrix-cloud-buc-sh
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: matrix-cloud-buc-sh
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: rtc-matrix-cloud-buc-sh
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: chat-cloud-buc-sh
+#   cors:
+#     allowOrigins:
+#     - "https://chat.cloud.buc.sh"
+#     - "https://admin-matrix.cloud.buc.sh"
+#     - "https://rtc-matrix.cloud.buc.sh"
+#     - "https://matrix.cloud.buc.sh"
 
 # ---
 # apiVersion: gateway.envoyproxy.io/v1alpha1
