@@ -31,6 +31,23 @@ spec:
         type: PathPrefix
         value: /.well-known
 
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-matrix-authentication-service
+      port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: RegularExpression
+        value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/login
+    - path:
+        type: RegularExpression
+        value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/refresh
+    - path:
+        type: RegularExpression
+        value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/logout
+
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -48,7 +65,7 @@ spec:
   - backendRefs:
     - group: ""
       kind: Service
-      name: element
+      name: matrix-element-web
       port: 80
       weight: 1
     matches:
@@ -56,129 +73,208 @@ spec:
         type: PathPrefix
         value: /
 
+
 ---
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: EnvoyExtensionPolicy
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: lua-geoip-block
+  name: account-matrix-cloud-buc-sh
 spec:
-  targetRefs:
+  parentRefs:
   - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: chat-cloud-buc-sh
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: matrix-cloud-buc-sh
-  lua:
-  - type: Inline
-    inline: |
-      function envoy_on_request(request_handle)
-        local allowed_countried = { AT=true, DE=true, CH=true, HR=true, IT=true }
-        if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
-          request_handle:respond(
-            {[":status"] = "451"}, "Not available in your country")
-        end
-      end
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: synapse
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: synapse
-  policyTypes:
-    - Ingress
-    - Egress
-  egress:
-  # Allow DNS Resolution
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-    - podSelector:
-        matchLabels:
-          k8s-app: kube-dns
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-
-  # dex.buc.sh
-  - to:
-    - ipBlock:
-        cidr: "10.0.0.16/32"
-    ports:
-    - port: 80
-    - port: 443
-  # Litestream --> S3
-  - to:
-    - ipBlock:
-        cidr: "10.0.0.19/32"
-    ports:
-    - port: 9000
-  # HomeAssistant (Frigate Preview)
-  - to:
-    - ipBlock:
-        cidr: 10.0.0.24/32
-    ports:
-    - port: 8123
-      protocol: TCP
-  - to:
-    - ipBlock:
-        cidr: 10.0.0.25/32
-    ports:
-    - port: 8971
-      protocol: TCP
-  
-  # # Allow Access to the Internet, but block internal Access
-  # - to:
-  #   - ipBlock:
-  #       cidr: "0.0.0.0/0"
-  #       except:
-  #       - 10.0.0.0/24
-  #       - 10.0.100.0/24
-  ingress:
-  # Allow Ingress
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: traefik
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: external-gateway
-    ports:
-    - protocol: TCP
-      port: 8008
-
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: element
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: element
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-  # Allow Ingress
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: traefik
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: external-gateway
-    ports:
-    - protocol: TCP
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "account.matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-matrix-authentication-service
       port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: admin-matrix-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "admin.matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-element-admin
+      port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rtc-matrix-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "rtc.matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-matrix-rtc-sfu
+      port: 7880
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+
+
+
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: EnvoyExtensionPolicy
+# metadata:
+#   name: lua-geoip-block
+# spec:
+#   targetRefs:
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: chat-cloud-buc-sh
+#   - group: gateway.networking.k8s.io
+#     kind: HTTPRoute
+#     name: matrix-cloud-buc-sh
+#   lua:
+#   - type: Inline
+#     inline: |
+#       function envoy_on_request(request_handle)
+#         local allowed_countried = { AT=true, DE=true, CH=true, HR=true, IT=true }
+#         if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
+#           request_handle:respond(
+#             {[":status"] = "451"}, "Not available in your country")
+#         end
+#       end
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: NetworkPolicy
+# metadata:
+#   name: synapse
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app.kubernetes.io/name: synapse
+#   policyTypes:
+#     - Ingress
+#     - Egress
+#   egress:
+#   # Allow DNS Resolution
+#   - to:
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: kube-system
+#     - podSelector:
+#         matchLabels:
+#           k8s-app: kube-dns
+#     ports:
+#     - protocol: UDP
+#       port: 53
+#     - protocol: TCP
+#       port: 53
+
+#   # dex.buc.sh
+#   - to:
+#     - ipBlock:
+#         cidr: "10.0.0.16/32"
+#     ports:
+#     - port: 80
+#     - port: 443
+#   # Litestream --> S3
+#   - to:
+#     - ipBlock:
+#         cidr: "10.0.0.19/32"
+#     ports:
+#     - port: 9000
+#   # HomeAssistant (Frigate Preview)
+#   - to:
+#     - ipBlock:
+#         cidr: 10.0.0.24/32
+#     ports:
+#     - port: 8123
+#       protocol: TCP
+#   - to:
+#     - ipBlock:
+#         cidr: 10.0.0.25/32
+#     ports:
+#     - port: 8971
+#       protocol: TCP
+  
+#   # # Allow Access to the Internet, but block internal Access
+#   # - to:
+#   #   - ipBlock:
+#   #       cidr: "0.0.0.0/0"
+#   #       except:
+#   #       - 10.0.0.0/24
+#   #       - 10.0.100.0/24
+#   ingress:
+#   # Allow Ingress
+#   - from:
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: traefik
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: external-gateway
+#     ports:
+#     - protocol: TCP
+#       port: 8008
+
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: NetworkPolicy
+# metadata:
+#   name: element
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app.kubernetes.io/name: element
+#   policyTypes:
+#     - Ingress
+#     - Egress
+#   ingress:
+#   # Allow Ingress
+#   - from:
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: traefik
+#     - namespaceSelector:
+#         matchLabels:
+#           kubernetes.io/metadata.name: external-gateway
+#     ports:
+#     - protocol: TCP
+#       port: 8080
 
 ---
 # increase local Rate Limit for Synapse/element

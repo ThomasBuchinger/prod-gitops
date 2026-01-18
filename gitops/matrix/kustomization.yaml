@@ -20,7 +20,7 @@ resources:
 - postgres.yaml
 # - synapse.yaml
 # - element.yaml
-# - httproute.yaml
+- httproute.yaml
 
 # configMapGenerator:
 # - name: synapse-data
