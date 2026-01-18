@@ -37,7 +37,7 @@ synapse:
     database: matrix
     sslMode: prefer
     password:
-      secret: matrix
+      secret: matrix-postgres-service
       secretKey: password
   media:
     storage:
