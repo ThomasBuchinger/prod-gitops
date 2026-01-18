@@ -13,7 +13,7 @@ spec:
       owner: matrix
 
       # dataChecksums: true
-      localeCollate: 'de_AT'
-      localeCType: 'de_AT'
+      # localeCollate: 'en_US
+      # localeCType: 'en_US
       postInitSQL:
       - CREATE DATABASE matrix_mas WITH owner=matrix;
