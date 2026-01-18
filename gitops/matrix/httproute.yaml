@@ -108,7 +108,7 @@ spec:
     name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "account.matrix.cloud.buc.sh"
+  - "account-matrix.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -134,7 +134,7 @@ spec:
     name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "admin.matrix.cloud.buc.sh"
+  - "admin-matrix.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -158,7 +158,7 @@ spec:
     name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "rtc.matrix.cloud.buc.sh"
+  - "rtc-matrix.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -172,7 +172,19 @@ spec:
         value: /
 
 
-
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: matrix-cors
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: admin-matrix-cloud-buc-sh
+  cors:
+    allowOrigins:
+    - "https://.*cloud.buc.sh"
 
 # ---
 # apiVersion: gateway.envoyproxy.io/v1alpha1
