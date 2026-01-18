@@ -108,7 +108,7 @@ spec:
     name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "account-matrix.cloud.buc.sh"
+  - "account.matrix.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -134,7 +134,7 @@ spec:
     name: external-gateway
     namespace: external-gateway
   hostnames:
-  - "admin-matrix.cloud.buc.sh"
+  - "admin.matrix.cloud.buc.sh"
   rules:
   - backendRefs:
     - group: ""
@@ -150,7 +150,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: rtc-matrix-cloud-buc-sh
+  name: rtc.matrix-cloud-buc-sh
 spec:
   parentRefs:
   - group: gateway.networking.k8s.io
