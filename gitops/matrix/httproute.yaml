@@ -48,6 +48,9 @@ spec:
       weight: 1
     matches:
     - path:
+        type: PathPrefix
+        value: /_matrix/client/v3/login
+    - path:
         type: RegularExpression
         value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/login
     - path:
