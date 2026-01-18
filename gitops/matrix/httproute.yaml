@@ -184,7 +184,10 @@ spec:
     name: admin-matrix-cloud-buc-sh
   cors:
     allowOrigins:
-    - "https://*.cloud.buc.sh"
+    - "https://chat.cloud.buc.sh"
+    - "https://admin-matrix.cloud.buc.sh"
+    - "https://rtc-matrix.cloud.buc.sh"
+    - "https://matrix.cloud.buc.sh"
 
 # ---
 # apiVersion: gateway.envoyproxy.io/v1alpha1
