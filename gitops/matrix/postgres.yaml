@@ -13,7 +13,9 @@ spec:
       owner: matrix
 
       # dataChecksums: true
-      # localeCollate: 'en_US'
-      # localeCType: 'en_US'
-      # postInitSQL:
-      #   - CREATE DATABASE angus
+      localeCollate: 'de_AT'
+      localeCType: 'de_AT'
+      postInitSQL:
+      - CREATE DATABASE matrix_mas;
+      - GRANT CONNECT ON DATABASE matrix_mas TO matrix;
+      - GRANT USAGE ON SCHEMA matrix_mas TO matrix;
