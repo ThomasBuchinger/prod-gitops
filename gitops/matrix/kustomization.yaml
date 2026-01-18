@@ -6,13 +6,15 @@ namespace: matrix
 
 helmCharts:
 - name: matrix-stack
-  repo:  oci://ghcr.io/element-hq/ess-helm/matrix-stack
+  repo:  oci://ghcr.io/element-hq/ess-helm/
   version: 26.1.0
   releaseName: matrix
   namespace: matrix
   valuesFile: values.yaml
   includeCRDs: true
 
+
+# docker pull ghcr.io/element-hq/ess-helm/matrix-stack:26.1.1-sha030beafcbed55453fbf05215bed2228585dddc8c
 
 # resources:
 # - synapse.yaml
