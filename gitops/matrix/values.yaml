@@ -45,7 +45,7 @@ synapse:
     storage:
       storageClassName: local-path
   additional: {}
-  appServices: []
+  appservices: []
 
 
 
