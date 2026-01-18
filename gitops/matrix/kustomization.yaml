@@ -16,7 +16,8 @@ helmCharts:
 
 # docker pull ghcr.io/element-hq/ess-helm/matrix-stack:26.1.1-sha030beafcbed55453fbf05215bed2228585dddc8c
 
-# resources:
+resources:
+- postgres.yaml
 # - synapse.yaml
 # - element.yaml
 # - httproute.yaml
