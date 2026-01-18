@@ -100,6 +100,7 @@ wellKnownDelegation:
     enabled: true
     url: ""
   additional:
-    client: "{}"
+    client: |
+      {"corsCredentials": "include"}
     server: "{}"
     support: "{}"
