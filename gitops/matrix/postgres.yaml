@@ -7,3 +7,15 @@ spec:
   storage:
     size: 10Gi
     storageClass: "local-path"
+  bootstrap:
+    initdb:
+      database: matrix
+      owner: matrix
+
+      secret:
+        name: matrix-postgres
+      # dataChecksums: true
+      # localeCollate: 'en_US'
+      # localeCType: 'en_US'
+      # postInitSQL:
+      #   - CREATE DATABASE angus
