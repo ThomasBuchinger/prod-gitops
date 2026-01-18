@@ -52,13 +52,13 @@ spec:
         value: /_matrix/client/v3/login
     - path:
         type: RegularExpression
-        value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/login
+        value: /_matrix/client/(api/v1|r0|v3|unstable)/login
     - path:
         type: RegularExpression
-        value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/refresh
+        value: /_matrix/client/(api/v1|r0|v3|unstable)/refresh
     - path:
         type: RegularExpression
-        value: /_matrix\/client\/(api\/v1|r0|v3|unstable)/logout
+        value: /_matrix/client/(api/v1|r0|v3|unstable)/logout
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
