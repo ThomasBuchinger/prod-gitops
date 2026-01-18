@@ -29,7 +29,6 @@ serverName: matrix.cloud.buc.sh
 synapse:
   ingress:
     host: matrix.cloud.buc.sh
-
   postgres:
     host: matrix-postgres-service
     port: 5432
@@ -44,7 +43,8 @@ synapse:
       storageClassName: local-path
   additional: {}
   appservices: []
-
+  checkConfigHook:
+    enabled: false
 
 
 ingress:
