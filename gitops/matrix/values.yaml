@@ -34,7 +34,7 @@ synapse:
     host: matrix-postgres-service
     port: 5432
     user: matrix
-    database:
+    database: matrix
     sslMode: prefer
     password:
       secret: matrix
