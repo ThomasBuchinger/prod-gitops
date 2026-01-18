@@ -16,6 +16,4 @@ spec:
       localeCollate: 'de_AT'
       localeCType: 'de_AT'
       postInitSQL:
-      - CREATE DATABASE matrix_mas;
-      - GRANT CONNECT ON DATABASE matrix_mas TO matrix;
-      - GRANT USAGE ON SCHEMA matrix_mas TO matrix;
+      - CREATE DATABASE matrix_mas WITH owner=matrix;
