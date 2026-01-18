@@ -23,17 +23,17 @@ serve_server_wellknown: true
 web_client_location: https://chat.cloud.buc.sh/
 public_baseurl: https://matrix.cloud.buc.sh
 default_identity_server: https://matrix.org
-oidc_providers:
-- idp_id: dex
-  idp_name: HomeLAB Dex
-  issuer: "https://dex.buc.sh"
-  client_id: "login"
-  client_secret: "notaSecretDexisLocal"
-  scopes: ["openid", "profile"]
-  user_mapping_provider:
-    config:
-      localpart_template: "{{ user.name }}"
-      display_name_template: "{{ user.name|capitalize }}"
+# oidc_providers:
+# - idp_id: dex
+#   idp_name: HomeLAB Dex
+#   issuer: "https://dex.buc.sh"
+#   client_id: "login"
+#   client_secret: "notaSecretDexisLocal"
+#   scopes: ["openid", "profile"]
+#   user_mapping_provider:
+#     config:
+#       localpart_template: "{{ user.name }}"
+#       display_name_template: "{{ user.name|capitalize }}"
 enable_metrics: true
 suppress_key_server_warning: true
 trusted_key_servers: []
@@ -61,7 +61,7 @@ url_preview_ip_range_blacklist:
 - fec0::/10
 url_preview_ip_range_whitelist:
 - 10.0.0.24/32   # Matrix Frigate URL proxy
-- 10.0.0.9/32   # Matrix Frigate URL proxy
+- 10.0.0.25/32   # Matrix Frigate URL proxy
 # url_preview_url_blacklist:
 # - path: ^((?!notification).)*$
 remote_media_download_per_second: 50000M
@@ -71,11 +71,11 @@ remote_media_download_burst_count: 50000M
 enable_registration: false
 allow_public_rooms_without_auth: false
 allow_public_rooms_over_federation: false
-autocreate_auto_join_rooms: true
-auto_join_rooms:
-- '#bot:matrix.cloud.buc.sh'
-- '#home:matrix.cloud.buc.sh'
-- '#timerec:matrix.cloud.buc.sh'
+# autocreate_auto_join_rooms: true
+# auto_join_rooms:
+# - '#bot:matrix.cloud.buc.sh'
+# - '#home:matrix.cloud.buc.sh'
+# - '#timerec:matrix.cloud.buc.sh'
 auto_accept_invites:
   enabled: true
   only_from_local_users: true

@@ -1,47 +1,70 @@
+# ---
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: s3-credantials
+# spec:
+#   refreshInterval: 1h0m0s
+#   secretStoreRef:
+#     name: k8s-evergreen
+#     kind: ClusterSecretStore
+#   target:
+#     name: eso-s3-credentials
+#     creationPolicy: Owner
+#   data:
+#   - secretKey: LITESTREAM_ACCESS_KEY_ID
+#     remoteRef:
+#       key: static-secrets
+#       property: s3_accesskey
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+#   - secretKey: LITESTREAM_SECRET_ACCESS_KEY
+#     remoteRef:
+#       key: static-secrets
+#       property: s3_secretkey
+#       conversionStrategy: Default
+#       decodingStrategy: None
+#       metadataPolicy: None
+
+
+
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: litestream-config
+# data:
+#   litestream.yml: |-
+#     dbs:
+#     - path: /db/homeserver.db
+#       replicas:
+#       - type: s3
+#         endpoint: http://s3.buc.sh:9000
+#         region: us-east-1
+#         bucket: litestream-backups
+#         path: matrix
 ---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: s3-credantials
+  name: bot-credentials
 spec:
   refreshInterval: 1h0m0s
   secretStoreRef:
     name: k8s-evergreen
     kind: ClusterSecretStore
   target:
-    name: eso-s3-credentials
+    name: eso-bot-credentials
     creationPolicy: Owner
   data:
-  - secretKey: LITESTREAM_ACCESS_KEY_ID
+  - secretKey: BOT_PASSWORD
     remoteRef:
       key: static-secrets
-      property: s3_accesskey
+      property: cred_bot_password
       conversionStrategy: Default
       decodingStrategy: None
       metadataPolicy: None
-  - secretKey: LITESTREAM_SECRET_ACCESS_KEY
-    remoteRef:
-      key: static-secrets
-      property: s3_secretkey
-      conversionStrategy: Default
-      decodingStrategy: None
-      metadataPolicy: None
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: litestream-config
-data:
-  litestream.yml: |-
-    dbs:
-    - path: /db/homeserver.db
-      replicas:
-      - type: s3
-        endpoint: http://s3.buc.sh:9000
-        region: us-east-1
-        bucket: litestream-backups
-        path: matrix
 
 ---
 apiVersion: apps/v1
@@ -60,32 +83,32 @@ spec:
       labels:
         app.kubernetes.io/name: synapse
     spec:
-      initContainers:
-      - name: litestream-restore
-        image: litestream/litestream:0.5.2
-        args:
-        - 'restore'
-        - '-if-db-not-exists'
-        - '-if-replica-exists'
-        - /db/homeserver.db
-        volumeMounts:
-        - name: db
-          mountPath: /db
-        - name: litestream-config
-          mountPath: /etc/litestream.yml
-          subPath: litestream.yml
-        envFrom:
-        - secretRef:
-            name: eso-s3-credentials
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsGroup: 1000
-          capabilities:
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
+      # initContainers:
+      # - name: litestream-restore
+      #   image: litestream/litestream:0.5.2
+      #   args:
+      #   - 'restore'
+      #   - '-if-db-not-exists'
+      #   - '-if-replica-exists'
+      #   - /db/homeserver.db
+      #   volumeMounts:
+      #   - name: db
+      #     mountPath: /db
+      #   - name: litestream-config
+      #     mountPath: /etc/litestream.yml
+      #     subPath: litestream.yml
+      #   envFrom:
+      #   - secretRef:
+      #       name: eso-s3-credentials
+      #   securityContext:
+      #     allowPrivilegeEscalation: false
+      #     runAsUser: 1000
+      #     runAsGroup: 1000
+      #     capabilities:
+      #       drop:
+      #       - ALL
+      #     seccompProfile:
+      #       type: RuntimeDefault
       containers:
       - name: synapse
         image: ghcr.io/element-hq/synapse:v1.140.0
@@ -96,8 +119,8 @@ spec:
         - name: USER_BOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: eso-s3-credentials
-              key: LITESTREAM_SECRET_ACCESS_KEY
+              name: eso-bot-credentials
+              key: BOT_PASSWORD
         ports:
         - name: http
           containerPort: 8008
@@ -140,31 +163,31 @@ spec:
             - ALL
           seccompProfile:
             type: RuntimeDefault
-      - name: litestream
-        image: litestream/litestream:0.5.2
-        args:
-        - 'replicate'
-        volumeMounts:
-        - name: db
-          mountPath: /db
-        - name: litestream-config
-          mountPath: /etc/litestream.yml
-          subPath: litestream.yml
-        envFrom:
-        - secretRef:
-            name: eso-s3-credentials
-        ports:
-        - name: metrics
-          containerPort: 9090
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsGroup: 1000
-          capabilities:
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
+      # - name: litestream
+      #   image: litestream/litestream:0.5.2
+      #   args:
+      #   - 'replicate'
+      #   volumeMounts:
+      #   - name: db
+      #     mountPath: /db
+      #   - name: litestream-config
+      #     mountPath: /etc/litestream.yml
+      #     subPath: litestream.yml
+      #   envFrom:
+      #   - secretRef:
+      #       name: eso-s3-credentials
+      #   ports:
+      #   - name: metrics
+      #     containerPort: 9090
+      #   securityContext:
+      #     allowPrivilegeEscalation: false
+      #     runAsUser: 1000
+      #     runAsGroup: 1000
+      #     capabilities:
+      #       drop:
+      #       - ALL
+      #     seccompProfile:
+            # type: RuntimeDefault
       securityContext:
         fsGroup: 1000
         runAsNonRoot: true
@@ -173,8 +196,9 @@ spec:
         configMap:
           name: synapse-data
       - name: db
-        persistentVolumeClaim:
-          claimName: matrix
+        emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: matrix
       - name: media
         emptyDir: {}
       - name: tmp
