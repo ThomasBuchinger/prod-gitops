@@ -26,11 +26,20 @@ spec:
     - path:
         type: PathPrefix
         value: /_synapse/client
-    - method: GET
-      path:
+    # - method: GET
+    #   path:
+    #     type: PathPrefix
+    #     value: /.well-known
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-well-known
+      port: 8010
+      weight: 1
+    matches:
+    - path:
         type: PathPrefix
-        value: /.well-known
-
+        value: /
   - backendRefs:
     - group: ""
       kind: Service
