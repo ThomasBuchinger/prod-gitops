@@ -16,7 +16,7 @@ spec:
   - backendRefs:
     - group: ""
       kind: Service
-      name: synapse
+      name: matrix-synapse
       port: 8008
       weight: 1
     matches:
