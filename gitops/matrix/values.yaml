@@ -14,7 +14,7 @@ matrixAuthenticationService:
     host: matrix-database-rw
     port: 5432
     user: matrix
-    database: matrix
+    database: matrix_mas
     sslMode: prefer
     password:
       secret: matrix-database-app
