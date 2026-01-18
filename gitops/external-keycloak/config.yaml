@@ -115,6 +115,68 @@ spec:
 
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: client-matrix
+  labels:
+    app: client-matrix
+spec:
+  realmSelector:
+    matchLabels:
+      app: realm-buc
+  client:
+    clientId: matrix
+    name: Chat
+    description: OIDC client for Matrix
+    baseUrl: https://chat.cloud.buc.sh
+    rootUrl: https://chat.cloud.buc.sh
+    redirectUris:
+    - "https://account-matrix.cloud.buc.sh/auth/login"
+    webOrigins:
+    - "https://account-matrix.cloud.buc.sh/auth/login"
+    secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
+
+    protocol: openid-connect
+    clientAuthenticatorType: client-secret
+    fullScopeAllowed: true
+    standardFlowEnabled: true
+    defaultClientScopes:
+    - basic
+    - email
+    - profile
+    - roles
+  #   protocolMappers:
+  #   - name: "client-role_to_claim"
+  #     protocol: "openid-connect"
+  #     protocolMapper: "oidc-usermodel-client-role-mapper"
+  #     config:
+  #       introspection.token.claim: "true"
+  #       multivalued: "false"
+  #       userinfo.token.claim: "true"
+  #       id.token.claim: "true"
+  #       lightweight.claim: "true"
+  #       access.token.claim: "true"
+  #       claim.name: "matrix_role"
+  #       jsonType.label: "String"
+  #       usermodel.clientRoleMapping.clientId: "matrix"
+  #   - name: "map_subject_to_static"
+  #     protocol: "openid-connect"
+  #     protocolMapper: "oidc-usermodel-property-mapper"
+  #     config:
+  #       introspection.token.claim: "true"
+  #       userinfo.token.claim: "true"
+  #       user.attribute: "username"
+  #       id.token.claim: "true"
+  #       lightweight.claim: "true"
+  #       access.token.claim: "true"
+  #       claim.name: "sub"
+  #       jsonType.label: "String"
+  # roles:
+  # - name: admin
+  # - name: user
+
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
   name: user-buc
