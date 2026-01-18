@@ -45,7 +45,8 @@ synapse:
   appservices: []
   checkConfigHook:
     enabled: false
-
+  logging:
+    rootLevel: DEBUG
 
 ingress:
   tlsEnabled: false

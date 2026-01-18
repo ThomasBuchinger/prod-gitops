@@ -317,5 +317,5 @@ spec:
     local:
       rules:
       - limit:
-          requests: 100000000
+          requests: 10000000000
           unit: Minute
