@@ -11,7 +11,7 @@ matrixAuthenticationService:
   ingress:
     host: account.matrix.cloud.buc.sh
   postgres:
-    host: matrix-postgres-service
+    host: matrix-database-rw
     port: 5432
     user: matrix
     database: matrixmas
@@ -30,13 +30,13 @@ synapse:
   ingress:
     host: matrix.cloud.buc.sh
   postgres:
-    host: matrix-postgres-service
+    host: matrix-database-rw
     port: 5432
     user: matrix
     database: matrix
     sslMode: prefer
     password:
-      secret: matrix-postgres-service
+      secret: matrix-database-rw
       secretKey: password
   media:
     storage:

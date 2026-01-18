@@ -12,8 +12,6 @@ spec:
       database: matrix
       owner: matrix
 
-      secret:
-        name: matrix-postgres
       # dataChecksums: true
       # localeCollate: 'en_US'
       # localeCType: 'en_US'
