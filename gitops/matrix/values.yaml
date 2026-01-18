@@ -1,15 +1,15 @@
 
 elementAdmin:
   enabled: true
-  # ingress:
-  #   host: admin.cloud.buc.sh
+  ingress:
+    host: admin.matrix.cloud.buc.sh
 elementWeb:
   enabled: true
-  # ingress:
-  #   host: chat.cloud.buc.sh
+  ingress:
+    host: chat.cloud.buc.sh
 matrixAuthenticationService:
-  # ingress:
-  #   host: account.cloud.buc.sh
+  ingress:
+    host: account.matrix.cloud.buc.sh
   # postgres:
     # host:
     # port: 5432
@@ -28,8 +28,8 @@ matrixRTC:
   #   host: mrtc.cloud.buc.sh
 serverName: matrix.cloud.buc.sh
 synapse:
-  # ingress:
-  #   host: matrix.cloud.buc.sh
+  ingress:
+    host: matrix.cloud.buc.sh
 
   # postgres:
     # host:
