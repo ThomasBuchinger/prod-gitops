@@ -10,37 +10,35 @@ elementWeb:
 matrixAuthenticationService:
   ingress:
     host: account.matrix.cloud.buc.sh
-  # postgres:
-    # host:
-    # port: 5432
-    # user:
-    # database:
-    # sslMode: prefer
-    # Or it can be provided via an existing Secret e.g.:
-    # password:
-    #   secret: existing-secret
-    #   secretKey: key-in-secret
+  postgres:
+    host: matrix-postgres-service
+    port: 5432
+    user: matrix
+    database: matrixmas
+    sslMode: prefer
+    password:
+      secret: matrix-postgres-matrix
+      secretKey: password
   additional: {}
 
 matrixRTC:
   enabled: true
-  # ingress:
-  #   host: mrtc.cloud.buc.sh
+  ingress:
+    host: rtc.matrix.cloud.buc.sh
 serverName: matrix.cloud.buc.sh
 synapse:
   ingress:
     host: matrix.cloud.buc.sh
 
-  # postgres:
-    # host:
-    # port: 5432
-    # user:
-    # database:
-    # sslMode: prefer
-    # Or it can be provided via an existing Secret e.g.:
-    # password:
-    #   secret: existing-secret
-    #   secretKey: key-in-secret
+  postgres:
+    host: matrix-postgres-service
+    port: 5432
+    user: matrix
+    database:
+    sslMode: prefer
+    password:
+      secret: matrix
+      secretKey: password
   media:
     storage:
       storageClassName: local-path
