@@ -1,17 +1,17 @@
 
 elementAdmin:
   ingress:
-    host: admin.your.tld
+    host: admin.cloud.buc.sh
 elementWeb:
   ingress:
-    host: chat.your.tld
+    host: chat.cloud.buc.sh
 matrixAuthenticationService:
   ingress:
-    host: account.your.tld
+    host: account.cloud.buc.sh
 matrixRTC:
   ingress:
-    host: mrtc.your.tld
-serverName: your.tld
+    host: mrtc.cloud.buc.sh
+serverName: cloud.buc.sh
 synapse:
   ingress:
-    host: matrix.your.tld
+    host: matrix.cloud.buc.sh
