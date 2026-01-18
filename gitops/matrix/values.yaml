@@ -17,7 +17,7 @@ matrixAuthenticationService:
     database: matrixmas
     sslMode: prefer
     password:
-      secret: matrix-postgres-matrix
+      secret: matrix-database-app
       secretKey: password
   additional: {}
 
@@ -36,7 +36,7 @@ synapse:
     database: matrix
     sslMode: prefer
     password:
-      secret: matrix-database-rw
+      secret: matrix-database-app
       secretKey: password
   media:
     storage:
