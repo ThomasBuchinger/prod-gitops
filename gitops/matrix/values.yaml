@@ -19,7 +19,35 @@ matrixAuthenticationService:
     password:
       secret: matrix-database-app
       secretKey: password
-  additional: {}
+  additional:
+    keycloak:
+      config: |-
+        passwords:
+          enabled: true
+          minimum_complexity: 0
+        telemetry:
+          metrics:
+            exporter: prometheus
+
+        upstream_oauth2:
+          providers:
+            - id: "01KFANV7TJ0JR42S0TPF63BHH5"
+              human_name: "BUC Login"
+              issuer: "https://sso.cloud.buc.sh/realms/buc
+              token_endpoint_auth_method: client_secret_basic
+              client_id: "matrix"
+              client_secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
+              scope: "openid profile email"
+              claims_imports:
+                localpart:
+                  action: require
+                  template: "{{ user.preferred_username }}"
+                displayname:
+                  action: suggest
+                  template: "{{ user.name }}"
+                email:
+                  action: suggest
+                  template: "{{ user.email }}"
 
 matrixRTC:
   enabled: true

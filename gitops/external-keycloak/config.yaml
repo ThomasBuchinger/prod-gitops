@@ -131,9 +131,10 @@ spec:
     baseUrl: https://chat.cloud.buc.sh
     rootUrl: https://chat.cloud.buc.sh
     redirectUris:
-    - "https://account-matrix.cloud.buc.sh/auth/login"
+    - "https://account-matrix.cloud.buc.sh//upstream/callback/01KFANV7TJ0JR42S0TPF63BHH5"
     webOrigins:
-    - "https://account-matrix.cloud.buc.sh/auth/login"
+    - "https://*matrix.cloud.buc.sh/*"
+    - "https://chat.cloud.buc.sh/*"
     secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
 
     protocol: openid-connect
