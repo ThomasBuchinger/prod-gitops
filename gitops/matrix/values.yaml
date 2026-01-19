@@ -28,12 +28,11 @@ matrixAuthenticationService:
         telemetry:
           metrics:
             exporter: prometheus
-
         upstream_oauth2:
           providers:
             - id: "01KFANV7TJ0JR42S0TPF63BHH5"
               human_name: "BUC Login"
-              issuer: "https://sso.cloud.buc.sh/realms/buc
+              issuer: "https://sso.cloud.buc.sh/realms/buc"
               token_endpoint_auth_method: client_secret_basic
               client_id: "matrix"
               client_secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
