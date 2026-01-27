@@ -88,7 +88,7 @@ spec:
             type: RuntimeDefault
       containers:
       - name: synapse
-        image: ghcr.io/element-hq/synapse:v1.140.0
+        image: ghcr.io/element-hq/synapse:v1.146.0
         # env:
         # - name: USER_BOT_PASSWORD
         #   value: mysupersecurepassword
