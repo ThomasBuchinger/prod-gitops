@@ -42,7 +42,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: matrix-room-script
-        image: alpine/curl:8.14.1
+        image: alpine/k8s:1.32.11
         command: ["/bin/bash", "/scripts/script.sh"]
         env:
         - name: BOT_USERNAME
@@ -117,6 +117,17 @@ data:
     
     API="$HOMESERVER/_matrix/client/v3"
     RETENTION_MS=$((7 * 24 * 3600000))
+
+    echo "Creating bot user..."
+    CMD_USER_EXISTS="manage unlock-user $BOT_USERNAME"
+    CMD_CREATE_USER="manage register-user $BOT_USERNAME --password $BOT_PASSWORD --display-name "Matrix Bot" --email $BOT_USERNAME@buc.sh --no-admin --yes --ignore-password-complexity"
+
+    POD=$(kubectl get pod -l app.kubernetes.io/name=matrix-authentication-service -o jsonpath='{.items[0].metadata.name}')
+    if kubectl exec $POD -- $CMD_USER_EXISTS; then
+      echo "Bot Account exists"
+    else
+      kubectl exec $POD -- $CMD_CREATE_USER
+    fi
 
     echo "Logging in…"
 
@@ -194,3 +205,40 @@ data:
     join_room "bot"
     set_retention "home"
     set_retention "bot"
+
+
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: matrix-config
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: allow-matrix-mas-exec
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: allow-matrix-mas-config
+subjects:
+- kind: ServiceAccount
+  name: matrix-config
+  namespace: matrix
+roleRef:
+  kind: Role
+  name: allow-matrix-mas-exec
+  apiGroup: rbac.authorization.k8s.io
