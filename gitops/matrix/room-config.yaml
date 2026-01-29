@@ -122,7 +122,7 @@ data:
 
     echo "Ensure bot user exists..."
     CMD_USER_EXISTS="mas-cli manage unlock-user $BOT_USERNAME"
-    CMD_CREATE_USER="mas-cli manage register-user $BOT_USERNAME --password $BOT_PASSWORD --display-name \"Matrix Bot\" --email $BOT_USERNAME@buc.sh --no-admin --yes --ignore-password-complexity"
+    CMD_CREATE_USER="mas-cli manage register-user $BOT_USERNAME --password $BOT_PASSWORD --display-name MatrixBot --email $BOT_USERNAME@buc.sh --no-admin --yes --ignore-password-complexity"
 
     POD=$(kubectl get pod -l app.kubernetes.io/name=matrix-authentication-service -o jsonpath='{.items[0].metadata.name}')
     if kubectl exec $POD -c matrix-authentication-service -- $CMD_USER_EXISTS; then
