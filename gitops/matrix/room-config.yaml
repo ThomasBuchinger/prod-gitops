@@ -169,7 +169,7 @@ data:
             \"room_alias_name\": \"$ROOM\",
             \"visibility\": \"public\",
             \"preset\": \"public_chat\"
-          }" >/dev/null
+          }"
       fi
     }
 
