@@ -65,7 +65,7 @@ spec:
           name: matrix-room-config
           defaultMode: 0755
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: matrix-room-cronjob
