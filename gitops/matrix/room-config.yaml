@@ -34,10 +34,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: initial-room-creation
-  
+  namespace: matrix
   annotations:
     argocd.argoproj.io/sync-wave: "2"
-spec: &job-spec
+spec:
   template:
     spec:
       restartPolicy: OnFailure
@@ -73,7 +73,34 @@ metadata:
 spec:
   schedule: "0 2 * * *"
   jobTemplate:
-    spec: *job-spec
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: matrix-room-script
+            image: alpine/curl:8.14.1
+            command: ["/bin/bash", "/scripts/script.sh"]
+            env:
+            - name: BOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_USERNAME
+                  name: eso-bot-credentials
+            - name: BOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_PASSWORD
+                  name: eso-bot-credentials
+
+            volumeMounts:
+            - name: script-volume
+              mountPath: /scripts
+          volumes:
+          - name: script-volume
+            configMap:
+              name: matrix-room-config
+              defaultMode: 0755
 
 ---
 apiVersion: v1
