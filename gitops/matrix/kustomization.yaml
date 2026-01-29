@@ -21,6 +21,13 @@ patches:
     name: matrix-matrix-authentication-service
     group: apps
     namespace: matrix
+  patch: >-
+    - {"op": "remove", "path": "/spec/template/spec/containers/0/startupProbe/httpGet"}
+- target:
+    kind: Deployment
+    name: matrix-matrix-authentication-service
+    group: apps
+    namespace: matrix
   patch: |-
     apiVersion: apps/v1
     kind: Deployment
