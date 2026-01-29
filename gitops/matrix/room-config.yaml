@@ -120,7 +120,7 @@ data:
 
     echo "Creating bot user..."
     CMD_USER_EXISTS="manage unlock-user $BOT_USERNAME"
-    CMD_CREATE_USER="manage register-user $BOT_USERNAME --password $BOT_PASSWORD --display-name "Matrix Bot" --email $BOT_USERNAME@buc.sh --no-admin --yes --ignore-password-complexity"
+    CMD_CREATE_USER="manage register-user $BOT_USERNAME --password $BOT_PASSWORD --display-name \"Matrix Bot\" --email $BOT_USERNAME@buc.sh --no-admin --yes --ignore-password-complexity"
 
     POD=$(kubectl get pod -l app.kubernetes.io/name=matrix-authentication-service -o jsonpath='{.items[0].metadata.name}')
     if kubectl exec $POD -- $CMD_USER_EXISTS; then
