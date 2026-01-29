@@ -167,7 +167,8 @@ data:
           -H "Content-Type: application/json" \
           -d "{
             \"room_alias_name\": \"$ROOM\",
-            \"visibility\": \"public\"
+            \"visibility\": \"public\",
+            \"preset\": \"public_chat\"
           }" >/dev/null
       fi
     }

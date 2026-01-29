@@ -1,6 +1,8 @@
 
 elementAdmin:
-  enabled: false
+  enabled: true
+  ingress:
+    host: admin-matrix.cloud.buc.sh
 elementWeb:
   enabled: true
   ingress:
