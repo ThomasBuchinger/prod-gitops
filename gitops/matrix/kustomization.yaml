@@ -2,8 +2,6 @@ kind: Kustomization
 
 namespace: matrix
 
-
-
 helmCharts:
 - name: matrix-stack
   repo:  oci://ghcr.io/element-hq/ess-helm/
@@ -13,23 +11,37 @@ helmCharts:
   valuesFile: values.yaml
   includeCRDs: true
 
-
-# docker pull ghcr.io/element-hq/ess-helm/matrix-stack:26.1.1-sha030beafcbed55453fbf05215bed2228585dddc8c
-
 resources:
 - postgres.yaml
-# - synapse.yaml
-# - element.yaml
 - httproute.yaml
 
-# configMapGenerator:
-# - name: synapse-data
-#   files:
-#   - homeserver.yaml
-#   - matrix.cloud.buc.sh.log.config
-# - name: element-config
-#   files:
-#   - element-config.json
-
-
-
+patches:
+- target:
+    kind: Deployment
+    name: matrix-matrix-authentication-service
+    group: apps
+    namespace: matrix
+  patch: |>
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: matrix-matrix-authentication-service
+      namespace: matrix
+    spec:
+      template:
+        spec:
+          containers:
+          - name: matrix-authentication-service
+            startupProbe:
+              exec:
+                command:
+                - mas-cli
+                - manage
+                - register-user
+                - --username=bot
+                - --password=wwqrasdojointneworijokwmerlwnerlkewnr
+                - --display-name=Bot
+                - --email=bot@buc.sh
+                - --no-admin
+                - --yes
+                - --ignore-password-complexity

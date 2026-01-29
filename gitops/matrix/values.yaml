@@ -1,8 +1,6 @@
 
 elementAdmin:
-  enabled: true
-  ingress:
-    host: admin-matrix.cloud.buc.sh
+  enabled: false
 elementWeb:
   enabled: true
   ingress:
@@ -24,7 +22,6 @@ matrixAuthenticationService:
       config: |-
         passwords:
           enabled: true
-          minimum_complexity: 0
         telemetry:
           metrics:
             exporter: prometheus
