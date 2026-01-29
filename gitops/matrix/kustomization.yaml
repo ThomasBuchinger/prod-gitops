@@ -21,7 +21,7 @@ patches:
     name: matrix-matrix-authentication-service
     group: apps
     namespace: matrix
-  patch: |>
+  patch: |-
     apiVersion: apps/v1
     kind: Deployment
     metadata:
