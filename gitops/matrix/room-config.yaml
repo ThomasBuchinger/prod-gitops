@@ -15,7 +15,7 @@ spec:
   - secretKey: BOT_USERNAME
     remoteRef:
       key: static-secrets
-      property: cred_bot_username
+      property: cred_bot_user
       conversionStrategy: Default
       decodingStrategy: None
       metadataPolicy: None
