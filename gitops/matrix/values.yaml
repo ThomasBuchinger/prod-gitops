@@ -44,6 +44,11 @@ matrixAuthenticationService:
                 email:
                   action: suggest
                   template: "{{ user.email }}"
+        policy:
+          data:
+            # Users which are allowed to ask for admin access. If possible, use the can_request_admin flag on users instead.
+            admin_users:
+              - buc
 
 matrixRTC:
   enabled: true
