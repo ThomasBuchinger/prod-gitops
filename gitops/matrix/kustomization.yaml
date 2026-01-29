@@ -45,10 +45,13 @@ patches:
                 - mas-cli
                 - manage
                 - register-user
-                - --username=bot
-                - --password=wwqrasdojointneworijokwmerlwnerlkewnr
-                - --display-name=Bot
-                - --email=bot@buc.sh
+                - bot
+                - --password
+                - wwqrasdojointneworijokwmerlwnerlkewnr
+                - --display-name
+                - Matrix Bot
+                - --email
+                - bot@buc.sh
                 - --no-admin
                 - --yes
                 - --ignore-password-complexity
