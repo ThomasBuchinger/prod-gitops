@@ -5,8 +5,9 @@ metadata:
 spec:
   instances: 1
   storage:
+    
     size: 10Gi
-    storageClass: "local-path"
+    storageClass: local-path-keep
   bootstrap:
     initdb:
       database: matrix
@@ -17,3 +18,4 @@ spec:
       # localeCType: 'en_US
       postInitSQL:
       - CREATE DATABASE matrix_mas WITH owner=matrix;
+
