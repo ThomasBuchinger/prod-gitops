@@ -39,6 +39,7 @@ metadata:
 spec:
   template:
     spec:
+      serviceAccountName: matrix-config
       restartPolicy: OnFailure
       containers:
       - name: matrix-room-script
@@ -75,10 +76,11 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: matrix-config
           restartPolicy: OnFailure
           containers:
           - name: matrix-room-script
-            image: alpine/curl:8.14.1
+            image: alpine/k8s:1.32.11
             command: ["/bin/bash", "/scripts/script.sh"]
             env:
             - name: BOT_USERNAME
