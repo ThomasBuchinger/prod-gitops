@@ -17,17 +17,6 @@ matrixAuthenticationService:
     password:
       secret: matrix-database-app
       secretKey: password
-  extraEnv:
-  - name: BOT_USERNAME
-    valueFrom:
-      secretKeyRef:
-        key: BOT_USERNAME
-        name: eso-bot-credentials
-  - name: BOT_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        key: BOT_PASSWORD
-        name: eso-bot-credentials
   additional:
     keycloak:
       config: |-

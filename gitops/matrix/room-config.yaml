@@ -34,7 +34,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: initial-room-creation
-  namespace: matrix
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
