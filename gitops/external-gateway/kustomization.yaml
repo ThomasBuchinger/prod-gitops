@@ -18,9 +18,9 @@ helmCharts:
   version: 1.6.3
   valuesInline:
     crds:
-      gatewayApi:
+      gatewayAPI:
         enabled: true
-        channel: stable
+        channel: standard
       envoyGateway:
         enabled: true
 - name: gateway-helm
