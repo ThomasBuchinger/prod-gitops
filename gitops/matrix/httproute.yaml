@@ -20,7 +20,7 @@ spec:
       port: 8008
       weight: 1
     timeouts:
-      request: 10m
+      request: 10h
     matches:
     - path:
         type: PathPrefix
