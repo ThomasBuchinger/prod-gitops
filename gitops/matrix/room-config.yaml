@@ -120,37 +120,26 @@ data:
     API="$HOMESERVER/_matrix/client/v3"
     RETENTION_MS=$((7 * 24 * 3600000))
 
-    echo "Ensure bot user exists..."
-    CMD_USER_EXISTS="mas-cli manage unlock-user $BOT_USERNAME"
-    CMD_CREATE_USER="mas-cli manage register-user $BOT_USERNAME --password $BOT_PASSWORD --display-name MatrixBot --email $BOT_USERNAME@buc.sh --no-admin --yes --ignore-password-complexity"
-
-    POD=$(kubectl get pod -l app.kubernetes.io/name=matrix-authentication-service -o jsonpath='{.items[0].metadata.name}')
-    if kubectl exec $POD -c matrix-authentication-service -- $CMD_USER_EXISTS; then
-      echo "Bot Account exists"
-    else
-      echo "Creating..."
-      kubectl exec $POD -c matrix-authentication-service -- $CMD_CREATE_USER
-    fi
-
-    echo "Logging in…"
-
-    ACCESS_TOKEN="$(
-      curl -s -X POST "$API/login" \
-        -H "Content-Type: application/json" \
-        -d "{
-          \"type\": \"m.login.password\",
-          \"user\": \"$BOT_USERNAME\",
-          \"password\": \"$BOT_PASSWORD\"
-        }" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p'
-    )"
-
-    if [ -z "$ACCESS_TOKEN" ]; then
-      echo "ERROR: Login failed"
-      exit 1
-    fi
-
     auth() {
       curl -s -H "Authorization: Bearer $ACCESS_TOKEN" "$@"
+    }
+
+    ensure_user() {
+      USER=$1
+      PASSWORD=$2
+      CMD_USER_EXISTS="mas-cli manage unlock-user $USER"
+      CMD_CREATE_USER="mas-cli manage register-user $USER --password $PASSWORD --display-name MatrixBot --email $USER@buc.sh --no-admin --yes --ignore-password-complexity"
+
+
+      echo "Ensure user '$USER' exists..."
+      TARGET="$(kubectl get pod -l app.kubernetes.io/name=matrix-authentication-service -o jsonpath='{.items[0].metadata.name}') -c matrix-authentication-service"
+      if kubectl exec $TARGET -- $CMD_USER_EXISTS; then
+        echo "User exists"
+      else
+        echo "Creating..."
+        kubectl exec $TARGET -- $CMD_CREATE_USER
+      fi
+    
     }
 
     ensure_room() {
@@ -200,11 +189,31 @@ data:
     }
 
     ### MAIN ###
+    ensure_user $BOT_USERNAME $BOT_PASSWORD
+    ensure_user glados $BOT_PASSWORD
+
+    echo "Logging in…"
+
+    ACCESS_TOKEN="$(
+      curl -s -X POST "$API/login" \
+        -H "Content-Type: application/json" \
+        -d "{
+          \"type\": \"m.login.password\",
+          \"user\": \"$BOT_USERNAME\",
+          \"password\": \"$BOT_PASSWORD\"
+        }" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p'
+    )"
+
+    if [ -z "$ACCESS_TOKEN" ]; then
+      echo "ERROR: Login failed"
+      exit 1
+    fi
 
     ensure_room "home"
     ensure_room "alerts"
     ensure_room "bot"
     ensure_room "timerec"
+    ensure_room "glados"
     join_room "home"
     join_room "bot"
     set_retention "home"
