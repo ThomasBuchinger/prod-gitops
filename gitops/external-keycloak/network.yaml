@@ -82,9 +82,6 @@ metadata:
   name: lua-geoip-block
 spec:
   targetRefs:
-  # - group: gateway.networking.k8s.io
-  #   kind: HTTPRoute
-  #   name: sso-admin-mtls-buc-sh
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: sso-cloud-buc-sh

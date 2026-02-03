@@ -1,6 +1,6 @@
 
 elementAdmin:
-  enabled: true
+  enabled: false
   ingress:
     host: admin-matrix.cloud.buc.sh
 elementWeb:
@@ -107,7 +107,6 @@ synapse:
         # - path: ^((?!notification).)*$
         remote_media_download_per_second: 50000M
         remote_media_download_burst_count: 50000M
-
   appservices: []
   checkConfigHook:
     enabled: false

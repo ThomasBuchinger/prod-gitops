@@ -4,48 +4,6 @@ kind: Namespace
 metadata:
   name: immich
 
-# ---
-# apiVersion: external-secrets.io/v1
-# kind: ExternalSecret
-# metadata:
-#   name: immich-cert
-# spec:
-#   refreshInterval: 1h0m0s
-#   secretStoreRef:
-#     name: k8s-evergreen
-#     kind: ClusterSecretStore
-#   target:
-#     name: cert-photos-buc-sh
-#     creationPolicy: Owner
-#   dataFrom:
-#   - extract:
-#       conversionStrategy: Default
-#       decodingStrategy: None
-#       metadataPolicy: None
-#       key: cert-photos-buc-sh
-
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: immich-tls
-# spec:
-#   tls:
-#   - hosts:
-#       - photos.buc.sh
-#     secretName: cert-photos-buc-sh
-#   rules:
-#   - host: "photos.buc.sh"
-#     http:
-#       paths:
-#       - path: "/"
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: immich-server
-#             port:
-#               name: http
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

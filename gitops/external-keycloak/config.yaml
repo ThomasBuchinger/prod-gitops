@@ -135,7 +135,6 @@ spec:
     webOrigins:
     - "https://*matrix.cloud.buc.sh/*"
     - "https://chat.cloud.buc.sh/*"
-    secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
 
     protocol: openid-connect
     clientAuthenticatorType: client-secret
@@ -146,35 +145,6 @@ spec:
     - email
     - profile
     - roles
-  #   protocolMappers:
-  #   - name: "client-role_to_claim"
-  #     protocol: "openid-connect"
-  #     protocolMapper: "oidc-usermodel-client-role-mapper"
-  #     config:
-  #       introspection.token.claim: "true"
-  #       multivalued: "false"
-  #       userinfo.token.claim: "true"
-  #       id.token.claim: "true"
-  #       lightweight.claim: "true"
-  #       access.token.claim: "true"
-  #       claim.name: "matrix_role"
-  #       jsonType.label: "String"
-  #       usermodel.clientRoleMapping.clientId: "matrix"
-  #   - name: "map_subject_to_static"
-  #     protocol: "openid-connect"
-  #     protocolMapper: "oidc-usermodel-property-mapper"
-  #     config:
-  #       introspection.token.claim: "true"
-  #       userinfo.token.claim: "true"
-  #       user.attribute: "username"
-  #       id.token.claim: "true"
-  #       lightweight.claim: "true"
-  #       access.token.claim: "true"
-  #       claim.name: "sub"
-  #       jsonType.label: "String"
-  # roles:
-  # - name: admin
-  # - name: user
 
 ---
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
