@@ -3,9 +3,10 @@ namespace: traefik
 helmCharts:
 - name: traefik
   releaseName: traefik
+  namespace: traefik
   includeCRDs: true
   repo: https://traefik.github.io/charts
-  version: 37.2.0
+  version: 39.0.0
   valuesFile: values.yaml
 
 resources:

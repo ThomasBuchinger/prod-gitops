@@ -112,7 +112,9 @@ synapse:
   checkConfigHook:
     enabled: false
   logging:
-    rootLevel: DEBUG
+    rootLevel: INFO
+  serviceMonitors:
+    enabled: true
 
 ingress:
   tlsEnabled: false
