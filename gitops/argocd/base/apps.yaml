@@ -81,7 +81,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: feat-immich
+        targetRevision: main
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
