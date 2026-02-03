@@ -19,6 +19,7 @@ prometheus:
           resources:
             requests:
               storage: 3Gi
+    serviceMonitorNamespaceSelector: {}
 
 
     # Workaround for: https://github.com/prometheus-community/helm-charts/issues/1162
