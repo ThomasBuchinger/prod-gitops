@@ -132,7 +132,7 @@ spec:
         - mountPath: /data
           name: paperless-nfs
       - name: paperless-exporter
-        image: ghcr.io/hansmi/prometheus-paperless-exporter:v0.0.8
+        image: ghcr.io/hansmi/prometheus-paperless-exporter:v0.0.9
         imagePullPolicy: IfNotPresent
         env:
         - name: PAPERLESS_URL
