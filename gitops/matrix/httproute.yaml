@@ -230,6 +230,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: matrix
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-keycloak
   ingress:
   # Allow Ingress
   - from:
@@ -389,6 +392,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: matrix
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-keycloak
   
   # # Allow Access to the Internet, but block internal Access
   # - to:
