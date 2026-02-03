@@ -385,6 +385,10 @@ spec:
     ports:
     - port: 8971
       protocol: TCP
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
   
   # # Allow Access to the Internet, but block internal Access
   # - to:
