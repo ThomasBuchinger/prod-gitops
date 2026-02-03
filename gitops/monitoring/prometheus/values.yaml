@@ -19,7 +19,8 @@ prometheus:
           resources:
             requests:
               storage: 3Gi
-
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: false
 
     # Workaround for: https://github.com/prometheus-community/helm-charts/issues/1162
     # Tested on: 25.11.2023 and ChartVersion 54.2.2

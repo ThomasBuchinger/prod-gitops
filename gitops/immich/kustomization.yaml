@@ -1,0 +1,15 @@
+namespace: immich
+
+resources:
+- immich-app.yaml
+- postgres.yaml
+- external-route.yaml
+
+- immich-server.yaml
+- immich-ml.yaml
+- valkey.yaml
+
+configMapGenerator:
+- name: immich-app-config
+  files:
+  - immich-config.yaml

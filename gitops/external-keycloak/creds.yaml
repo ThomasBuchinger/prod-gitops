@@ -1,0 +1,88 @@
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: user-credentials
+spec:
+  refreshInterval: 1h0m0s
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: eso-user-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: BUC_USER
+    remoteRef:
+      key: static-secrets
+      property: cred_user_user
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: BUC_PASSWORD
+    remoteRef:
+      key: static-secrets
+      property: cred_user_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: set-credentials-script
+data:
+  update-credentials.sh: |-
+    set -e
+    kubectl get keycloakuser ${USER_CR} -o yaml > /tmp/user.yaml
+    kubectl patch -f /tmp/user.yaml --local --type json -p "[{\"op\":\"replace\",\"path\":\"/spec/user/credentials\",\"value\":[{\"type\": \"password\", \"value\": \"${PASSWORD}\"}] }]" -o yaml > /tmp/modified-user.yaml
+    echo -e "\n\nNew Manifest: \n"
+    cat /tmp/modified-user.yaml
+
+    kubectl replace -f /tmp/modified-user.yaml
+    echo username = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.spec.user.username}')
+    echo ns = $(kubectl get -f /tmp/modified-user.yaml -o jsonpath='{.metadata.namespace}')
+    kubectl delete secret credential-${REALM}-${username}-${ns} || true
+    
+    # credential-REALM-USER-NS
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: set-user-credentials
+  annotations:
+    # argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/sync-wave: "2"  # wait for the User-CR to exist
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest
+        command:
+        - bash
+        - /scripts/update-credentials.sh
+        env:
+        - name: REALM
+          value: buc
+        - name: USER_CR
+          value: user-buc
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: BUC_PASSWORD
+              name: eso-user-credentials
+        volumeMounts:
+          - name: scripts
+            mountPath: /scripts
+      restartPolicy: Never
+      serviceAccount: keycloak-realm-operator
+      volumes:
+      - name: scripts
+        configMap:
+          name: set-credentials-script
+  backoffLimit: 1
+  # ttlSecondsAfterFinished: 60

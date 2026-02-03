@@ -1,0 +1,177 @@
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: ExternalKeycloak
+metadata:
+  name: sso-keycloak
+  labels:
+    app: sso-keycloak
+spec:
+  url: https://keycloak.buc.sh
+  contextRoot: /
+
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: realm-buc
+  labels:
+    app: realm-buc
+spec:
+  instanceSelector:
+    matchLabels:
+      app: sso-keycloak
+  realm:
+    id: "buc"
+    realm: "buc"
+    displayName: "BUC HomeLab"
+    enabled: true
+    # authenticationConfig: []
+    bruteForceProtected: true
+    internationalizationEnabled: true
+    defaultLocale: "de"
+    supportedLocales:
+    - de
+    - en
+    loginWithEmailAllowed: true
+    failureFactor: 5
+    waitIncrementSeconds: 30
+
+    maxDeltaTimeSeconds: 43200
+    maxFailureWaitSeconds: 43200
+    # otpPolicyAlgorithm: 
+    # optPolicyLookAheadWindow: 2
+    # passwordPolicy: ""
+    permanentLockout: false
+    registrationAllowed: false
+    rememberMe: true
+    resetPasswordAllowed: true
+      
+
+# unmanagedAttributePolicy:
+# bruteForceStrategy: linear
+
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: client-immich
+  labels:
+    app: client-immich
+spec:
+  realmSelector:
+    matchLabels:
+      app: realm-buc
+  client:
+    clientId: immich
+    name: Fotos
+    description: OIDC client for Immich
+    baseUrl: https://photos.cloud.buc.sh
+    rootUrl: https://photos.cloud.buc.sh
+    redirectUris:
+    - "app.immich:///oauth-callback"
+    - "https://photos.cloud.buc.sh/auth/login"
+    webOrigins:
+    - "app.immich:///oauth-callback"
+    - "https://photos.cloud.buc.sh/auth/login"
+    secret: TDCWNHYYtkZhZAMfGkmUwRBZbmZ4kZBC7
+
+    protocol: openid-connect
+    clientAuthenticatorType: client-secret
+    fullScopeAllowed: true
+    standardFlowEnabled: true
+    defaultClientScopes:
+    - basic
+    - email
+    - profile
+    - roles
+    protocolMappers:
+    - name: "client-role_to_claim"
+      protocol: "openid-connect"
+      protocolMapper: "oidc-usermodel-client-role-mapper"
+      config:
+        introspection.token.claim: "true"
+        multivalued: "false"
+        userinfo.token.claim: "true"
+        id.token.claim: "true"
+        lightweight.claim: "true"
+        access.token.claim: "true"
+        claim.name: "immich_role"
+        jsonType.label: "String"
+        usermodel.clientRoleMapping.clientId: "immich"
+    - name: "map_subject_to_static"
+      protocol: "openid-connect"
+      protocolMapper: "oidc-usermodel-property-mapper"
+      config:
+        introspection.token.claim: "true"
+        userinfo.token.claim: "true"
+        user.attribute: "username"
+        id.token.claim: "true"
+        lightweight.claim: "true"
+        access.token.claim: "true"
+        claim.name: "sub"
+        jsonType.label: "String"
+  roles:
+  - name: admin
+  - name: user
+
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: client-matrix
+  labels:
+    app: client-matrix
+spec:
+  realmSelector:
+    matchLabels:
+      app: realm-buc
+  client:
+    clientId: matrix
+    name: Chat
+    description: OIDC client for Matrix
+    baseUrl: https://chat.cloud.buc.sh
+    rootUrl: https://chat.cloud.buc.sh
+    redirectUris:
+    - https://account-matrix.cloud.buc.sh/upstream/callback/01KFANV7TJ0JR42S0TPF63BHH5
+    webOrigins:
+    - "https://*matrix.cloud.buc.sh/*"
+    - "https://chat.cloud.buc.sh/*"
+
+    protocol: openid-connect
+    clientAuthenticatorType: client-secret
+    fullScopeAllowed: true
+    standardFlowEnabled: true
+    defaultClientScopes:
+    - basic
+    - email
+    - profile
+    - roles
+
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: user-buc
+  labels:
+    app: user-buc
+spec:
+  realmSelector:
+    matchLabels:
+      app: realm-buc
+  user:
+    username: "buc"
+    firstName: "Thomas"
+    lastName: "Buchinger"
+    email: "buc@buc.sh"
+    enabled: True
+    emailVerified: true
+    # credentials:
+    # - type: "password"
+    #   value: "changeme"
+    realmRoles:
+    - offline_access
+    clientRoles:
+      account:
+      - "manage-account"
+      - "view-profile"
+      immich:
+      - admin

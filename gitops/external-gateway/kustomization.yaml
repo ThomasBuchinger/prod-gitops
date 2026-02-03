@@ -15,18 +15,18 @@ helmCharts:
 - name: gateway-crds-helm
   releaseName: gateway-crds-helm
   repo: oci://docker.io/envoyproxy
-  version: 1.5.4
+  version: 1.6.3
   valuesInline:
     crds:
-      gatewayApi:
+      gatewayAPI:
         enabled: true
-        channel: stable
+        channel: standard
       envoyGateway:
         enabled: true
 - name: gateway-helm
   releaseName: gateway
   repo: oci://docker.io/envoyproxy
-  version: 1.5.4
+  version: 1.6.3
   includeCRDs: false
   namespace: external-gateway
   valuesInline:

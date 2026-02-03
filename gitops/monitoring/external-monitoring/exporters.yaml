@@ -12,8 +12,8 @@ spec:
       job: node-exporter
     targets:
       - 10.0.0.13:9100
-      - kube-state-metrics.10.0.0.16.nip.io
       - 10.0.0.14:9100
+      - 10.0.0.15:9100
       - 10.0.0.22:9100
 ---
 apiVersion: monitoring.coreos.com/v1alpha1

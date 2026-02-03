@@ -1,0 +1,138 @@
+
+elementAdmin:
+  enabled: false
+  ingress:
+    host: admin-matrix.cloud.buc.sh
+elementWeb:
+  enabled: true
+  ingress:
+    host: chat.cloud.buc.sh
+matrixAuthenticationService:
+  ingress:
+    host: account-matrix.cloud.buc.sh
+  postgres:
+    host: matrix-database-rw
+    port: 5432
+    user: matrix
+    database: matrix_mas
+    sslMode: prefer
+    password:
+      secret: matrix-database-app
+      secretKey: password
+  additional:
+    keycloak:
+      config: |-
+        passwords:
+          enabled: true
+        telemetry:
+          metrics:
+            exporter: prometheus
+        upstream_oauth2:
+          providers:
+            - id: "01KFANV7TJ0JR42S0TPF63BHH5"
+              human_name: "BUC Login"
+              issuer: "https://sso.cloud.buc.sh/realms/buc"
+              token_endpoint_auth_method: client_secret_basic
+              client_id: "matrix"
+              client_secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
+              scope: "openid profile email"
+              claims_imports:
+                localpart:
+                  action: require
+                  template: "{{ user.preferred_username }}"
+                displayname:
+                  action: suggest
+                  template: "{{ user.name }}"
+                email:
+                  action: suggest
+                  template: "{{ user.email }}"
+        policy:
+          data:
+            # Users which are allowed to ask for admin access. If possible, use the can_request_admin flag on users instead.
+            admin_users:
+              - buc
+
+matrixRTC:
+  enabled: true
+  ingress:
+    host: rtc-matrix.cloud.buc.sh
+serverName: matrix.cloud.buc.sh
+synapse:
+  ingress:
+    host: matrix.cloud.buc.sh
+  postgres:
+    host: matrix-database-rw
+    port: 5432
+    user: matrix
+    database: matrix
+    sslMode: prefer
+    password:
+      secret: matrix-database-app
+      secretKey: password
+  media:
+    storage:
+      storageClassName: local-path
+  additional:
+    custom:
+      config: |
+        # enable_metrics: true
+        # suppress_key_server_warning: true
+        # trusted_key_servers: []
+          # - server_name: "matrix.org"
+        url_preview_enabled: true
+        url_preview_ip_range_blacklist:
+        - 127.0.0.0/8
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 100.64.0.0/10
+        - 192.0.0.0/24
+        - 169.254.0.0/16
+        - 192.88.99.0/24
+        - 198.18.0.0/15
+        - 192.0.2.0/24
+        - 198.51.100.0/24
+        - 203.0.113.0/24
+        - 224.0.0.0/4
+        - ::1/128
+        - fe80::/10
+        - fc00::/7
+        - 2001:db8::/32
+        - ff00::/8
+        - fec0::/10
+        url_preview_ip_range_whitelist:
+        - 10.0.0.24/32   # Matrix Frigate URL proxy
+        - 10.0.0.25/32   # Matrix Frigate URL proxy
+        # url_preview_url_blacklist:
+        # - path: ^((?!notification).)*$
+        remote_media_download_per_second: 50000M
+        remote_media_download_burst_count: 50000M
+  appservices: []
+  checkConfigHook:
+    enabled: false
+  logging:
+    rootLevel: INFO
+  serviceMonitors:
+    enabled: true
+
+ingress:
+  tlsEnabled: false
+
+initSecrets:
+  enabled: true
+deploymentMarkers:
+  enabled: true
+haproxy:
+  replicas: 1
+postgres:
+  enabled: false
+wellKnownDelegation:
+  enabled: true
+  baseDomainRedirect:
+    enabled: true
+    url: ""
+  additional:
+    client: |
+      {"corsCredentials": "include"}
+    server: "{}"
+    support: "{}"

@@ -1,0 +1,257 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: bot-credentials
+spec:
+  refreshInterval: 1h0m0s
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: eso-bot-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: BOT_USERNAME
+    remoteRef:
+      key: static-secrets
+      property: cred_bot_user
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: BOT_PASSWORD
+    remoteRef:
+      key: static-secrets
+      property: cred_bot_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: initial-room-creation
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  template:
+    spec:
+      serviceAccountName: matrix-config
+      restartPolicy: OnFailure
+      containers:
+      - name: matrix-room-script
+        image: alpine/k8s:1.32.11
+        command: ["/bin/bash", "/scripts/script.sh"]
+        env:
+        - name: BOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: BOT_USERNAME
+              name: eso-bot-credentials
+        - name: BOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: BOT_PASSWORD
+              name: eso-bot-credentials
+
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      volumes:
+      - name: script-volume
+        configMap:
+          name: matrix-room-config
+          defaultMode: 0755
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: matrix-room-cronjob
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: matrix-config
+          restartPolicy: OnFailure
+          containers:
+          - name: matrix-room-script
+            image: alpine/k8s:1.32.11
+            command: ["/bin/bash", "/scripts/script.sh"]
+            env:
+            - name: BOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_USERNAME
+                  name: eso-bot-credentials
+            - name: BOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_PASSWORD
+                  name: eso-bot-credentials
+
+            volumeMounts:
+            - name: script-volume
+              mountPath: /scripts
+          volumes:
+          - name: script-volume
+            configMap:
+              name: matrix-room-config
+              defaultMode: 0755
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: matrix-room-config
+data:
+  script.sh: |-
+    #!/bin/sh
+    set -eu
+
+    ### CONFIG ###
+    HOMESERVER="https://matrix.cloud.buc.sh"
+    SERVER_NAME="matrix.cloud.buc.sh"
+    
+    API="$HOMESERVER/_matrix/client/v3"
+    RETENTION_MS=$((7 * 24 * 3600000))
+
+    auth() {
+      curl -s -H "Authorization: Bearer $ACCESS_TOKEN" "$@"
+    }
+
+    ensure_user() {
+      USER=$1
+      PASSWORD=$2
+      CMD_USER_EXISTS="mas-cli manage unlock-user $USER"
+      CMD_CREATE_USER="mas-cli manage register-user $USER --password $PASSWORD --display-name MatrixBot --email $USER@buc.sh --no-admin --yes --ignore-password-complexity"
+
+
+      echo "Ensure user '$USER' exists..."
+      TARGET="$(kubectl get pod -l app.kubernetes.io/name=matrix-authentication-service -o jsonpath='{.items[0].metadata.name}') -c matrix-authentication-service"
+      if kubectl exec $TARGET -- $CMD_USER_EXISTS; then
+        echo "User exists"
+      else
+        echo "Creating..."
+        kubectl exec $TARGET -- $CMD_CREATE_USER
+      fi
+    
+    }
+
+    ensure_room() {
+      ROOM="$1"
+      ALIAS="#$ROOM:$SERVER_NAME"
+
+      echo "Ensuring room $ALIAS exists…"
+
+      if auth "$API/directory/room/$ALIAS" | grep -q '"room_id"'; then
+        echo "  Room exists"
+      else
+        echo "  Creating room"
+        auth -X POST "$API/createRoom" \
+          -H "Content-Type: application/json" \
+          -d "{
+            \"room_alias_name\": \"$ROOM\",
+            \"visibility\": \"public\",
+            \"preset\": \"public_chat\"
+          }"
+      fi
+    }
+
+    join_room() {
+      ROOM="$1"
+      ALIAS="#$ROOM:$SERVER_NAME"
+
+      echo "Ensuring joined to $ALIAS"
+      auth -X POST "$API/join/$ALIAS" >/dev/null
+    }
+
+    set_retention() {
+      ROOM="$1"
+      ALIAS="#$ROOM:$SERVER_NAME"
+
+      ROOM_ID="$(
+        auth "$API/directory/room/$ALIAS" |
+          sed -n 's/.*"room_id":"\([^"]*\)".*/\1/p'
+      )"
+
+      echo "Ensuring retention policy on $ALIAS (7 days)"
+
+      auth -X PUT "$API/rooms/$ROOM_ID/state/m.room.retention" \
+        -H "Content-Type: application/json" \
+        -d "{
+          \"max_lifetime\": $RETENTION_MS
+        }" >/dev/null
+    }
+
+    ### MAIN ###
+    ensure_user $BOT_USERNAME $BOT_PASSWORD
+    ensure_user glados $BOT_PASSWORD
+
+    echo "Logging in…"
+
+    ACCESS_TOKEN="$(
+      curl -s -X POST "$API/login" \
+        -H "Content-Type: application/json" \
+        -d "{
+          \"type\": \"m.login.password\",
+          \"user\": \"$BOT_USERNAME\",
+          \"password\": \"$BOT_PASSWORD\"
+        }" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p'
+    )"
+
+    if [ -z "$ACCESS_TOKEN" ]; then
+      echo "ERROR: Login failed"
+      exit 1
+    fi
+
+    ensure_room "home"
+    ensure_room "alerts"
+    ensure_room "bot"
+    ensure_room "timerec"
+    ensure_room "glados"
+    join_room "home"
+    join_room "bot"
+    set_retention "home"
+    set_retention "bot"
+
+
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: matrix-config
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: allow-matrix-mas-exec
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: allow-matrix-mas-config
+subjects:
+- kind: ServiceAccount
+  name: matrix-config
+  namespace: matrix
+roleRef:
+  kind: Role
+  name: allow-matrix-mas-exec
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,147 @@
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: keycloak-cert
+spec:
+  refreshInterval: 1h0m0s
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: cert-keycloak-buc-sh
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+      key: cert-keycloak-buc-sh
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-admin-interface
+spec:
+  tls:
+  - hosts:
+      - keycloak.buc.sh
+    secretName: cert-keycloak-buc-sh
+  rules:
+  - host: "keycloak.buc.sh"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: sso-service
+            port:
+              name: http
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: sso-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "sso.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: sso-service
+      port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: Exact
+        value: /
+    - path:
+        type: PathPrefix
+        value: /realms
+    - path:
+        type: PathPrefix
+        value: /resources
+    - path:
+        type: PathPrefix
+        value: /.well-known
+
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: lua-geoip-block
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: sso-cloud-buc-sh
+  lua:
+  - type: Inline
+    inline: |
+      function envoy_on_request(request_handle)
+        local allowed_countried = { AT=true, DE=true, CH=true, HR=true, IT=true }
+        if not allowed_countried[request_handle:headers():get("X-Geo-Country")] then
+          request_handle:respond(
+            {[":status"] = "451"}, "Not available in your country")
+        end
+      end
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-keycloak-egress
+  namespace: external-hfs
+spec:
+  podSelector:
+    matchLabels:
+      app: keycloak
+  policyTypes:
+    - Egress
+    - Ingress
+  egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    ports:
+    - protocol: TCP
+      port: 8080
+  # Allow monitoring
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - protocol: TCP
+      port: 9000
+

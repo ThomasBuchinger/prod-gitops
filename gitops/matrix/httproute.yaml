@@ -16,20 +16,54 @@ spec:
   - backendRefs:
     - group: ""
       kind: Service
-      name: synapse
+      name: matrix-synapse
       port: 8008
       weight: 1
+    timeouts:
+      request: 10h
     matches:
     - path:
         type: PathPrefix
         value: /_matrix
     - path:
         type: PathPrefix
-        value: /_synapse/client
-    - method: GET
-      path:
+        value: /_synapse
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-well-known
+      port: 8010
+      weight: 1
+    matches:
+    - path:
         type: PathPrefix
-        value: /.well-known
+        value: /
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-matrix-authentication-service
+      port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: RegularExpression
+        value: /_matrix/client/api/v1/login.*
+    - path:
+        type: RegularExpression
+        value: /_matrix/client/api/v1/refresh.*
+    - path:
+        type: RegularExpression
+        value: /_matrix/client/api/v1/logout.*
+    - path:
+        type: RegularExpression
+        value: /_matrix/client/(r0|v3|unstable)/login.*
+    - path:
+        type: RegularExpression
+        value: /_matrix/client/(r0|v3|unstable)/refresh.*
+    - path:
+        type: RegularExpression
+        value: /_matrix/client/(r0|v3|unstable)/logout.*
+
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -48,8 +82,84 @@ spec:
   - backendRefs:
     - group: ""
       kind: Service
-      name: element
+      name: matrix-element-web
       port: 80
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: account-matrix-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "account-matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-matrix-authentication-service
+      port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: admin-matrix-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "admin-matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-element-admin
+      port: 8080
+      weight: 1
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rtc-matrix-cloud-buc-sh
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: external-gateway
+    namespace: external-gateway
+  hostnames:
+  - "rtc-matrix.cloud.buc.sh"
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: matrix-matrix-rtc-sfu
+      port: 7880
       weight: 1
     matches:
     - path:
@@ -69,6 +179,15 @@ spec:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: matrix-cloud-buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: accountmatrix-cloud-buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: admin-matrix-cloud-buc-sh
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: rtc-matrix-cloud-buc-sh
   lua:
   - type: Inline
     inline: |
@@ -84,11 +203,45 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: allow-all-within-namespace
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  # Allow DNS Resolution
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: synapse
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: synapse
+      app.kubernetes.io/name: synapse-main
   policyTypes:
     - Ingress
     - Egress
@@ -107,19 +260,6 @@ spec:
     - protocol: TCP
       port: 53
 
-  # dex.buc.sh
-  - to:
-    - ipBlock:
-        cidr: "10.0.0.16/32"
-    ports:
-    - port: 80
-    - port: 443
-  # Litestream --> S3
-  - to:
-    - ipBlock:
-        cidr: "10.0.0.19/32"
-    ports:
-    - port: 9000
   # HomeAssistant (Frigate Preview)
   - to:
     - ipBlock:
@@ -141,18 +281,6 @@ spec:
   #       except:
   #       - 10.0.0.0/24
   #       - 10.0.100.0/24
-  ingress:
-  # Allow Ingress
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: traefik
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: external-gateway
-    ports:
-    - protocol: TCP
-      port: 8008
 
 
 ---
@@ -163,22 +291,9 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: element
+      app.kubernetes.io/name: element-web
   policyTypes:
-    - Ingress
     - Egress
-  ingress:
-  # Allow Ingress
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: traefik
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: external-gateway
-    ports:
-    - protocol: TCP
-      port: 8080
 
 ---
 # increase local Rate Limit for Synapse/element
@@ -190,7 +305,7 @@ spec:
   targetRefs:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: matrix-cloud--buc-sh
+    name: matrix-cloud-buc-sh
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: chat-cloud--buc-sh
@@ -199,5 +314,5 @@ spec:
     local:
       rules:
       - limit:
-          requests: 100000000
+          requests: 10000000000
           unit: Minute

@@ -1,16 +1,18 @@
 kind: Kustomization
 
 namespace: matrix
-resources:
-- synapse.yaml
-- element.yaml
-- httproute.yaml
 
-configMapGenerator:
-- name: synapse-data
-  files:
-  - homeserver.yaml
-  - matrix.cloud.buc.sh.log.config
-- name: element-config
-  files:
-  - element-config.json
+helmCharts:
+- name: matrix-stack
+  repo:  oci://ghcr.io/element-hq/ess-helm/
+  version: 26.1.0
+  releaseName: matrix
+  namespace: matrix
+  valuesFile: values.yaml
+  includeCRDs: true
+
+resources:
+- postgres.yaml
+- httproute.yaml
+- room-config.yaml
+
