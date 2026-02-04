@@ -215,7 +215,7 @@ spec:
           mountPath: /var/lib/opencloud
         - name: opencloud-config
           mountPath: /etc/opencloud
-          subPath: opencloud.yaml
+          # subPath: opencloud.yaml
       volumes:
       - name: opencloud-data
         emptyDir: {}
