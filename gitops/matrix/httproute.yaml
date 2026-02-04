@@ -117,30 +117,30 @@ spec:
         value: /
 
 
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: admin-matrix-cloud-buc-sh
-spec:
-  parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: external-gateway
-    namespace: external-gateway
-  hostnames:
-  - "admin-matrix.cloud.buc.sh"
-  rules:
-  - backendRefs:
-    - group: ""
-      kind: Service
-      name: matrix-element-admin
-      port: 8080
-      weight: 1
-    matches:
-    - path:
-        type: PathPrefix
-        value: /
+# ---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: admin-matrix-cloud-buc-sh
+# spec:
+#   parentRefs:
+#   - group: gateway.networking.k8s.io
+#     kind: Gateway
+#     name: external-gateway
+#     namespace: external-gateway
+#   hostnames:
+#   - "admin-matrix.cloud.buc.sh"
+#   rules:
+#   - backendRefs:
+#     - group: ""
+#       kind: Service
+#       name: matrix-element-admin
+#       port: 8080
+#       weight: 1
+#     matches:
+#     - path:
+#         type: PathPrefix
+#         value: /
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

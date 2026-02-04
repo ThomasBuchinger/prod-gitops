@@ -1,0 +1,146 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: opencloud
+data:
+  # enable services that are not started automatically
+  # OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
+  OC_URL: https://docs.cloud.buc.sh
+  # OC_LOG_LEVEL: ${LOG_LEVEL:-info}
+  # OC_LOG_COLOR: "${LOG_PRETTY:-false}"
+  # OC_LOG_PRETTY: "${LOG_PRETTY:-false}"
+  # do not use SSL between the reverse proxy and OpenCloud
+  # PROXY_TLS: "false"
+  # INSECURE: needed if OpenCloud / reverse proxy is using self generated certificates
+  OC_INSECURE: "true"
+  # basic auth (not recommended, but needed for eg. WebDav clients that do not support OpenID Connect)
+  # PROXY_ENABLE_BASIC_AUTH: "${PROXY_ENABLE_BASIC_AUTH:-false}"
+  # demo users
+  # IDM_CREATE_DEMO_USERS: "${DEMO_USERS:-false}"
+  # admin password
+  IDM_ADMIN_PASSWORD: "changeme"
+  # email server (if configured)
+  # NOTIFICATIONS_SMTP_HOST: "${SMTP_HOST}"
+  # NOTIFICATIONS_SMTP_PORT: "${SMTP_PORT}"
+  # NOTIFICATIONS_SMTP_SENDER: "${SMTP_SENDER:-OpenCloud Notifications <notifications@cloud.opencloud.test>}"
+  # NOTIFICATIONS_SMTP_USERNAME: "${SMTP_USERNAME}"
+  # NOTIFICATIONS_SMTP_PASSWORD: "${SMTP_PASSWORD}"
+  # NOTIFICATIONS_SMTP_INSECURE: "${SMTP_INSECURE:-false}"
+  # NOTIFICATIONS_SMTP_AUTHENTICATION: "${SMTP_AUTHENTICATION}"
+  # NOTIFICATIONS_SMTP_ENCRYPTION: "${SMTP_TRANSPORT_ENCRYPTION:-none}"
+  # FRONTEND_ARCHIVER_MAX_SIZE: "10000000000"
+  # FRONTEND_CHECK_FOR_UPDATES: "${CHECK_FOR_UPDATES:-true}"
+  # PROXY_CSP_CONFIG_FILE_LOCATION: /etc/opencloud/csp.yaml
+  # enable to allow using the banned passwords list
+  # OC_PASSWORD_POLICY_BANNED_PASSWORDS_LIST: banned-password-list.txt
+  # control the password enforcement and policy for public shares
+  # OC_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD: "${OC_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD:-true}"
+  # OC_SHARING_PUBLIC_WRITEABLE_SHARE_MUST_HAVE_PASSWORD: "${OC_SHARING_PUBLIC_WRITEABLE_SHARE_MUST_HAVE_PASSWORD:-false}"
+  # OC_PASSWORD_POLICY_DISABLED: "${OC_PASSWORD_POLICY_DISABLED:-false}"
+  # OC_PASSWORD_POLICY_MIN_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_CHARACTERS:-8}"
+  # OC_PASSWORD_POLICY_MIN_LOWERCASE_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_LOWERCASE_CHARACTERS:-1}"
+  # OC_PASSWORD_POLICY_MIN_UPPERCASE_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_UPPERCASE_CHARACTERS:-1}"
+  # OC_PASSWORD_POLICY_MIN_DIGITS: "${OC_PASSWORD_POLICY_MIN_DIGITS:-1}"
+  # OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
+  # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
+  OC_DEFAULT_LANGUAGE: de # en
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opencloud
+  namespace: opencloud
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: opencloud
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: opencloud
+    spec:
+      containers:
+      - name: opencloud
+        image: opencloudeu/opencloud-rolling:latest
+        envFrom:
+        - configMapRef:
+            name: config
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          runAsUser: 1000
+          runAsGroup: 1000
+          runAsNonRoot: true
+          privileged: false
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: opencloud-data
+          mountPath: /var/lib/opencloud
+        - name: opencloud-config
+          mountPath: /etc/opencloud
+
+      volumes:
+      - name: opencloud-data
+        emptyDir: {}
+      - name: opencloud-config
+        emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: opencloud-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opencloud
+  namespace: opencloud
+spec:
+  selector:
+    app: opencloud
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: opencloud-ingress
+  namespace: opencloud
+spec:
+  tls:
+  - hosts:
+    - docs.buc.sh
+    secretName: cert-docs-buc-sh
+  rules:
+    - host: docs.buc.sh
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opencloud
+                port:
+                  number: 80
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: opencloud-pvc
+#   namespace: opencloud
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi
+
