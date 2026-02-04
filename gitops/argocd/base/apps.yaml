@@ -59,6 +59,9 @@ spec:
       - name: immich
         path: gitops/immich
         wave: "2"
+      - name: opencloud
+        path: gitops/opencloud
+        wave: "1"
       # === Internet Facing
       - name: external-gateway
         path: gitops/external-gateway
