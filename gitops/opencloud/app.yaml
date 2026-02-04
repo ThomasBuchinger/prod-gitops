@@ -47,6 +47,136 @@ data:
   # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
   OC_DEFAULT_LANGUAGE: de # en
 
+  opencloud.yaml: |-
+    token_manager:
+      jwt_secret: 3-XhRlx3.nRx0oYxSl57U1om85@2LWBQ
+    machine_auth_api_key: l%aC4=um.tNAxv3q0=f@y^tjELX#NjO.
+    system_user_api_key: R^1Vv^^jINgJt^GN46z%SnCaOYnsCBmM
+    transfer_secret: WqB782qRX@OsZPPzUAjZTKQJSctY1AS@
+    url_signing_secret: ykZHuZNxnvBrs1#g^3dplhG#yahnz=oA
+    system_user_id: d2ce9b10-1aac-4521-8e21-630ed0cdb391
+    admin_user_id: 437c73e7-4c73-4618-9898-ecb759046221
+    graph:
+      application:
+        id: bf5da4e7-857d-4e4d-afee-a086f2c75b57
+      events:
+        tls_insecure: true
+      spaces:
+        insecure: true
+      identity:
+        ldap:
+          bind_password: 3e*!hwm8wHpyL8MN=^siZmab6=0Azad3
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    idp:
+      ldap:
+        bind_password: 35s4q.xyQ@=a!CkC1zrNo!XPerBh#VNI
+    idm:
+      service_user_passwords:
+        admin_password: admin
+        idm_password: 3e*!hwm8wHpyL8MN=^siZmab6=0Azad3
+        reva_password: E8pVpz=XSx7gkFzJNg5QxsPL7^9!JRnl
+        idp_password: 35s4q.xyQ@=a!CkC1zrNo!XPerBh#VNI
+    collaboration:
+      wopi:
+        secret: TB4pOtvH.#QeE-09!1t+6tgRFPzyWxJd
+      app:
+        insecure: true
+    proxy:
+      oidc:
+        insecure: true
+      insecure_backends: true
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    frontend:
+      app_handler:
+        insecure: true
+      archiver:
+        insecure: true
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+      ocdav:
+        insecure: true
+    auth_basic:
+      auth_providers:
+        ldap:
+          bind_password: E8pVpz=XSx7gkFzJNg5QxsPL7^9!JRnl
+    auth_bearer:
+      auth_providers:
+        oidc:
+          insecure: true
+    users:
+      drivers:
+        ldap:
+          bind_password: E8pVpz=XSx7gkFzJNg5QxsPL7^9!JRnl
+    groups:
+      drivers:
+        ldap:
+          bind_password: E8pVpz=XSx7gkFzJNg5QxsPL7^9!JRnl
+    ocm:
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    thumbnails:
+      thumbnail:
+        transfer_secret: '&OY=l#WY1Cz3crER%Fvd$M-hfk6@=bpF'
+        webdav_allow_insecure: true
+        cs3_allow_insecure: true
+    search:
+      events:
+        tls_insecure: true
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    audit:
+      events:
+        tls_insecure: true
+    settings:
+      service_account_ids:
+      - d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+    sharing:
+      events:
+        tls_insecure: true
+    storage_users:
+      events:
+        tls_insecure: true
+      mount_id: 48c27a38-aeea-4620-9bf7-ccbd3b617e60
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    notifications:
+      notifications:
+        events:
+          tls_insecure: true
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    nats:
+      nats:
+        tls_skip_verify_client_cert: true
+    gateway:
+      storage_registry:
+        storage_users_mount_id: 48c27a38-aeea-4620-9bf7-ccbd3b617e60
+    userlog:
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    auth_service:
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    clientlog:
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+    activitylog:
+      service_account:
+        service_account_id: d281cc8b-445d-4b4a-8be0-c6a1fa5e59f7
+        service_account_secret: 4%vwkDvR@hPP8WebKb2imrhXmMiILxU1
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -85,14 +215,15 @@ spec:
           mountPath: /var/lib/opencloud
         - name: opencloud-config
           mountPath: /etc/opencloud
-
+          subPath: opencloud.yaml
       volumes:
       - name: opencloud-data
         emptyDir: {}
-      - name: opencloud-config
-        emptyDir: {}
         # persistentVolumeClaim:
         #   claimName: opencloud-pvc
+      - name: opencloud-config
+        configMap:
+          name: config
 
 ---
 apiVersion: v1
