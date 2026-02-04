@@ -8,9 +8,9 @@ data:
   # enable services that are not started automatically
   # OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
   OC_URL: https://docs.cloud.buc.sh
-  # OC_LOG_LEVEL: ${LOG_LEVEL:-info}
-  # OC_LOG_COLOR: "${LOG_PRETTY:-false}"
-  # OC_LOG_PRETTY: "${LOG_PRETTY:-false}"
+  OC_LOG_LEVEL: info
+  OC_LOG_COLOR: "false"
+  OC_LOG_PRETTY: "true"
   # do not use SSL between the reverse proxy and OpenCloud
   # PROXY_TLS: "false"
   # INSECURE: needed if OpenCloud / reverse proxy is using self generated certificates
