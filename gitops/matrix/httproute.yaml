@@ -279,6 +279,13 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: matrix
+  # public IP block
+  - to:
+    - ipBlock:
+        cidr: 188.20.0.0/14
+    ports:
+    - protocol: TCP
+      port: 443
   ingress:
   # Allow Ingress
   - from:
