@@ -5,7 +5,7 @@ namespace: matrix
 helmCharts:
 - name: matrix-stack
   repo:  oci://ghcr.io/element-hq/ess-helm/
-  version: 26.1.0
+  version: 26.2.0
   releaseName: matrix
   namespace: matrix
   valuesFile: values.yaml
