@@ -1,7 +1,7 @@
 {
   "packages": [
     "renovate@41.169.3",
-    "talosctl@1.11.5",
+    "talosctl@1.12.2",
     "opencode@latest",
     "claude-code@latest"
   ],
