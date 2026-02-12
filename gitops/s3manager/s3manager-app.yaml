@@ -63,7 +63,7 @@ spec:
         emptyDir: {}
       initContainers:
       - name: generate-cookie-secret
-        image: alpine/curl:8.14.1
+        image: alpine/curl:8.17.0
         command: ["/bin/sh", "-c"]
         args:
           - |

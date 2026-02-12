@@ -19,7 +19,7 @@ spec:
         spec:
           containers:
           - name: workhours-reminder
-            image: alpine/curl:8.14.1
+            image: alpine/curl:8.17.0
             imagePullPolicy: IfNotPresent
             resources: {}
             env:
