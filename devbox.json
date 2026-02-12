@@ -3,7 +3,7 @@
     "renovate@41.169.3",
     "talosctl@1.11.5",
     "opencode@latest",
-    "claude-code@latest"
+    "claude-code@0.2.122"
   ],
   "env": {
     "ANTHROPIC_API_KEY": "aaa",
