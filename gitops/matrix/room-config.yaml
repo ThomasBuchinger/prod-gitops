@@ -43,7 +43,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: matrix-room-script
-        image: alpine/k8s:1.32.11
+        image: alpine/k8s:1.35.0
         command: ["/bin/bash", "/scripts/script.sh"]
         env:
         - name: BOT_USERNAME
@@ -80,7 +80,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: matrix-room-script
-            image: alpine/k8s:1.32.11
+            image: alpine/k8s:1.35.0
             command: ["/bin/bash", "/scripts/script.sh"]
             env:
             - name: BOT_USERNAME
