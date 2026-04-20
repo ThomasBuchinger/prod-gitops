@@ -396,6 +396,14 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: matrix
+  # Allow access to matrix.org for push notifications
+  - to:
+    - ipBlock:
+        cidr: 172.66.135.3/32
+    - ipBlock:
+        cidr: 172.66.139.239/32
+    ports:
+    - port: 443
   ingress:
   # Allow Ingress
   - from:
