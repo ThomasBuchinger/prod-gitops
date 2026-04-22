@@ -24,7 +24,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: main
-          image: ghcr.io/immich-app/immich-server:v2.7.4
+          image: ghcr.io/immich-app/immich-server:v2.7.5
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 2283
