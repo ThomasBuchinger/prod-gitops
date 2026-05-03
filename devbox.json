@@ -1,6 +1,6 @@
 {
   "packages": [
-    "renovate@43.132.1",
+    "renovate@43.150.1",
     "talosctl@1.12.7",
     "opencode@1.14.25",
     "claude-code@2.1.119"
