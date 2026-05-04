@@ -6,7 +6,7 @@ helmCharts:
   namespace: traefik
   includeCRDs: true
   repo: https://traefik.github.io/charts
-  version: 39.0.8
+  version: 39.0.9
   valuesFile: values.yaml
 
 resources:
