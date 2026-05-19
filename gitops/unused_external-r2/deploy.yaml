@@ -59,7 +59,7 @@ spec:
       containers:
       - name: r2
         # Upstream is currently rebuilding in with HTMX using the latest tag. We want to stay on v0.5.0 until it is donw
-        image: docker.io/cloudlena/s3manager:v0.5.0
+        image: docker.io/cloudlena/s3manager:v0.7.0
         # imagePullPolicy: Always
         envFrom:
         - secretRef:
