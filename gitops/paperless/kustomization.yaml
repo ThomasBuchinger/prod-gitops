@@ -4,7 +4,7 @@ helmCharts:
   # repo: https://charts.bitnami.com/bitnami
   repo: oci://registry-1.docker.io/bitnamicharts/
   releaseName: redis-ephemeral
-  version: 25.5.2
+  version: 25.5.3
   namespace: paperless
   includeCRDs: true
   valuesInline:
