@@ -2,7 +2,7 @@
   "packages": [
     "renovate@43.150.1",
     "talosctl@1.13.0",
-    "opencode@1.14.48",
+    "opencode@1.15.5",
     "claude-code@2.1.141"
   ],
   "env": {
