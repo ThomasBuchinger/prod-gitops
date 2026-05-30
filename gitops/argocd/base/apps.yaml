@@ -90,7 +90,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: feat-opencloud
+        targetRevision: main
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
