@@ -1,0 +1,26 @@
+
+helmCharts:
+- name: kubernetes-mcp-server
+  repo: oci://ghcr.io/containers/charts
+  version: 0.1.0-dev.353772b
+  releaseName: kubernetes-mcp-server
+  namespace: mcp-kubernetes
+  valuesInline:
+    config:
+      list_output: yaml
+    ingress:
+      enabled: false
+      host: k8s-mcp.10.0.0.21.nip.io
+    image:
+      version: v0.0.59
+    rbac: 
+      extraClusterRoles:
+      - name: read-only
+        rules:
+        - apiGroups: ["*"]
+          resources: ["*"]
+          verbs: ["get", "list"]
+      extraClusterRoleBindings:
+      - name: read-only
+        roleRef:
+          name: read-only
