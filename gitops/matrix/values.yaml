@@ -53,7 +53,7 @@ matrixAuthenticationService:
               - buc
 
 matrixRTC:
-  enabled: true
+  enabled: false
   ingress:
     host: rtc-matrix.cloud.buc.sh
 serverName: matrix.cloud.buc.sh
