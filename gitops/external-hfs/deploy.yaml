@@ -12,7 +12,7 @@ kind: ExternalSecret
 metadata:
   name: hfs-creds
 spec:
-  refreshInterval: 1h
+  refreshInterval: 1h0m0s
   secretStoreRef:
     name: k8s-evergreen
     kind: ClusterSecretStore
@@ -59,7 +59,7 @@ spec:
         command:
         - sh
         - -c
-        - test -f /.hfs/config.yaml || sed -e "s/__guest_password__/$GUEST_PASS/" -e "s/__buc_password__/$BUC_PASS/" -e "s/__admin_password__/$ADMIN_PASS/"  /template/hfs-config.yaml > /.hfs/config.yaml
+        - test -f /data/config.yaml || sed -e "s/__guest_password__/$GUEST_PASS/" -e "s/__buc_password__/$BUC_PASS/" -e "s/__admin_password__/$ADMIN_PASS/"  /template/hfs-config.yaml > /data/config.yaml
         env:
         - name: GUEST_PASS
           value: this-is-the-guest-account-password
@@ -77,7 +77,7 @@ spec:
         - name: config-template
           mountPath: /template
         - name: config
-          mountPath: /.hfs
+          mountPath: /data
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -94,7 +94,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: config
-          mountPath: /.hfs
+          mountPath: /data
         - name: config-template
           mountPath: /template
         - name: data
