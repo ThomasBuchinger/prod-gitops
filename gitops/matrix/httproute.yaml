@@ -117,30 +117,30 @@ spec:
         value: /
 
 
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: admin-matrix-cloud-buc-sh
-spec:
-  parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: external-gateway
-    namespace: external-gateway
-  hostnames:
-  - "admin-matrix.cloud.buc.sh"
-  rules:
-  - backendRefs:
-    - group: ""
-      kind: Service
-      name: matrix-element-admin
-      port: 8080
-      weight: 1
-    matches:
-    - path:
-        type: PathPrefix
-        value: /
+# ---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: admin-matrix-cloud-buc-sh
+# spec:
+#   parentRefs:
+#   - group: gateway.networking.k8s.io
+#     kind: Gateway
+#     name: external-gateway
+#     namespace: external-gateway
+#   hostnames:
+#   - "admin-matrix.cloud.buc.sh"
+#   rules:
+#   - backendRefs:
+#     - group: ""
+#       kind: Service
+#       name: matrix-element-admin
+#       port: 8080
+#       weight: 1
+#     matches:
+#     - path:
+#         type: PathPrefix
+#         value: /
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -203,9 +203,67 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-all-within-namespace
+  name: matrix-authentication-service
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-authentication-service
+  policyTypes:
+    - Ingress
+    - Egress
+  # Allow DNS Resolution
+  egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  # public IP block
+  - to:
+    - ipBlock:
+        cidr: 188.20.0.0/14
+    ports:
+    - protocol: TCP
+      port: 443
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: matrix-rtc-authorization
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-rtc-authorisation-service
   policyTypes:
     - Ingress
     - Egress
@@ -250,6 +308,54 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: matrix-rtc-sfu
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-rtc-sfu
+  policyTypes:
+    - Ingress
+    - Egress
+  # Allow DNS Resolution
+  egress:
+  # Allow DNS Resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: synapse
 spec:
   podSelector:
@@ -286,6 +392,34 @@ spec:
     ports:
     - port: 8971
       protocol: TCP
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  # Allow access to matrix.org for push notifications
+  - to:
+    - ipBlock:
+        cidr: 172.66.135.3/32
+    - ipBlock:
+        cidr: 172.66.139.239/32
+    ports:
+    - port: 443
+  ingress:
+  # Allow Ingress
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: traefik
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: external-gateway
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
   
   # # Allow Access to the Internet, but block internal Access
   # - to:

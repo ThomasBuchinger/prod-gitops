@@ -19,6 +19,7 @@ machine:
   - device: /dev/vdb
     partitions:
       - mountpoint: /var/lib/local-path-provisioner
+        
   kubelet:
     extraArgs:
       rotate-server-certificates: true
