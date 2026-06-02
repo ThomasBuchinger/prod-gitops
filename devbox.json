@@ -1,14 +1,13 @@
 {
   "packages": [
     "renovate@43.150.1",
-    "talosctl@1.13.2",
+    "talosctl@1.12.8",
     "opencode@1.15.11",
     "claude-code@2.1.152",
     "opencloud@7.0.0"
   ],
   "env": {
-    "ANTHROPIC_API_KEY":  "aaa",
-    "ANTHROPIC_BASE_URL": "http://10.0.0.190:32434/",
+    "OPENCODE_CONFIG": ".agents/opencode.json",
     "KUBECONFIG":         "./kubeconfig"
   },
   "shell": {
