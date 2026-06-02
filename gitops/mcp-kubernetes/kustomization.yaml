@@ -9,7 +9,7 @@ helmCharts:
     config:
       list_output: yaml
     ingress:
-      enabled: false
+      enabled: true
       host: k8s-mcp.10.0.0.21.nip.io
     image:
       version: v0.0.59
