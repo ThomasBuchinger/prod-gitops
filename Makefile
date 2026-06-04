@@ -5,6 +5,7 @@ DHCP_IP=10.0.0.179
 OUTPUT_DIR=out
 YQ_ARGS=--prettyPrint --no-colors --inplace
 # TALOSCTL="./bin/talosctl"
+TALOS_MACHINE_PROD=talos/machine-prod.yaml
 TALOS_NODECONF=$(OUTPUT_DIR)/controlplane.yaml
 TALOS_CONFIG=$(OUTPUT_DIR)/talosconfig
 
@@ -27,12 +28,12 @@ talos-config: $(OUTPUT_DIR)/talos-secrets.yaml kustomize
 		--config-patch=@talos/talos-merge.yaml \
 		--output-dir "$(OUTPUT_DIR)" \
 		--with-secrets "$(OUTPUT_DIR)/talos-secrets.yaml"
-	yq eval $(YQ_ARGS) '.machine.network.interfaces[0].addresses[0] = "$(NODE_IP)/24"'                       $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[0].contents = load_str("secrets/eso-k8s-token.yaml")' $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/infra-argocd.yaml")'  $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)//infra-cillium.yaml")'  $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[3].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)
-	yq eval $(YQ_ARGS) '.cluster.inlineManifests[4].contents = load_str("secrets/cluster-secrets.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) 'select(.machine) | .machine.network.interfaces[0].addresses[0] = "$(NODE_IP)/24"'                       $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) 'select(.machine) | .cluster.inlineManifests[0].contents = load_str("secrets/eso-k8s-token.yaml")' $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) 'select(.machine) | .cluster.inlineManifests[1].contents = load_str("$(OUTPUT_DIR)/infra-argocd.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) 'select(.machine) | .cluster.inlineManifests[2].contents = load_str("$(OUTPUT_DIR)//infra-cillium.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) 'select(.machine) | .cluster.inlineManifests[3].contents = load_str("$(OUTPUT_DIR)/infra-traefik.yaml")'  $(TALOS_NODECONF)
+	yq eval $(YQ_ARGS) 'select(.machine) | .cluster.inlineManifests[4].contents = load_str("secrets/cluster-secrets.yaml")'  $(TALOS_NODECONF)
 	yq eval $(YQ_ARGS) '.contexts.prod.endpoints[0] = "$(NODE_IP)"'                                          $(TALOS_CONFIG)
 
 talos-init: talos-config
@@ -48,7 +49,7 @@ kubeconfig:
 talos-reset:
 	talosctl reset --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP)
 talos-apply: talos-config
-	talosctl apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF)
+	talosctl apply-config --talosconfig $(TALOS_CONFIG) --nodes $(NODE_IP) --file $(TALOS_NODECONF) --config-patch $(TALOS_MACHINE_PROD)
 
 # Temporary Workaround. Kubernetes 1.27 is not yet supported by the k8s operator controller-runtime
 # https://github.com/alex1989hu/kubelet-serving-cert-approver/issues/139

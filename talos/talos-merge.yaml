@@ -1,7 +1,8 @@
-
+---
 machine:
   network:
-    hostname: prod.buc.sh
+    # You can't set the hostname
+    # hostname: prod.buc.sh
     interfaces:
     - interface: eth0
       addresses:
