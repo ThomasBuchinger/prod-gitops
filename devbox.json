@@ -4,7 +4,7 @@
     "talosctl@1.13.3",
     "opencode@1.16.2",
     "claude-code@2.1.161",
-    "opencloud@7.0.0"
+    "opencloud@7.1.0"
   ],
   "env": {
     "OPENCODE_CONFIG": ".agents/opencode.json",
