@@ -3,7 +3,7 @@
     "renovate@43.214.1",
     "talosctl@1.13.4",
     "opencode@1.17.7",
-    "claude-code@2.1.177",
+    "claude-code@2.1.185",
     "opencloud@7.1.0"
   ],
   "env": {
