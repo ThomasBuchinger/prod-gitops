@@ -3,7 +3,7 @@
     "renovate@43.214.1",
     "talosctl@1.13.4",
     "opencode@1.17.9",
-    "opencloud@7.1.0"
+    "opencloud@7.2.0"
   ],
   "env": {
     "OPENCODE_CONFIG": ".agents/opencode.json",
