@@ -105,7 +105,8 @@ spec:
         - name: http
           containerPort: 8000
         startupProbe:
-          initialDelaySeconds: 300
+          failureThreshold: 30
+          periodSeconds: 10
           tcpSocket:
             port: 8000
         livenessProbe:
