@@ -45,3 +45,34 @@ spec:
       job: smrtctl-exporter
     targets:
       - 10.0.0.19:9633
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: external-frigate
+  namespace: monitoring
+  labels:
+    prometheus: system-monitoring-prometheus
+    release: monitoring
+spec:
+  metricsPath: /api/metrics
+  staticConfigs:
+  - labels:
+      job: frigate
+    targets:
+      - 10.0.0.25:8971
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: external-openwrt
+  namespace: monitoring
+  labels:
+    prometheus: system-monitoring-prometheus
+    release: monitoring
+spec:
+  staticConfigs:
+  - labels:
+      job: openwrt
+    targets:
+      - 10.0.0.9:9100
