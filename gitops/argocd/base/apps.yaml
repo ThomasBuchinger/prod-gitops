@@ -53,9 +53,6 @@ spec:
       - name: mediarr
         path: gitops/mediarr
         wave: "1"
-      - name: s3manager
-        path: gitops/s3manager
-        wave: "1"
       - name: immich
         path: gitops/immich
         wave: "2"
