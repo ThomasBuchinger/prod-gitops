@@ -2,12 +2,12 @@
   "packages": [
     "renovate@44.216.0",
     "talosctl@1.14.5",
-    "opencode@1.18.21",
-    "opencloud@7.2.0"
+    "opencloud@7.2.0",
+    "opencode@2.2.5"
   ],
   "env": {
     "OPENCODE_CONFIG": ".agents/opencode.json",
-    "KUBECONFIG":         "./kubeconfig"
+    "KUBECONFIG":      "./kubeconfig"
   },
   "shell": {
     "init_hook": [
