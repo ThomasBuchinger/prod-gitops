@@ -200,7 +200,8 @@ data:
         -d "{
           \"type\": \"m.login.password\",
           \"user\": \"$BOT_USERNAME\",
-          \"password\": \"$BOT_PASSWORD\"
+          \"password\": \"$BOT_PASSWORD\",
+          \"device_id\": \"roomconfigjob\"
         }" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p'
     )"
 
