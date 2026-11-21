@@ -135,6 +135,7 @@ spec:
     webOrigins:
     - "https://*matrix.cloud.buc.sh/*"
     - "https://chat.cloud.buc.sh/*"
+    secret: Sa2c97voKaBoXa7hqeBvNEw9lF14mnKd
 
     protocol: openid-connect
     clientAuthenticatorType: client-secret

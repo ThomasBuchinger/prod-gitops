@@ -34,7 +34,7 @@ matrixAuthenticationService:
               issuer: "https://sso.cloud.buc.sh/realms/buc"
               token_endpoint_auth_method: client_secret_basic
               client_id: "matrix"
-              client_secret: LDJJYwa65VYwHaDhF2YCUDimj5XqmFTer
+              client_secret: Sa2c97voKaBoXa7hqeBvNEw9lF14mnKd
               scope: "openid profile email"
               claims_imports:
                 localpart:
