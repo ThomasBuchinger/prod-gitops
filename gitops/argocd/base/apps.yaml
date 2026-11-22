@@ -90,7 +90,7 @@ spec:
       project: apps
       source:
         repoURL: https://github.com/thomasbuchinger/prod-gitops
-        targetRevision: main
+        targetRevision: feature-oidc
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
