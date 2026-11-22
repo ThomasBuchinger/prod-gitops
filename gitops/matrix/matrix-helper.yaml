@@ -56,17 +56,6 @@ rules:
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: matrix-helper-read-keycloak-secret
-rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  resourceNames: ["keycloak-client-secret-client-matrix"]
-  verbs: ["get"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: matrix-helper-access-matrix-resources-rb
@@ -76,8 +65,19 @@ subjects:
   namespace: matrix
 roleRef:
   kind: Role
-  name: matrix-helper
-  apiGroup: rbac.authorization.k8s.io
+  name: matrix-helper-access-matrix-resources
+  apiGroup: rbac.authorization.k8s.
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: matrix-helper-read-keycloak-secret
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames: ["keycloak-client-secret-client-matrix"]
+  verbs: ["get"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -90,7 +90,7 @@ subjects:
   namespace: matrix
 roleRef:
   kind: ClusterRole
-  name: matrix-helper
+  name: matrix-helper-read-keycloak-secret
   apiGroup: rbac.authorization.k8s.io
 
 ---
