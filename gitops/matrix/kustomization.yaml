@@ -14,5 +14,6 @@ helmCharts:
 resources:
 - postgres.yaml
 - httproute.yaml
-- room-config.yaml
+- matrix-helper.yaml
+# - room-config.yaml
 

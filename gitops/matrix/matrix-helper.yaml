@@ -1,0 +1,150 @@
+# Reference deployment for matrix-helper.
+#
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: bot-credentials
+spec:
+  refreshInterval: 1h0m0s
+  secretStoreRef:
+    name: k8s-evergreen
+    kind: ClusterSecretStore
+  target:
+    name: eso-bot-credentials
+    creationPolicy: Owner
+  data:
+  - secretKey: BOT_USERNAME
+    remoteRef:
+      key: static-secrets
+      property: cred_bot_user
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+  - secretKey: BOT_PASSWORD
+    remoteRef:
+      key: static-secrets
+      property: cred_bot_password
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: matrix-config
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: matrix-helper-access-matrix-resources
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "patch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: matrix-helper-read-keycloak-secret
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames: ["keycloak-client-secret-client-matrix"]
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: matrix-helper-access-matrix-resources-rb
+subjects:
+- kind: ServiceAccount
+  name: matrix-config
+  namespace: matrix
+roleRef:
+  kind: Role
+  name: matrix-helper
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: matrix-helper-read-keycloak-secret-crb
+subjects:
+- kind: ServiceAccount
+  name: matrix-config
+  namespace: matrix
+roleRef:
+  kind: ClusterRole
+  name: matrix-helper
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrix-helper
+  namespace: matrix
+  labels:
+    app.kubernetes.io/name: matrix-helper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-helper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: matrix-helper
+    spec:
+      serviceAccountName: matrix-config
+      containers:
+      - name: matrix-helper
+        image: ghcr.io/thomasbuchinger/homelab-api:latest
+        command: ["/app/matrix-helper"]
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: MATRIX_HELPER_CLIENTSECRET_NAMESPACE
+          value: "keycloak"
+        - name: MATRIX_HELPER_CLIENTSECRET_NAME
+          value: "keycloak-client-secret-client-matrix"
+        - name: MATRIX_HELPER_CLIENTSECRET_KEY
+          value: "CLIENT_SECRET"
+        - name: MATRIX_HELPER_BOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: eso-bot-credentials
+              key: BOT_USERNAME
+        - name: MATRIX_HELPER_BOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eso-bot-credentials
+              key: BOT_PASSWORD
+        livenessProbe:
+          httpGet:
+            path: /api/livez
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/readyz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
