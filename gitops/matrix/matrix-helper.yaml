@@ -114,7 +114,7 @@ spec:
       serviceAccountName: matrix-config
       containers:
       - name: matrix-helper
-        image: ghcr.io/thomasbuchinger/homelab-api:latest
+        image: ghcr.io/thomasbuchinger/homelab-api:main
         command: ["/app/matrix-helper"]
         ports:
         - name: http
